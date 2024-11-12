@@ -18,3 +18,5 @@ app
       }
     })
 );
+
+app.mount('#app');

@@ -5,9 +5,9 @@ import App from '../App.vue'
 
 const routes = [
     {
-        path: '/',
-        name: 'base',
-        component: App,
+      path: '/',
+      name: 'base',
+      component: App,
     },
     {
       path: '/callback',
