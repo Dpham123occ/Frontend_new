@@ -1,15 +1,19 @@
 <template>
-    <div>
-        <h1>This is HomePage</h1>
-        <p>Im in</p>
-        <LogOutButton></LogOutButton> 
+    <div class="home">
+      <Sidebar></Sidebar>
     </div>
-    
-</template>
-
-<script setup>
-</script>
-
-<style lang="scss" scoped>
-
-</style>
+  </template>
+  
+  <script>
+  import Sidebar from './Sidebar.vue';
+  export default {
+    name: 'HomePage',
+    components: {
+      Sidebar
+    },
+  };
+  </script>
+  
+  <style scoped>
+  /* Add styles here if needed */
+  </style>

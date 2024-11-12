@@ -1,6 +1,8 @@
 import HomePage from "../components/HomePage.vue";
 import {createRouter, createWebHistory} from "vue-router";
 import App from '../App.vue'
+import ApraisalDistrict from '../components/ApraisalDistrict.vue';
+import AcquisitionList from '../components/AcquisitionList.vue';
 
 const routes = [
     {
@@ -12,6 +14,16 @@ const routes = [
       path: '/home',
       name: 'HomePage',
       component: HomePage
+    },
+    {
+        path: '/appraisaldistrict',
+        name: 'Appraisal District',
+        component: ApraisalDistrict,
+    },
+    {
+    path: '/acquisitionlist',
+    name: 'Acquisition List',
+    component: AcquisitionList,
     }
 ]
 
