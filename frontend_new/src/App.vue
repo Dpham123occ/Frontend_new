@@ -1,9 +1,11 @@
 <script setup>
-import HelloWorld from './components/HelloWorld.vue'
+  import { useAuth0 } from '@auth0/auth0-vue';
+  const {isAuthenticated} = useAuth0();
+  import HelloWorld from './components/HelloWorld.vue'
 </script>
 
 <template>
-  <div>
+  <div v-if="!isAuthenticated"> 
     <a href="https://vite.dev" target="_blank">
       <img src="/vite.svg" class="logo" alt="Vite logo" />
     </a>

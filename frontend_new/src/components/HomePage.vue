@@ -1,16 +1,13 @@
 <template>
     <div>
         <h1>This is HomePage</h1>
+        <p>Im in</p>
+        <LogOutButton></LogOutButton> //can move this to the inner pages
     </div>
-    <div>
-        <LogOutButton></LogOutButton>
-    </div>
+    
 </template>
 
 <script setup>
-import LogOutButton from './button/LogOutButton.vue';
-
-
 </script>
 
 <style lang="scss" scoped>
