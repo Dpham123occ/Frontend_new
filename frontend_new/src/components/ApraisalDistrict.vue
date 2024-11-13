@@ -8,6 +8,7 @@
                 <li><button @click="showTable('Dallas')">Dallas</button></li>
                 <li><button @click="showTable('Collin')">Collin</button></li>
                 <li><button @click="showTable('Harris')">Harris</button></li>
+                <li><button v-on:click="goback">Go Back</button></li>
             </ul>
         </div>
 
@@ -54,7 +55,7 @@
                 <button @click="uploadFile" :disabled="!selectedFile || !uploadRegion">Upload</button>
 
                 <button>Download Report</button>
-                <button v-on:click="goback">Go Back</button>
+                
             </div>
         </div>
     </div>
