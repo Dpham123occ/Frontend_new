@@ -8,11 +8,11 @@
       </div>
 
       <nav class="nav-menu">
-        <button class="nav-item" @click="navigateTo('home')">Home</button>
-        <button class="nav-item" @click="navigateTo('import')">Import Button</button>
-        <button class="nav-item" @click="navigateTo('generate')">Generate Report</button>
-        <button class="nav-item" @click="navigateTo('view')">View Reports</button>
-        <button class="nav-item" @click="navigateTo('settings')">Settings</button>
+        <button class="nav-item" @click="navigateTo('/home')">Home</button>
+        <button class="nav-item" @click="navigateTo('/appraisaldistrict')">Apprasial District</button>
+        <button class="nav-item" @click="navigateTo('/generate')">Generate Report</button>
+        <button class="nav-item" @click="navigateTo('/view')">View Reports</button>
+        <button class="nav-item" @click="navigateTo('/settings')">Settings</button>
         <button class="nav-item back-button" @click="goBack">Back</button>
       </nav>
     </div>
@@ -53,7 +53,7 @@ export default {
       this.$router.push(property.route);
     },
     navigateTo(page) {
-      console.log(`Navigating to ${page}`);
+      this.$router.push(page); // Navigate to the specified page
     },
     goBack() {
       this.$router.go(-1); // Navigate back to the previous page
@@ -61,6 +61,7 @@ export default {
   },
 };
 </script>
+
 
 <style scoped>
 /* Main container styling */
