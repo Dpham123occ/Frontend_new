@@ -1,8 +1,14 @@
 <template>
   <div class="side-nav">
+    <!-- Logo Section -->
+    <div class="logo-section">
+      <img src="../assets/TSBlack.png" alt="Trailspur Logo" class="logo" />
+    </div>
     <ul>
       <li><router-link to="/home">Home</router-link></li>
-      <li><router-link to="/appraisaldistrict">Appraisal District</router-link></li>
+      <li>
+        <router-link to="/appraisaldistrict">Appraisal District</router-link>
+      </li>
       <li><router-link to="/acquisitionlist">Acquisition List</router-link></li>
       <li v-if="isAuthenticated">
         <LogOutButton />
@@ -12,64 +18,91 @@
 </template>
 
 <script>
-  import LogOutButton from './button/LogOutButton.vue';
-  import { useAuth0 } from '@auth0/auth0-vue';
+import LogOutButton from './button/LogOutButton.vue';
+import { useAuth0 } from '@auth0/auth0-vue';
 
-  export default {
-    components: {
-      LogOutButton
-    },
-    setup() {
-      const { isAuthenticated } = useAuth0();
-      return { isAuthenticated };
-    }
-  };
+export default {
+  components: {
+    LogOutButton,
+  },
+  setup() {
+    const { isAuthenticated } = useAuth0();
+    return { isAuthenticated };
+  },
+};
 </script>
 
 <style scoped>
-/* Side Navigation container */
-.side-nav {
-  width: 200px;                /* Adjust width as needed */
-  background-color: #F5F5F5;    /* Light gray background color */
-  border-radius: 8px;           /* Rounded corners */
-  padding: 20px;                /* Spacing inside the navbar */
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  height: 100vh;                /* Full vertical height */
-  position: fixed;              /* Fix the sidebar on the screen */
-  top: 0;
-  left: 0;
+/* Logo Section */
+.logo-section {
+  margin-bottom: 2rem;
 }
 
-/* Remove bullet points and default list styling */
-.side-nav ul {
-  list-style-type: none;
-  padding: 0;
-  margin: 0;
-  width: 100%;                  /* Ensure links take up full width */
+.logo {
+  width: 180px;
+  height: auto;
+  object-fit: contain;
+}
+/* Sidebar container */
+.side-nav {
+  width: 250px;                /* Adjust width as needed */
+  background-color: #d7e6e6;   /* Light teal background color */
+  height: 100vh;               /* Full viewport height */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 20px;
+  padding-bottom: 20px;
+  position: fixed;             /* Fixed position to stay on the left side */
+  box-sizing: border-box;
 }
 
 /* Navigation links */
+.side-nav ul {
+  list-style-type: none;       /* Remove bullet points */
+  padding: 0;
+  width: 100%;                 /* Make links span full sidebar width */
+}
+
+.side-nav li {
+  width: 100%;                 /* Make each list item span full sidebar width */
+}
+
 .side-nav a {
-  display: flex;
-  align-items: center;
-  color: #000;                  /* Black text color */
-  text-decoration: none;        /* Remove underline */
-  font-size: 16px;
-  font-weight:bold;             /* Adjust font size */
-  padding: 10px 0;              /* Vertical spacing between links */
-  margin-left: 10px;            /* Indent links to match design */
-  width: 100%;
-  border-radius: 4px;           /* Slight rounding for link backgrounds */
+  display: block;
+  width: 100%;                 /* Make links span full sidebar width */
+  color: #333;                 /* Dark text color */
+  text-decoration: none;       /* Remove underline */
+  font-size: 18px;             /* Adjust font size */
+  padding: 15px 20px;          /* Spacing inside each link */
+  text-align: left;
+  box-sizing: border-box;      /* Ensures padding is inside the defined width */
+  transition: background-color 0.3s ease;
 }
 
-.side-nav a:hover {
-  background-color:#d8d2c4 ;    /* Light gray on hover */
-}
-
+.side-nav a:hover,
 .side-nav a.active {
-  background-color: #C5C5C5;    /* Darker gray for active link */
-  font-weight: bold;            /* Bold text for active link */
+  background-color: #b8c2c2;   /* Lighter teal color on hover/active */
 }
+
+/* Log Out button styling */
+.side-nav .logout-button {
+  margin-top: auto;            /* Push the button to the bottom */
+  background-color: #333;      /* Dark color for button */
+  color: #fff;
+  text-align: center;
+  padding: 10px 20px;
+  border-radius: 4px;
+  font-size: 16px;
+  text-decoration: none;
+  width: 80%;
+  display: inline-block;
+  text-align: center;
+  box-sizing: border-box;
+}
+
+.side-nav .logout-button:hover {
+  background-color: #000;
+}
+
 </style>
