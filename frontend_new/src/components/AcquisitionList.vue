@@ -41,8 +41,8 @@ export default {
   data() {
     return {
       properties: [
-        { name: 'Light Industrial -Multi Tenant', route: '/acquisition-list/light-industrial-MT' },
-        { name: 'Light Industrial -User Buildings', route: '/acquisition-list/light-industrial-UB' },
+        { name: 'Light Industrial -Multi Tenant', route: '/acquisition-list/LightIndustrialMT' },
+        { name: 'Light Industrial -User Buildings', route: '/acquisition-list/LightIndustrialUB' },
         { name: 'IOS -Existing', route: '/acquisition-list/IOSExsiting' },
         { name: 'IOS Developable Land', route: '/acquisition-list/IOSDevelopment' },
       ],
