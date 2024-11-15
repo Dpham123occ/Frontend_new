@@ -1,12 +1,12 @@
 <<template>
     <div>
-        <button @click="handleLogout">Log Out</button>
+        <button class="logout-button" @click="handleLogout">Log Out</button>
     </div>
 </template>
 
 <script setup>
     import { useAuth0 } from '@auth0/auth0-vue';
-    const { logout} = useAuth0();
+    const {logout} = useAuth0();
 
     const handleLogout = () => {
         logout({
@@ -17,6 +17,9 @@
     }
 </script>
 
-<style lang="scss" scoped>
-
+<style scoped>
+.logout-button {
+  margin-top: 10%;
+  margin-left: 10%
+}
 </style>

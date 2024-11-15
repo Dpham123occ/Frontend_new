@@ -7,9 +7,10 @@
     <ul>
       <li><router-link to="/home">Home</router-link></li>
       <li>
-        <router-link to="/appraisaldistrict">Appraisal District</router-link>
+        <router-link to="/appraisaldistrict">Appraisal District Vacancies</router-link>
       </li>
       <li><router-link to="/acquisitionlist">Acquisition List</router-link></li>
+      <li><router-link to="/uploadcostar">Upload Costar's Point</router-link></li>
       <li v-if="isAuthenticated">
         <LogOutButton />
       </li>
