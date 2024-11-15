@@ -10,7 +10,7 @@
       <nav class="nav-menu">
         <button class="nav-item" @click="navigateTo('/home')">Home</button>
         <button class="nav-item" @click="navigateTo('/appraisaldistrict')">Apprasial District</button>
-        <button class="nav-item" @click="navigateTo('/generate')">Generate Report</button>
+        <button class="nav-item" @click="navigateTo('/acquisitionlist')">Acquisition List</button>
         <button class="nav-item" @click="navigateTo('/view')">View Reports</button>
         <button class="nav-item" @click="navigateTo('/settings')">Settings</button>
         <button class="nav-item back-button" @click="goBack">Back</button>

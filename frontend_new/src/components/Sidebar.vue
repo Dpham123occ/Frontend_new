@@ -83,7 +83,7 @@ export default {
 
 .side-nav a:hover,
 .side-nav a.active {
-  background-color: #b8c2c2;   /* Lighter teal color on hover/active */
+  background-color: #d8d2c4; /* trail-dust on hover */
 }
 
 /* Log Out button styling */
