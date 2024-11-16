@@ -1,13 +1,21 @@
 <template>
   <div class="light-industrial-mt">
-    <h1>Light Industrial Multi Tenant</h1>
-    <p>Welcome to the Light Industrial Multi Tenant page! This is a placeholder component to test routing.</p>
+    <h1>Light Industrial Multi-Tenant</h1>
+    <p>Welcome to the Light Industrial Multi-Tenant page! Use the table below to upload and manage your data.</p>
+
+    <!-- Use TableView Component -->
+    <TableView />
   </div>
 </template>
 
 <script>
+import TableView from "../components/TableView.vue"; // Adjust the path to your TableView component
+
 export default {
-  name: 'LightIndustrialMT',
+  name: "LightIndustrialMT",
+  components: {
+    TableView,
+  },
 };
 </script>
 
