@@ -1,109 +1,139 @@
 <template>
-  <div class="side-nav">
+  <div class="sidebar">
     <!-- Logo Section -->
     <div class="logo-section">
       <img src="../assets/TSBlack.png" alt="Trailspur Logo" class="logo" />
     </div>
-    <ul>
-      <li><router-link to="/home">Home</router-link></li>
-      <li>
-        <router-link to="/appraisaldistrict">Appraisal District Vacancies</router-link>
-      </li>
-      <li><router-link to="/acquisitionlist">Acquisition List</router-link></li>
-      <li><router-link to="/uploadcostar">Upload Costar's Point</router-link></li>
-      <li v-if="isAuthenticated">
-        <LogOutButton />
-      </li>
-    </ul>
+
+    <nav class="nav-menu">
+      <router-link to="/home" class="nav-item">Home</router-link>
+      <router-link to="/appraisaldistrict" class="nav-item">Appraisal District</router-link>
+      <router-link to="/acquisitionlist" class="nav-item">Acquisition List</router-link>
+      <router-link to="/view" class="nav-item">View Reports</router-link>
+      <router-link to="/settings" class="nav-item">Settings</router-link>
+      <!-- Conditional Button -->
+      <button
+        v-if="isHomePage"
+        class="nav-item logout-button"
+        @click="logOut"
+      >
+        Log Out
+      </button>
+      <button
+        v-else
+        class="nav-item back-button"
+        @click="goBack"
+      >
+        Back
+      </button>
+    </nav>
   </div>
 </template>
 
 <script>
-import LogOutButton from './button/LogOutButton.vue';
+import { useRoute, useRouter } from 'vue-router';
 import { useAuth0 } from '@auth0/auth0-vue';
 
 export default {
-  components: {
-    LogOutButton,
-  },
+  name: 'Sidebar',
   setup() {
-    const { isAuthenticated } = useAuth0();
-    return { isAuthenticated };
+    const { logout } = useAuth0();
+    const route = useRoute();
+    const router = useRouter();
+
+    // Check if the current route is the home page
+    const isHomePage = route.path === '/home';
+
+    const logOut = () => {
+      logout({ returnTo: window.location.origin });
+    };
+
+    const goBack = () => {
+      router.back();
+    };
+
+    return { isHomePage, logOut, goBack };
   },
 };
 </script>
 
 <style scoped>
-/* Logo Section */
+/* Sidebar styling */
+.sidebar {
+  width: 220px;
+  background-color: #d1dede;
+  padding: 2rem 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+  height: 100vh;
+}
+
 .logo-section {
   margin-bottom: 2rem;
 }
 
 .logo {
-  width: 180px;
+  width: 140px;
   height: auto;
   object-fit: contain;
 }
-/* Sidebar container */
-.side-nav {
-  width: 250px;                /* Adjust width as needed */
-  background-color: #d7e6e6;   /* Light teal background color */
-  height: 100vh;               /* Full viewport height */
+
+.nav-menu {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  padding-top: 20px;
-  padding-bottom: 20px;
-  position: fixed;             /* Fixed position to stay on the left side */
-  box-sizing: border-box;
+  width: 100%;
 }
 
-/* Navigation links */
-.side-nav ul {
-  list-style-type: none;       /* Remove bullet points */
-  padding: 0;
-  width: 100%;                 /* Make links span full sidebar width */
-}
-
-.side-nav li {
-  width: 100%;                 /* Make each list item span full sidebar width */
-}
-
-.side-nav a {
-  display: block;
-  width: 100%;                 /* Make links span full sidebar width */
-  color: #333;                 /* Dark text color */
-  text-decoration: none;       /* Remove underline */
-  font-size: 18px;             /* Adjust font size */
-  padding: 15px 20px;          /* Spacing inside each link */
+.nav-item {
+  padding: 0.5rem 1rem;
+  background-color: transparent;
+  border: none;
+  color: #231f20;
   text-align: left;
-  box-sizing: border-box;      /* Ensures padding is inside the defined width */
-  transition: background-color 0.3s ease;
+  font-weight: bold;
+  font-family: 'Brother 1816 Reg', sans-serif;
+  cursor: pointer;
+  width: calc(100% - 2rem);
+  border-radius: 5px;
+  margin-bottom: 1rem;
+  transition: background-color 0.3s;
 }
 
-.side-nav a:hover,
-.side-nav a.active {
-  background-color: #d8d2c4; /* trail-dust on hover */
+.nav-item:hover {
+  background-color: #d8d2c4;
 }
 
-/* Log Out button styling */
-.side-nav .logout-button {
-  margin-top: auto;            /* Push the button to the bottom */
-  background-color: #333;      /* Dark color for button */
-  color: #fff;
-  text-align: center;
-  padding: 10px 20px;
-  border-radius: 4px;
-  font-size: 16px;
-  text-decoration: none;
-  width: 80%;
-  display: inline-block;
-  text-align: center;
-  box-sizing: border-box;
+.back-button {
+  margin-top: 2rem;
+  background-color: #231f20;
+  color: white;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 5px;
+  font-size: 0.9rem;
+  width: calc(100% - 2rem);
+  cursor: pointer;
 }
 
-.side-nav .logout-button:hover {
+.back-button:hover {
   background-color: #000;
 }
 
+.logout-button {
+  margin-top: 2rem;
+  background-color: #231f20;
+  color: white;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 5px;
+  font-size: 0.9rem;
+  width: calc(100% - 2rem);
+  cursor: pointer;
+}
+
+.logout-button:hover {
+  background-color: #000;
+}
 </style>
