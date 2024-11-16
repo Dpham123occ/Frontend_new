@@ -1,9 +1,12 @@
 <template>
     <div>
-        <h1>Upload Costar's Point</h1>
-        <button class ="button" @click="upload">Upload</button> <br>
-        <button class ="button" @click="goBack">Back</button>
+        <h1>Upload Costar's Points</h1>
+        <button class ="button" @click="upload">Upload</button>
     </div>
+    <div><h1>Upload Appraisal District Data</h1>
+        <button class ="button" @click="upload">Upload</button>
+    </div>
+    <div><button class ="button" @click="goBack">Back</button></div>
 </template>
 
 <script setup>
@@ -14,7 +17,7 @@
     }
 
     function upload() {
-        alert('impelement your ');
+        alert('impelement your upload api here');
     }
 </script>
 
