@@ -13,6 +13,7 @@
                 <button class="nav-item underlined-item" @click="showTable('Harris')">Harris</button>
                 <button class="nav-item underlined-item" @click="downloadTAD">Download TAD Parcel - Make James' API
                     call</button>
+                <button class="nav-item underlined-item" @click="spatialMerge">Perform Spatial Merge</button>
                 <button class="nav-item back-button" @click="goback">Back</button>
             </nav>
         </div>
