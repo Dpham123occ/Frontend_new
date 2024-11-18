@@ -11,7 +11,8 @@
                 <button class="nav-item underlined-item" @click="showTable('Dallas')">Dallas</button>
                 <button class="nav-item underlined-item" @click="showTable('Collin')">Collin</button>
                 <button class="nav-item underlined-item" @click="showTable('Harris')">Harris</button>
-                <button class="nav-item underlined-item" @click="showTable('Harris')">Download TAD Parcel - Make James' API call</button>
+                <button class="nav-item underlined-item" @click="downloadTAD">Download TAD Parcel - Make James' API
+                    call</button>
                 <button class="nav-item back-button" @click="goback">Back</button>
             </nav>
         </div>
@@ -33,7 +34,8 @@
             </table>
 
             <!-- Pagination Controls -->
-            <div class="pagination-controls" v-if="selectedRegion && csvData[selectedRegion] && csvData[selectedRegion].length">
+            <div class="pagination-controls"
+                v-if="selectedRegion && csvData[selectedRegion] && csvData[selectedRegion].length">
                 <label for="rowsPerPage">Rows per page:</label>
                 <select v-model="rowsPerPage" @change="resetPagination">
                     <option v-for="option in rowsPerPageOptions" :key="option" :value="option">{{ option }}</option>
@@ -61,6 +63,7 @@
 <script>
 import router from '../router/router';
 import * as XLSX from 'xlsx';
+import axios from 'axios';
 
 export default {
     name: 'AppraisalDistrict',
@@ -100,6 +103,16 @@ export default {
         }
     },
     methods: {
+        async downloadTAD() {
+            try {
+                const response = await axios.get(`http://127.0.0.1:8000/download-tad`);
+                const data = response.data;
+                alert(data.statusCode);
+            } catch (error) {
+                console.error("Error calling api:", error);
+                this.errorMessage = "Failed to call api";
+            }
+        },
         showTable(region) {
             this.selectedRegion = region;
         },
@@ -217,7 +230,8 @@ export default {
     font-size: 0.9rem;
     width: calc(100% - 2rem);
     cursor: pointer;
-    text-decoration: none; /* Ensures no underline is applied */
+    text-decoration: none;
+    /* Ensures no underline is applied */
 }
 
 .back-button:hover {
