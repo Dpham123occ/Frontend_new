@@ -55,7 +55,7 @@
                 <button @click="uploadFile" :disabled="!selectedFile || !uploadRegion">Upload</button>
 
                 <button>Download Report</button>
-                
+
             </div>
         </div>
     </div>

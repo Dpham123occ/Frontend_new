@@ -3,7 +3,6 @@ import { createRouter, createWebHistory } from "vue-router";
 import App from '../App.vue'
 import ApraisalDistrict from '../components/ApraisalDistrict.vue';
 import AcquisitionList from '../components/AcquisitionList.vue';
-import UpLoadCostarPage from "../components/UpLoadCostarPage.vue";
 import LightIndustrialMT from "../AcquisitionComponents/LightIndustrialMT.vue";
 import LightIndustrialUB from "../AcquisitionComponents/LightIndustrialUB.vue";
 import IOSExsisting from "../AcquisitionComponents/IOSExsisting.vue";
@@ -29,11 +28,6 @@ const routes = [
     path: '/acquisitionlist',
     name: 'Acquisition List',
     component: AcquisitionList,
-  },
-  {
-    path: '/uploadcostar',
-    name: 'Upload Costar',
-    component: UpLoadCostarPage
   },
   {
     path: '/acquisition-list/LightIndustrialMT', // Update to match component route
