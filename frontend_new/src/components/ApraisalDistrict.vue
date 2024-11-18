@@ -3,15 +3,16 @@
     <div class="main-container">
         <!-- Vertical Navigation Bar -->
         <div class="vertical-nav">
-            <ul>
-                <li><button @click="showTable('Tarrant')">Tarrant</button></li>
-                <li><button @click="showTable('Dallas')">Dallas</button></li>
-                <li><button @click="showTable('Collin')">Collin</button></li>
-                <li><button @click="showTable('Harris')">Harris</button></li>
-                <li><button v-on:click="goback">Go Back</button></li>
+            <ul> 
+                <li><h2>Appraisal District List</h2></li>
+                <li><button class="button-item" @click="showTable('Tarrant')">Tarrant</button></li>
+                <li><button class="button-item" @click="showTable('Dallas')">Dallas</button></li>
+                <li><button class="button-item" @click="showTable('Collin')">Collin</button></li>
+                <li><button class="button-item" @click="showTable('Harris')">Harris</button></li>
+                <li><button class="button-item" @click="showTable('Harris')">Dowload TAD Parcel - Make James' API call</button></li>
+                <li><button class="button-item" v-on:click="goback">Back</button></li>
             </ul>
         </div>
-
 
         <!-- Table and Buttons Section -->
         <div class="table-section">
@@ -49,12 +50,11 @@
                     <option disabled value="">Select a district</option>
                     <option v-for="district in districts" :key="district" :value="district">{{ district }}</option>
                 </select>
+                    <input type="file" @change="handleFileSelection" accept=".xlsx, .xls, .csv" />
 
-                <input type="file" @change="handleFileSelection" accept=".xlsx, .xls, .csv" />
+                <button @click="uploadFile" :disabled="!selectedFile || !uploadRegion">Upload Vacancies Report</button>
 
-                <button @click="uploadFile" :disabled="!selectedFile || !uploadRegion">Upload</button>
-
-                <button>Download Report</button>
+                <button>Download Vacancies Report</button>
 
             </div>
         </div>
@@ -167,17 +167,39 @@ export default {
 }
 
 .vertical-nav {
-    width: 100%;
+  width: 220px;
+  background-color: #d1dede;
+  padding: 2rem 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+  height: 100vh;
 }
 
 .vertical-nav ul {
     list-style-type: none;
     padding: 50px;
-    margin: 0;
 }
 
 .vertical-nav li {
+    margin-top: 10px;
     margin-bottom: 10px;
+    width: fit-content;
+}
+
+.vertical-nav li .button-item {
+  padding: 0.5rem 1rem;
+  background-color: transparent;
+  border: none;
+  color: #231f20;
+  text-align: left;
+  font-weight: bold;
+  font-family: 'Brother 1816 Reg', sans-serif;
+  cursor: pointer;
+  border-radius: 5px;
+  margin-bottom: 1rem;
+  transition: background-color 0.3s;
 }
 
 .vertical-nav button {
