@@ -1,22 +1,23 @@
-
 <template>
     <div class="main-container">
         <!-- Vertical Navigation Bar -->
-        <div class="vertical-nav">
-            <ul> 
-                <li><h2>Appraisal District List</h2></li>
-                <li><button class="button-item" @click="showTable('Tarrant')">Tarrant</button></li>
-                <li><button class="button-item" @click="showTable('Dallas')">Dallas</button></li>
-                <li><button class="button-item" @click="showTable('Collin')">Collin</button></li>
-                <li><button class="button-item" @click="showTable('Harris')">Harris</button></li>
-                <li><button class="button-item" @click="showTable('Harris')">Dowload TAD Parcel - Make James' API call</button></li>
-                <li><button class="button-item" v-on:click="goback">Back</button></li>
-            </ul>
+        <div class="sidebar">
+            <!-- Logo Section -->
+            <div class="logo-section">
+                <img src="../assets/TSBlack.png" alt="Trailspur Logo" class="logo" />
+            </div>
+            <nav class="nav-menu">
+                <button class="nav-item underlined-item" @click="showTable('Tarrant')">Tarrant</button>
+                <button class="nav-item underlined-item" @click="showTable('Dallas')">Dallas</button>
+                <button class="nav-item underlined-item" @click="showTable('Collin')">Collin</button>
+                <button class="nav-item underlined-item" @click="showTable('Harris')">Harris</button>
+                <button class="nav-item underlined-item" @click="showTable('Harris')">Download TAD Parcel - Make James' API call</button>
+                <button class="nav-item back-button" @click="goback">Back</button>
+            </nav>
         </div>
 
         <!-- Table and Buttons Section -->
         <div class="table-section">
-            <!-- Conditionally Rendered Table for CSV Data -->
             <table v-if="selectedRegion && csvData[selectedRegion] && csvData[selectedRegion].length" class="csv-table">
                 <caption>{{ selectedRegion }} Data</caption>
                 <thead>
@@ -37,7 +38,6 @@
                 <select v-model="rowsPerPage" @change="resetPagination">
                     <option v-for="option in rowsPerPageOptions" :key="option" :value="option">{{ option }}</option>
                 </select>
-                
                 <button @click="prevPage" :disabled="currentPage === 1">Previous</button>
                 <span>Page {{ currentPage }} of {{ totalPages }}</span>
                 <button @click="nextPage" :disabled="currentPage === totalPages">Next</button>
@@ -50,12 +50,9 @@
                     <option disabled value="">Select a district</option>
                     <option v-for="district in districts" :key="district" :value="district">{{ district }}</option>
                 </select>
-                    <input type="file" @change="handleFileSelection" accept=".xlsx, .xls, .csv" />
-
+                <input type="file" @change="handleFileSelection" accept=".xlsx, .xls, .csv" />
                 <button @click="uploadFile" :disabled="!selectedFile || !uploadRegion">Upload Vacancies Report</button>
-
                 <button>Download Vacancies Report</button>
-
             </div>
         </div>
     </div>
@@ -82,12 +79,12 @@ export default {
                 Collin: [],
                 Harris: []
             },
-            currentPage: 1,          // Current page number
-            rowsPerPage: 10,         // Default rows per page
-            rowsPerPageOptions: [10, 20, 50], // Options for rows per page
-            uploadRegion: "",        // Selected region for uploading file
-            districts: ['Tarrant', 'Dallas', 'Collin', 'Harris'], // List of districts
-            selectedFile: null       // Temporarily stores the selected file
+            currentPage: 1,
+            rowsPerPage: 10,
+            rowsPerPageOptions: [10, 20, 50],
+            uploadRegion: "",
+            districts: ['Tarrant', 'Dallas', 'Collin', 'Harris'],
+            selectedFile: null
         };
     },
     computed: {
@@ -110,10 +107,9 @@ export default {
             router.push('/home');
         },
         handleFileSelection(event) {
-            this.selectedFile = event.target.files[0]; // Store selected file
+            this.selectedFile = event.target.files[0];
         },
-        //in the future will change is into a post request
-        uploadFile() { 
+        uploadFile() {
             if (!this.uploadRegion) {
                 alert('Please select a district before uploading.');
                 return;
@@ -134,12 +130,9 @@ export default {
         },
         parseCSV(data, region) {
             if (!region) return;
-
             const rows = data.trim().split('\n');
             this.csvHeaders[region] = rows[0].split(',');
             this.csvData[region] = rows.slice(1).map(row => row.split(','));
-
-            // Reset pagination for the newly uploaded data
             this.resetPagination();
         },
         nextPage() {
@@ -166,92 +159,68 @@ export default {
     gap: 20px;
 }
 
-.vertical-nav {
-  width: 220px;
-  background-color: #d1dede;
-  padding: 2rem 1rem;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
-  height: 100vh;
+.sidebar {
+    width: 220px;
+    background-color: #d1dede;
+    padding: 2rem 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+    height: 100vh;
 }
 
-.vertical-nav ul {
-    list-style-type: none;
-    padding: 50px;
+.logo-section {
+    margin-bottom: 2rem;
 }
 
-.vertical-nav li {
-    margin-top: 10px;
-    margin-bottom: 10px;
-    width: fit-content;
+.logo {
+    width: 140px;
+    height: auto;
+    object-fit: contain;
 }
 
-.vertical-nav li .button-item {
-  padding: 0.5rem 1rem;
-  background-color: transparent;
-  border: none;
-  color: #231f20;
-  text-align: left;
-  font-weight: bold;
-  font-family: 'Brother 1816 Reg', sans-serif;
-  cursor: pointer;
-  border-radius: 5px;
-  margin-bottom: 1rem;
-  transition: background-color 0.3s;
-}
-
-.vertical-nav button {
+.nav-menu {
+    display: flex;
+    flex-direction: column;
     width: 100%;
-    padding: 10px;
-    text-align: left;
+}
+
+.nav-item {
+    padding: 0.5rem 1rem;
+    background-color: transparent;
     border: none;
-    background-color: #f0f0f0;
+    color: #231f20;
+    text-align: left;
+    font-weight: bold;
+    text-decoration: underline;
+    font-size: 1.0rem;
+    font-family: 'Brother 1816 Reg', sans-serif;
     cursor: pointer;
+    width: calc(100% - 2rem);
+    border-radius: 5px;
+    margin-bottom: 1rem;
     transition: background-color 0.3s;
 }
 
-.vertical-nav button:hover {
-    background-color: #dcdcdc;
+.nav-item:hover {
+    background-color: #d8d2c4;
 }
 
-.table-section {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    padding: 50px;
+.back-button {
+    margin-top: auto;
+    background-color: #231f20;
+    color: white;
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 5px;
+    font-size: 0.9rem;
+    width: calc(100% - 2rem);
+    cursor: pointer;
+    text-decoration: none; /* Ensures no underline is applied */
 }
 
-.button-group {
-    position: absolute;
-    bottom: 10px;
-    right: 10px;
-    display: flex;
-    gap: 10px;
-    align-items: center;
-}
-
-.pagination-controls {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin: 10px 0;
-}
-
-.csv-table {
-    width: 100%;
-    border-collapse: collapse;
-}
-
-.csv-table th, .csv-table td {
-    border: 1px solid #ddd;
-    padding: 8px;
-    text-align: left;
-}
-
-.csv-table th {
-    background-color: #f2f2f2;
-    font-weight: bold;
+.back-button:hover {
+    background-color: #000;
 }
 </style>
