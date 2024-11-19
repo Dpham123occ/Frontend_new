@@ -54,7 +54,8 @@
                     <option v-for="district in districts" :key="district" :value="district">{{ district }}</option>
                 </select>
                 <input type="file" @change="handleFileSelection" accept=".xlsx, .xls, .csv" />
-                <button @click="uploadFile" :disabled="!selectedFile || !uploadRegion">Upload Vacancies Report</button>
+                <button @click="uploadFile" :disabled="!selectedFile || !uploadRegion">Upload Costar Vacancies
+                    Report</button>
                 <button>Download Vacancies Report</button>
             </div>
         </div>
@@ -62,109 +63,132 @@
 </template>
 
 <script>
-import router from '../router/router';
-import * as XLSX from 'xlsx';
-import axios from 'axios';
+import router from "../router/router";
+import * as XLSX from "xlsx";
+import axios from "axios";
 
 export default {
-    name: 'AppraisalDistrict',
-    data() {
-        return {
-            selectedRegion: null,
-            csvHeaders: {
-                Tarrant: [],
-                Dallas: [],
-                Collin: [],
-                Harris: []
-            },
-            csvData: {
-                Tarrant: [],
-                Dallas: [],
-                Collin: [],
-                Harris: []
-            },
-            currentPage: 1,
-            rowsPerPage: 10,
-            rowsPerPageOptions: [10, 20, 50],
-            uploadRegion: "",
-            districts: ['Tarrant', 'Dallas', 'Collin', 'Harris'],
-            selectedFile: null
-        };
+  name: "AppraisalDistrict",
+  data() {
+    return {
+      selectedRegion: null,
+      csvHeaders: {
+        Tarrant: [],
+        Dallas: [],
+        Collin: [],
+        Harris: []
+      },
+      csvData: {
+        Tarrant: [],
+        Dallas: [],
+        Collin: [],
+        Harris: []
+      },
+      currentPage: 1,
+      rowsPerPage: 10,
+      rowsPerPageOptions: [10, 20, 50],
+      uploadRegion: "",
+      districts: ["Tarrant", "Dallas", "Collin", "Harris"],
+      selectedFile: null
+    };
+  },
+  computed: {
+    paginatedData() {
+      if (!this.selectedRegion || !this.csvData[this.selectedRegion]) return [];
+      const start = (this.currentPage - 1) * this.rowsPerPage;
+      const end = start + this.rowsPerPage;
+      return this.csvData[this.selectedRegion].slice(start, end);
     },
-    computed: {
-        paginatedData() {
-            if (!this.selectedRegion || !this.csvData[this.selectedRegion]) return [];
-            const start = (this.currentPage - 1) * this.rowsPerPage;
-            const end = start + this.rowsPerPage;
-            return this.csvData[this.selectedRegion].slice(start, end);
-        },
-        totalPages() {
-            if (!this.selectedRegion || !this.csvData[this.selectedRegion]) return 1;
-            return Math.ceil(this.csvData[this.selectedRegion].length / this.rowsPerPage);
-        }
-    },
-    methods: {
-        async downloadTAD() {
-            try {
-                const response = await axios.get(`http://127.0.0.1:8000/download-tad`);
-                const data = response.data;
-                alert(data.statusCode);
-            } catch (error) {
-                console.error("Error calling api:", error);
-                this.errorMessage = "Failed to call api";
-            }
-        },
-        showTable(region) {
-            this.selectedRegion = region;
-        },
-        goback() {
-            router.push('/home');
-        },
-        handleFileSelection(event) {
-            this.selectedFile = event.target.files[0];
-        },
-        uploadFile() {
-            if (!this.uploadRegion) {
-                alert('Please select a district before uploading.');
-                return;
-            }
-            if (this.selectedFile) {
-                const reader = new FileReader();
-                reader.onload = (e) => {
-                    const data = new Uint8Array(e.target.result);
-                    const workbook = XLSX.read(data, { type: 'array' });
-                    const worksheet = workbook.Sheets[workbook.SheetNames[0]];
-                    const csv = XLSX.utils.sheet_to_csv(worksheet);
-                    this.parseCSV(csv, this.uploadRegion);
-                };
-                reader.readAsArrayBuffer(this.selectedFile);
-            } else {
-                alert('Please select a file to upload.');
-            }
-        },
-        parseCSV(data, region) {
-            if (!region) return;
-            const rows = data.trim().split('\n');
-            this.csvHeaders[region] = rows[0].split(',');
-            this.csvData[region] = rows.slice(1).map(row => row.split(','));
-            this.resetPagination();
-        },
-        nextPage() {
-            if (this.currentPage < this.totalPages) {
-                this.currentPage++;
-            }
-        },
-        prevPage() {
-            if (this.currentPage > 1) {
-                this.currentPage--;
-            }
-        },
-        resetPagination() {
-            this.currentPage = 1;
-        }
+    totalPages() {
+      if (!this.selectedRegion || !this.csvData[this.selectedRegion]) return 1;
+      return Math.ceil(this.csvData[this.selectedRegion].length / this.rowsPerPage);
     }
+  },
+  methods: {
+    async downloadTAD() {
+      try {
+        const response = await axios.get(`http://127.0.0.1:8000/download-tad`);
+        const data = response.data;
+        alert(data.statusCode);
+      } catch (error) {
+        console.error("Error calling API:", error);
+        alert("Failed to call API");
+      }
+    },
+    showTable(region) {
+      this.selectedRegion = region;
+      this.resetPagination();
+    },
+    goback() {
+      router.push("/home");
+    },
+    handleFileSelection(event) {
+      this.selectedFile = event.target.files[0];
+    },
+    async uploadFile() {
+      if (!this.uploadRegion) {
+        alert("Please select a district before uploading.");
+        return;
+      }
+      if (this.selectedFile) {
+        const formData = new FormData();
+        formData.append("file", this.selectedFile);
+
+        try {
+          const response = await axios.post(
+            "http://127.0.0.1:8000/upload-excel/",
+            formData,
+            {
+              headers: {
+                "Content-Type": "multipart/form-data"
+              }
+            }
+          );
+          alert(response.data.message);
+        } catch (error) {
+          console.error("Error uploading Excel file", error.message);
+          alert("An error occurred while uploading the file.");
+        }
+      } else {
+        alert("Please select a file to upload.");
+      }
+    },
+    parseCSV(data, region) {
+      if (!region) return;
+
+      const rows = data.trim().split("\n");
+      const parsedRows = rows.map((row) =>
+        row.match(/(".*?"|[^",]+)(?=\s*,|\s*$)/g)?.map((cell) =>
+          cell.startsWith('"') && cell.endsWith('"')
+            ? cell.slice(1, -1).replace(/""/g, '"') // Handle quoted fields
+            : cell
+        )
+      );
+
+      this.csvHeaders[region] = parsedRows[0] || [];
+      this.csvData[region] = parsedRows.slice(1).map((row) =>
+        (row || []).map((cell) => (cell?.trim() ? cell.trim() : "N/A"))
+      );
+
+      this.resetPagination();
+    },
+    nextPage() {
+      if (this.currentPage < this.totalPages) {
+        this.currentPage++;
+      }
+    },
+    prevPage() {
+      if (this.currentPage > 1) {
+        this.currentPage--;
+      }
+    },
+    resetPagination() {
+      this.currentPage = 1;
+    }
+  }
 };
 </script>
+
 
 <style scoped>
 .main-container {
