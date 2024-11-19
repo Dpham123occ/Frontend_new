@@ -52,7 +52,7 @@
                     <option v-for="district in districts" :key="district" :value="district">{{ district }}</option>
                 </select> -->
                 <input type="file" @change="handleFileSelection" accept=".xlsx, .xls, .csv" />
-                <button @click="uploadFile" :disabled="!selectedFile">Upload Costar Vacancies
+                <button @click="uploadFile">Upload Costar Vacancies
                     Report</button>
                 <button @click="downloadVacanciesReport">Download Vacancies Report</button>
             </div>
@@ -136,10 +136,6 @@ export default {
             this.selectedFile = event.target.files[0];
         },
         async uploadFile() {
-            if (!this.uploadRegion) {
-                alert("Please select a district before uploading.");
-                return;
-            }
             if (this.selectedFile) {
                 const formData = new FormData();
                 formData.append("file", this.selectedFile);
