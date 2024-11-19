@@ -54,7 +54,7 @@
                 <input type="file" @change="handleFileSelection" accept=".xlsx, .xls, .csv" />
                 <button @click="uploadFile" :disabled="!selectedFile">Upload Costar Vacancies
                     Report</button>
-                <button>Download Vacancies Report</button>
+                <button @click="downloadVacanciesReport">Download Vacancies Report</button>
             </div>
         </div>
     </div>
@@ -194,7 +194,35 @@ export default {
         },
         resetPagination() {
             this.currentPage = 1;
-        }
+        },
+        async downloadVacanciesReport() {
+            try {
+                // Send request to the backend to get the CSV file
+                const response = await axios.get("http://127.0.0.1:8000/export-csv/", {
+                    responseType: "blob", // Ensure the response is treated as a binary blob
+                });
+
+                // Create a URL for the blob
+                const blob = new Blob([response.data], { type: "text/csv" });
+                const url = window.URL.createObjectURL(blob);
+
+                // Create a temporary link element
+                const link = document.createElement("a");
+                link.href = url;
+                link.setAttribute("download", "master_vacancy_table.csv"); // Set the file name
+
+                // Append the link to the document, trigger the download, and clean up
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+
+                // Revoke the URL to free memory
+                window.URL.revokeObjectURL(url);
+            } catch (error) {
+                console.error("Error downloading CSV:", error);
+                alert("Failed to download CSV.");
+            }
+        },
     }
 };
 </script>
