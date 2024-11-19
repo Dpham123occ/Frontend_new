@@ -20,24 +20,25 @@
 
         <!-- Table and Buttons Section -->
         <div class="table-section">
-            <table v-if="csvData.length" class="csv-table">
+            <table v-if="paginatedData.length" class="csv-table">
                 <thead>
                     <tr>
                         <th v-for="(header, index) in csvHeaders" :key="index">{{ header }}</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr v-for="(row, rowIndex) in csvData" :key="rowIndex">
+                    <tr v-for="(row, rowIndex) in paginatedData" :key="rowIndex">
                         <td v-for="(value, colIndex) in row" :key="colIndex">{{ value }}</td>
                     </tr>
                 </tbody>
             </table>
             <!-- Pagination Controls -->
-            <div class="pagination-controls"
-                v-if="selectedRegion && csvData[selectedRegion] && csvData[selectedRegion].length">
+            <div class="pagination-controls" v-if="csvData.length">
                 <label for="rowsPerPage">Rows per page:</label>
                 <select v-model="rowsPerPage" @change="resetPagination">
-                    <option v-for="option in rowsPerPageOptions" :key="option" :value="option">{{ option }}</option>
+                    <option v-for="option in rowsPerPageOptions" :key="option" :value="option">
+                        {{ option }}
+                    </option>
                 </select>
                 <button @click="prevPage" :disabled="currentPage === 1">Previous</button>
                 <span>Page {{ currentPage }} of {{ totalPages }}</span>
@@ -68,38 +69,25 @@ export default {
     name: "AppraisalDistrict",
     data() {
         return {
-            selectedRegion: null,
-            csvHeaders: {
-                Tarrant: [],
-                Dallas: [],
-                Collin: [],
-                Harris: []
-            },
-            csvData: {
-                Tarrant: [],
-                Dallas: [],
-                Collin: [],
-                Harris: []
-            },
-            currentPage: 1,
-            rowsPerPage: 10,
-            rowsPerPageOptions: [10, 20, 50],
-            uploadRegion: "",
-            districts: ["Tarrant", "Dallas", "Collin", "Harris"],
-            selectedFile: null
+            csvHeaders: [], // Array to store table headers
+            csvData: [], // Array to store all rows of data
+            currentPage: 1, // Current page for pagination
+            rowsPerPage: 10, // Number of rows displayed per page
+            rowsPerPageOptions: [10, 20, 50], // Options for rows per page
+            selectedFile: null, // Currently selected file for upload
         };
     },
     computed: {
         paginatedData() {
-            if (!this.selectedRegion || !this.csvData[this.selectedRegion]) return [];
+            // Compute rows to display based on the current page and rows per page
             const start = (this.currentPage - 1) * this.rowsPerPage;
             const end = start + this.rowsPerPage;
-            return this.csvData[this.selectedRegion].slice(start, end);
+            return this.csvData.slice(start, end);
         },
         totalPages() {
-            if (!this.selectedRegion || !this.csvData[this.selectedRegion]) return 1;
-            return Math.ceil(this.csvData[this.selectedRegion].length / this.rowsPerPage);
-        }
+            // Calculate the total number of pages
+            return Math.ceil(this.csvData.length / this.rowsPerPage) || 1;
+        },
     },
     methods: {
         async downloadTAD() {
@@ -123,6 +111,9 @@ export default {
                     this.csvData = response.data.data.map((row) =>
                         Object.values(row).map((cell) => (cell !== null ? cell : "N/A"))
                     );
+
+                    // Reset pagination
+                    this.currentPage = 1;
                 }
             } catch (error) {
                 console.error("Error fetching data:", error);
