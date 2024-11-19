@@ -1,10 +1,5 @@
 <template>
   <div class="main-container">
-    <!-- File Upload Section -->
-    <div class="upload-section">
-      <input type="file" @change="handleFileSelection" accept=".xlsx, .xls, .csv" />
-    </div>
-
     <!-- Table and Pagination Section -->
     <div class="table-section" v-if="csvHeaders.length && csvData.length">
       <!-- Conditionally Rendered Table for CSV Data -->
@@ -57,7 +52,8 @@
 </template>
 
 <script>
-import * as XLSX from "xlsx";
+import axios from "axios";
+import Papa from "papaparse";
 
 export default {
   name: "AppraisalTable",
@@ -69,7 +65,6 @@ export default {
       currentPage: 1, // Current page for pagination
       rowsPerPage: 10, // Rows displayed per page
       rowsPerPageOptions: [10, 20, 50], // Options for pagination
-      selectedFile: null, // Currently selected file
     };
   },
   computed: {
@@ -83,29 +78,30 @@ export default {
     },
   },
   methods: {
-    handleFileSelection(event) {
-      this.selectedFile = event.target.files[0];
-      if (this.selectedFile) {
-        this.uploadFile();
+    async fetchCSVFile() {
+      try {
+        const response = await axios.get("http://127.0.0.1:8000/fetch-csv/", {
+          responseType: "blob", // Ensure response is treated as a binary file
+        });
+
+        // Read the file content using PapaParse
+        const reader = new FileReader();
+        reader.onload = () => {
+          Papa.parse(reader.result, {
+            header: true, // Extract headers dynamically
+            skipEmptyLines: true, // Skip empty rows
+            complete: (results) => {
+              this.csvHeaders = results.meta.fields; // Extract headers
+              this.csvData = results.data; // Extract rows
+              this.resetPagination();
+            },
+          });
+        };
+        reader.readAsText(response.data);
+      } catch (error) {
+        console.error("Error fetching CSV file:", error);
+        alert("Failed to load CSV file.");
       }
-    },
-    uploadFile() {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        const data = new Uint8Array(e.target.result);
-        const workbook = XLSX.read(data, { type: "array" });
-        const worksheet = workbook.Sheets[workbook.SheetNames[0]];
-        const csv = XLSX.utils.sheet_to_csv(worksheet);
-        this.parseCSV(csv);
-      };
-      reader.readAsArrayBuffer(this.selectedFile);
-    },
-    parseCSV(data) {
-      const rows = data.trim().split("\n");
-      this.csvHeaders = rows[0].split(",");
-      this.csvData = rows.slice(1).map((row) => row.split(","));
-      this.notes = Array(this.csvData.length).fill(""); // Initialize notes for each row
-      this.resetPagination();
     },
     nextPage() {
       if (this.currentPage < this.totalPages) this.currentPage++;
@@ -121,8 +117,14 @@ export default {
       alert("Notes saved successfully!");
     },
   },
+  mounted() {
+    // Automatically fetch the CSV file when the component is mounted
+    this.fetchCSVFile();
+  },
 };
 </script>
+
+
 
 <style scoped>
 .main-container {
