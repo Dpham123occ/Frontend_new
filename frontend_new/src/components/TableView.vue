@@ -56,7 +56,7 @@ import axios from "axios";
 import Papa from "papaparse";
 
 export default {
-  name: "AppraisalTable",
+  name: "TableView",
   data() {
     return {
       csvHeaders: [], // Array to store headers
@@ -80,7 +80,7 @@ export default {
   methods: {
     async fetchCSVFile() {
       try {
-        const response = await axios.get("http://127.0.0.1:8000/fetch-csv/", {
+        const response = await axios.get("http://127.0.0.1:8000/fetch-csv-all/", {
           responseType: "blob", // Ensure response is treated as a binary file
         });
 

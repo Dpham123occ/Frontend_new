@@ -7,6 +7,7 @@ import LightIndustrialMT from "../AcquisitionComponents/LightIndustrialMT.vue";
 import LightIndustrialUB from "../AcquisitionComponents/LightIndustrialUB.vue";
 import IOSExsisting from "../AcquisitionComponents/IOSExsisting.vue";
 import IOSDevelopment from "../AcquisitionComponents/IOSDevelopment.vue";
+import View from "../components/View.vue";
 
 const routes = [
   {
@@ -45,11 +46,15 @@ const routes = [
     name: 'IOS Exsiting',
     component: IOSExsisting,
   },
-
   {
     path: '/acquisition-list/IOSDevelopment', // Update to match component route
     name: 'IOS Development',
     component: IOSDevelopment,
+  },
+  {
+    path: '/view',
+    name: 'View',
+    component: View,
   },
 ];
 
