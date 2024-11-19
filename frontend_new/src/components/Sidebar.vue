@@ -6,7 +6,6 @@
     </div>
 
     <nav class="nav-menu">
-      <router-link to="/home" class="nav-item">Home</router-link>
       <router-link to="/appraisaldistrict" class="nav-item">Appraisal District</router-link>
       <router-link to="/acquisitionlist" class="nav-item">Acquisition List</router-link>
       <router-link to="/view" class="nav-item">View Reports</router-link>
