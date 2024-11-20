@@ -90,6 +90,16 @@ export default {
         },
     },
     methods: {
+        async spatialMerge() {
+            try {
+                const response = await axios.post(`http://127.0.0.1:8000/spatial-join`, {});
+                const data = response.data;
+                alert("The api has been successfully called with status code:" + data.statusCode);
+            } catch (error) {
+                console.error("Error calling API:", error);
+                alert("Failed to call API");
+            }
+        },
         async downloadTAD() {
             try {
                 const response = await axios.get(`http://127.0.0.1:8000/download-tad`);
