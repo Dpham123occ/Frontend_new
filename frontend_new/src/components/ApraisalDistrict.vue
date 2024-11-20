@@ -297,4 +297,25 @@ export default {
 .back-button:hover {
     background-color: #000;
 }
+
+.table-section {
+  margin-top: 20px;
+}
+
+.csv-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.csv-table th,
+.csv-table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
+}
+
+.csv-table th {
+  background-color: #f2f2f2;
+  font-weight: bold;
+}
 </style>
