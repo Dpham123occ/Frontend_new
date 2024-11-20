@@ -7,12 +7,11 @@
                 <img src="../assets/TSBlack.png" alt="Trailspur Logo" class="logo" />
             </div>
             <nav class="nav-menu">
-                <button class="nav-item underlined-item" @click="showTable">Tarrant</button>
+                <button class="nav-item underlined-item" @click="showTable">Display Tarrant's Vacancies</button>
                 <!-- <button class="nav-item underlined-item" @click="showTable('Dallas')">Dallas</button>
                 <button class="nav-item underlined-item" @click="showTable('Collin')">Collin</button>
                 <button class="nav-item underlined-item" @click="showTable('Harris')">Harris</button> -->
-                <button class="nav-item underlined-item" @click="downloadTAD">Download TAD Parcel - Make James' API
-                    call</button>
+                <button class="nav-item underlined-item" @click="downloadTAD">Download TAD Parcel </button>
                 <button class="nav-item underlined-item" @click="spatialMerge">Perform Spatial Merge</button>
                 <button class="nav-item back-button" @click="goback">Back</button>
             </nav>
@@ -303,8 +302,8 @@ export default {
 }
 
 .csv-table {
-  width: 100%;
-  border-collapse: collapse;
+    border-collapse: collapse; /* Ensures clean borders */
+    table-layout: auto; /* Allows automatic adjustment based on content */
 }
 
 .csv-table th,
@@ -317,5 +316,40 @@ export default {
 .csv-table th {
   background-color: #f2f2f2;
   font-weight: bold;
+  position: sticky;
+  top: 0; /* Keeps the header row at the top */
+  z-index: 1; /* Ensures the header stays above other content */
+  text-align: left; /* Aligns text to the left */
+  width: f;
+}
+
+.csv-table tbody {
+    display: block;
+    max-height: 50vh; /* Limits the table's height */
+    overflow-y: auto; /* Enables vertical scrolling */
+}
+
+.csv-table thead {
+    display: table; /* Ensures the header behaves like a table */
+    table-layout: fixed;
+    width: 100%; /* Matches the width of the body */
+}
+
+.csv-table tbody tr {
+    display: table; /* Ensures rows behave like a table */
+    table-layout: fixed; /* Matches the layout of the header */
+    width: 100%; /* Matches the header width */
+}
+
+.csv-table tbody tr:nth-child(even) {
+    background-color: #f9f9f9; /* Alternating row colors */
+}
+
+.csv-table tbody tr:hover {
+    background-color: #f1f1f1; /* Row hover effect */
+}
+
+.pagination-controls {
+    margin-top: 20px;
 }
 </style>
