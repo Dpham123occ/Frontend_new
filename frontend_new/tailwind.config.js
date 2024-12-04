@@ -2,8 +2,16 @@
 export default {
   content: [
     "./index.html",
-    "./**/*.{vue,js,ts,jsx,tsx}",
+    "./**/*.{vue,ts,jsx,tsx}",
   ],
-  plugins: [],
+  theme: {
+    extend: {},
+  },
+  plugins: [
+    require('daisyui'),
+  ],
+  daisyui: {
+    themes: ["light"],
+  },
 }
 

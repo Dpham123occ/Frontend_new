@@ -3,7 +3,9 @@
 </script>
 
 <template>
-  <LoginPage msg="Welcome to Trailspur" />
+  <html data-theme="coporate">
+    <LoginPage msg="Welcome to Trailspur" />
+  </html>
 </template>
 
 <style scoped>

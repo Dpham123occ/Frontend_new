@@ -1,10 +1,7 @@
 <template>
   <div class="main-container">
-    <!-- Table and Pagination Section -->
-    <div class="table-section" v-if="csvHeaders.length && csvData.length">
-      <!-- Conditionally Rendered Table for CSV Data -->
-      <table class="csv-table">
-        <caption>Uploaded Data</caption>
+    <div class="overflow-x-auto">
+      <table class="table table-xs">
         <thead>
           <tr>
             <th v-for="(header, index) in csvHeaders" :key="index">{{ header }}</th>
@@ -24,7 +21,10 @@
           </tr>
         </tbody>
       </table>
-
+    </div>
+    <!-- Table and Pagination Section -->
+    <div class="table-section" v-if="csvHeaders.length && csvData.length">
+      <!-- Conditionally Rendered Table for CSV Data -->
       <!-- Pagination Controls -->
       <div class="pagination-controls">
         <label for="rowsPerPage">Rows per page:</label>
@@ -140,44 +140,6 @@ export default {
 
 .table-section {
   margin-top: 20px;
-}
-
-.csv-table {
-  width: 100%;
-  height: 70vh;
-  border-collapse: collapse; /* Removes gaps between borders */
-  table-layout: auto; /* Allows column widths to adjust dynamically based on content */
-}
-
-.csv-table th,
-.csv-table td {
-  border: 1px solid #ddd;
-  padding: 8px;
-  text-align: left;
-  white-space: nowrap; /* Prevents text wrapping */
-  overflow: hidden; /* Ensures no content overflow */
-}
-
-.csv-table th {
-  background-color: #f2f2f2;
-  font-weight: bold;
-  position: sticky;
-  top: 0; /* Keeps the header at the top */
-  z-index: 1; /* Ensures the header is above content */
-}
-
-.csv-table tbody {
-  max-height: 50vh; /* Limits the table body height */
-  overflow-y: auto; /* Adds vertical scrolling */
-  overflow-x: auto; /* Enables vertical scrolling */
-}
-
-.csv-table tbody tr:nth-child(even) {
-  background-color: #f9f9f9; /* Alternating row colors for readability */
-}
-
-.csv-table tbody tr:hover {
-  background-color: #f1f1f1; /* Highlights the row on hover */
 }
 
 textarea {

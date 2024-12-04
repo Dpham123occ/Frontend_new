@@ -6,20 +6,20 @@
             <div class="logo-section">
                 <img src="../assets/TSBlack.png" alt="Trailspur Logo" class="logo" />
             </div>
-            <nav class="nav-menu">
-                <button class="nav-item underlined-item" @click="showTable">Display Tarrant's Vacancies</button>
+            <nav class>
+                <button class="nav-item" @click="showTable">Display Tarrant's Vacancies</button>
                 <!-- <button class="nav-item underlined-item" @click="showTable('Dallas')">Dallas</button>
                 <button class="nav-item underlined-item" @click="showTable('Collin')">Collin</button>
                 <button class="nav-item underlined-item" @click="showTable('Harris')">Harris</button> -->
-                <button class="nav-item underlined-item" @click="downloadTAD">Download TAD Parcel </button>
-                <button class="nav-item underlined-item" @click="spatialMerge">Perform Spatial Merge</button>
-                <button class="nav-item back-button" @click="goback">Back</button>
+                <button class="nav-item" @click="downloadTAD">Download TAD Parcel </button>
+                <button class="nav-item" @click="spatialMerge">Perform Spatial Merge</button>
+                <button class="nav-item" @click="goback">Back</button>
             </nav>
         </div>
 
         <!-- Table and Buttons Section -->
-        <div class="table-section">
-            <table v-if="paginatedData.length" class="csv-table">
+        <div class="overflow-x-auto">
+            <table v-if="paginatedData.length" class="table table-s">
                 <thead>
                     <tr>
                         <th v-for="(header, index) in csvHeaders" :key="index">{{ header }}</th>
@@ -32,16 +32,16 @@
                 </tbody>
             </table>
             <!-- Pagination Controls -->
-            <div class="pagination-controls" v-if="csvData.length">
+            <div class="" v-if="csvData.length">
                 <label for="rowsPerPage">Rows per page:</label>
                 <select v-model="rowsPerPage" @change="resetPagination">
                     <option v-for="option in rowsPerPageOptions" :key="option" :value="option">
                         {{ option }}
                     </option>
                 </select>
-                <button @click="prevPage" :disabled="currentPage === 1">Previous</button>
+                <button class="bth btn-md" @click="prevPage" :disabled="currentPage === 1">Previous</button>
                 <span>Page {{ currentPage }} of {{ totalPages }}</span>
-                <button @click="nextPage" :disabled="currentPage === totalPages">Next</button>
+                <button class="bth btn-md" @click="nextPage" :disabled="currentPage === totalPages">Next</button>
             </div>
 
             <!-- Upload & Download Buttons -->
@@ -265,7 +265,6 @@ export default {
     color: #231f20;
     text-align: left;
     font-weight: bold;
-    text-decoration: underline;
     font-size: 1.0rem;
     font-family: 'Brother 1816 Reg', sans-serif;
     cursor: pointer;
@@ -299,54 +298,6 @@ export default {
 
 .table-section {
   margin-top: 20px;
-}
-
-.csv-table {
-    border-collapse: collapse; /* Ensures clean borders */
-    table-layout: auto; /* Allows automatic adjustment based on content */
-}
-
-.csv-table th,
-.csv-table td {
-  border: 1px solid #ddd;
-  padding: 8px;
-  text-align: left;
-}
-
-.csv-table th {
-  background-color: #f2f2f2;
-  font-weight: bold;
-  position: sticky;
-  top: 0; /* Keeps the header row at the top */
-  z-index: 1; /* Ensures the header stays above other content */
-  text-align: left; /* Aligns text to the left */
-  width: f;
-}
-
-.csv-table tbody {
-    display: block;
-    max-height: 50vh; /* Limits the table's height */
-    overflow-y: auto; /* Enables vertical scrolling */
-}
-
-.csv-table thead {
-    display: table; /* Ensures the header behaves like a table */
-    table-layout: fixed;
-    width: 100%; /* Matches the width of the body */
-}
-
-.csv-table tbody tr {
-    display: table; /* Ensures rows behave like a table */
-    table-layout: fixed; /* Matches the layout of the header */
-    width: 100%; /* Matches the header width */
-}
-
-.csv-table tbody tr:nth-child(even) {
-    background-color: #f9f9f9; /* Alternating row colors */
-}
-
-.csv-table tbody tr:hover {
-    background-color: #f1f1f1; /* Row hover effect */
 }
 
 .pagination-controls {
