@@ -80,38 +80,6 @@ const routes = [
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes,
-  parseQuery(query) {
-    const parsedQuery = {}
-    query.split('&').forEach((param) => {
-      const [key, value] = param.split('=')
-      parsedQuery[key] = value
-    })
-    return parsedQuery
-  },
-  stringifyQuery(obj) {
-    const params = []
-    Object.keys(obj).forEach((key) => {
-      params.push(`${key}=${obj[key]}`)
-    })
-    return params.join('&')
-  },
-  scrollBehavior(to, from, savedPosition) {
-    if (savedPosition) {
-      return savedPosition
-    } else {
-      return { x: 0, y: 0 }
-    }
-  },
-  async beforeResolve(to, from) {
-    if (to.name === 'homeCallback') {
-      const { getAccessTokenSilently } = useAuth0()
-      const token = await getAccessTokenSilently()
-      // Use the token to authenticate the user
-      // ...
-      // Redirect to the homepage
-      await router.push({ name: 'HomePage' })
-    }
-  }
 })
 
 export default router
