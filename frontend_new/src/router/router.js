@@ -38,7 +38,7 @@ const routes = [
         next()
       }
     }
-  }
+  },
   {
     path: '/appraisaldistrict',
     name: 'Appraisal District',
