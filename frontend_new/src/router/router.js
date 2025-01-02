@@ -8,7 +8,6 @@ import LightIndustrialUB from "../AcquisitionComponents/LightIndustrialUB.vue";
 import IOSExsisting from "../AcquisitionComponents/IOSExsisting.vue";
 import IOSDevelopment from "../AcquisitionComponents/IOSDevelopment.vue";
 import View from "../components/View.vue";
-import { useAuth0 } from "@auth0/auth0-vue";
 
 const routes = [
   {
@@ -20,25 +19,6 @@ const routes = [
     path: '/home',
     name: 'home',
     component: HomePage,
-    beforeEnter: async (to, from, next) => {
-      if (to.query.code && to.query.state) {
-        const { getAccessTokenSilently } = useAuth0()
-        try {
-          const token = await getAccessTokenSilently({
-            code: to.query.code,
-            state: to.query.state,
-          })
-          // Remove the code and state from the URL path
-          const cleanPath = to.path
-          next({ path: cleanPath, replace: true })
-        } catch (error) {
-          console.error(error)
-          next()
-        }
-      } else {
-        next()
-      }
-    }
   },
   {
     path: '/appraisaldistrict',
