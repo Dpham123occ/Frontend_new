@@ -8,6 +8,7 @@ import LightIndustrialUB from "../AcquisitionComponents/LightIndustrialUB.vue";
 import IOSExsisting from "../AcquisitionComponents/IOSExsisting.vue";
 import IOSDevelopment from "../AcquisitionComponents/IOSDevelopment.vue";
 import View from "../components/View.vue";
+import { useAuth0 } from "@auth0/auth0-vue";
 
 const routes = [
   {
