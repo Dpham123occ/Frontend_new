@@ -17,6 +17,7 @@ const handleLogin = () => {
             target: './home'
         }
     })
+    window.history.replaceState({}, '', './home')
 }
 </script>
 
