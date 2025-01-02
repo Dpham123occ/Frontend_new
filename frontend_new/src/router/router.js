@@ -17,9 +17,28 @@ const routes = [
   },
   {
     path: '/home',
-    name: 'HomePage',
-    component: HomePage
-  },
+    name: 'home',
+    component: HomePage,
+    beforeEnter: async (to, from, next) => {
+      if (to.query.code && to.query.state) {
+        const { getAccessTokenSilently } = useAuth0()
+        try {
+          const token = await getAccessTokenSilently({
+            code: to.query.code,
+            state: to.query.state,
+          })
+          // Remove the code and state from the URL path
+          const cleanPath = to.path
+          next({ path: cleanPath, replace: true })
+        } catch (error) {
+          console.error(error)
+          next()
+        }
+      } else {
+        next()
+      }
+    }
+  }
   {
     path: '/appraisaldistrict',
     name: 'Appraisal District',
@@ -61,6 +80,38 @@ const routes = [
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes,
+  parseQuery(query) {
+    const parsedQuery = {}
+    query.split('&').forEach((param) => {
+      const [key, value] = param.split('=')
+      parsedQuery[key] = value
+    })
+    return parsedQuery
+  },
+  stringifyQuery(obj) {
+    const params = []
+    Object.keys(obj).forEach((key) => {
+      params.push(`${key}=${obj[key]}`)
+    })
+    return params.join('&')
+  },
+  scrollBehavior(to, from, savedPosition) {
+    if (savedPosition) {
+      return savedPosition
+    } else {
+      return { x: 0, y: 0 }
+    }
+  },
+  async beforeResolve(to, from) {
+    if (to.name === 'homeCallback') {
+      const { getAccessTokenSilently } = useAuth0()
+      const token = await getAccessTokenSilently()
+      // Use the token to authenticate the user
+      // ...
+      // Redirect to the homepage
+      await router.push({ name: 'HomePage' })
+    }
+  }
 })
 
 export default router
