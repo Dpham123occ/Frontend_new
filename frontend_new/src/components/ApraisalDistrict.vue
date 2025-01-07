@@ -1,5 +1,5 @@
 <template>
-    <div class="main-container">
+    <div class="flex gap-2-px">
         <!-- Vertical Navigation Bar -->
         <div class="sidebar">
             <!-- Logo Section -->
@@ -32,29 +32,30 @@
                 </tbody>
             </table>
             <!-- Pagination Controls -->
-            <div class="" v-if="csvData.length">
+            <div class="join" v-if="csvData.length">
                 <label for="rowsPerPage">Rows per page:</label>
                 <select v-model="rowsPerPage" @change="resetPagination">
                     <option v-for="option in rowsPerPageOptions" :key="option" :value="option">
                         {{ option }}
                     </option>
                 </select>
-                <button class="bth btn-md" @click="prevPage" :disabled="currentPage === 1">Previous</button>
+                <button class="btn btn-s" @click="prevPage" :disabled="currentPage === 1">Previous</button>
                 <span>Page {{ currentPage }} of {{ totalPages }}</span>
-                <button class="bth btn-md" @click="nextPage" :disabled="currentPage === totalPages">Next</button>
+                <button class="btn btn-s" @click="nextPage" :disabled="currentPage === totalPages">Next</button>
             </div>
 
             <!-- Upload & Download Buttons -->
-            <div class="button-group">
+
+            <div class="join">
                 <!-- <label for="districtSelect">Select District:</label>
                 <select v-model="uploadRegion" id="districtSelect">
                     <option disabled value="">Select a district</option>
                     <option v-for="district in districts" :key="district" :value="district">{{ district }}</option>
                 </select> -->
-                <input type="file" @change="handleFileSelection" accept=".xlsx, .xls, .csv" />
-                <button @click="uploadFile">Upload Costar Vacancies
+                <input type="file" class="join-item file-input file-input-bordered" @change="handleFileSelection" accept=".xlsx, .xls, .csv" />
+                <button class="btn btn-s join-item" @click="uploadFile">Upload Costar Vacancies
                     Report</button>
-                <button @click="downloadVacanciesReport">Download Vacancies Report</button>
+                <button class="btn btn-s join-item" @click="downloadVacanciesReport">Download Vacancies Report</button>
             </div>
         </div>
     </div>

@@ -1,4 +1,4 @@
-<<template>
+<template>
     <div>
         <button class="logout-button" @click="handleLogout">Log Out</button>
     </div>

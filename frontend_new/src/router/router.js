@@ -17,8 +17,8 @@ const routes = [
   },
   {
     path: '/home',
-    name: 'home',
-    component: HomePage,
+    name: 'HomePage',
+    component: HomePage
   },
   {
     path: '/appraisaldistrict',

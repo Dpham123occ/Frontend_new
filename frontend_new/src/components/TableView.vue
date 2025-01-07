@@ -147,7 +147,6 @@ textarea {
   resize: none; /* Prevents resizing */
 }
 
-
 textarea {
   width: 100%;
   resize: none;
