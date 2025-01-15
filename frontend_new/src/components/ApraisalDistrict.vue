@@ -1,7 +1,7 @@
 <template>
-    <div class="flex gap-2-px">
+    <div class="grid grid-cols-5 gap-2-px">
         <!-- Vertical Navigation Bar -->
-        <div class="sidebar">
+        <div class="row-span-5 flex sidebar">
             <!-- Logo Section -->
             <div class="logo-section">
                 <img src="../assets/TSBlack.png" alt="Trailspur Logo" class="logo" />
@@ -18,7 +18,7 @@
         </div>
 
         <!-- Table and Buttons Section -->
-        <div class="overflow-x-auto">
+        <div class="col-start-2 col-end-5 rows-start-1 rows-end-3">
             <table v-if="paginatedData.length" class="table table-s">
                 <thead>
                     <tr>
@@ -32,7 +32,7 @@
                 </tbody>
             </table>
             <!-- Pagination Controls -->
-            <div class="join" v-if="csvData.length">
+            <div class="col-start-2 col-end-5 rows-start-4 rows-end-4 col-span-4 join" v-if="csvData.length">
                 <label for="rowsPerPage">Rows per page:</label>
                 <select v-model="rowsPerPage" @change="resetPagination">
                     <option v-for="option in rowsPerPageOptions" :key="option" :value="option">
@@ -45,8 +45,7 @@
             </div>
 
             <!-- Upload & Download Buttons -->
-
-            <div class="join">
+            <div class="col-start-2 col-end-5 rows-start-5 rows-end-5 col-span-4 join">
                 <!-- <label for="districtSelect">Select District:</label>
                 <select v-model="uploadRegion" id="districtSelect">
                     <option disabled value="">Select a district</option>
@@ -226,11 +225,7 @@ export default {
 
 
 <style scoped>
-.main-container {
-    display: grid;
-    grid-template-columns: 1fr 3fr;
-    gap: 20px;
-}
+
 
 .sidebar {
     width: 220px;
@@ -239,8 +234,8 @@ export default {
     display: flex;
     flex-direction: column;
     align-items: center;
+    height:100vh;
     box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
-    height: 100vh;
 }
 
 .logo-section {
