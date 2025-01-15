@@ -7,7 +7,7 @@
                 <img src="../assets/TSBlack.png" alt="Trailspur Logo" class="logo" />
             </div>
             <nav class>
-                <button class="nav-item" @click="showTable">Display Tarrant's Vacancies</button>
+                <button class="btn nav-item" @click="showTable">Display Tarrant's Vacancies</button>
                 <!-- <button class="nav-item underlined-item" @click="showTable('Dallas')">Dallas</button>
                 <button class="nav-item underlined-item" @click="showTable('Collin')">Collin</button>
                 <button class="nav-item underlined-item" @click="showTable('Harris')">Harris</button> -->
