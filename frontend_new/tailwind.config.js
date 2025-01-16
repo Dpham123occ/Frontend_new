@@ -1,3 +1,12 @@
-export const content = ['./src/**/*.{vue,js,ts}'];
-export const plugins = [require('daisyui')];
-export const themes = ["light", "dark"];
+export default {
+    theme: {
+      extend: {
+        colors: {
+          'side-bar': '#d1dede',
+        },
+      }
+    },
+    content: ['./src/**/*.{vue,js,ts}'],
+    plugins: [require('daisyui')],
+    themes: ["light", "dark"]
+  }

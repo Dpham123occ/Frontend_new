@@ -1,13 +1,13 @@
 <template>
-    <div class="grid grid-cols-5 gap-2-px">
+    <div class="grid grid-cols-6 gap-20-px">
         <!-- Vertical Navigation Bar -->
-        <div class="row-span-5 flex sidebar">
+        <div class="row-span-5 w-275 bg-side-bar p-4 flex flex-col items-center shadow-md h-screen">
             <!-- Logo Section -->
             <div class="logo-section">
                 <img src="../assets/TSBlack.png" alt="Trailspur Logo" class="logo" />
             </div>
             <nav class>
-                <button class="btn nav-item" @click="showTable">Display Tarrant's Vacancies</button>
+                <button class="nav-item" @click="showTable">Display Tarrant's Vacancies</button>
                 <!-- <button class="nav-item underlined-item" @click="showTable('Dallas')">Dallas</button>
                 <button class="nav-item underlined-item" @click="showTable('Collin')">Collin</button>
                 <button class="nav-item underlined-item" @click="showTable('Harris')">Harris</button> -->
@@ -18,27 +18,24 @@
         </div>
 
         <!-- Table and Buttons Section -->
-        <div class="col-start-2 col-end-5 rows-start-1 rows-end-3">
-            <table v-if="paginatedData.length" class="table table-s">
-                <thead>
+        <div class="col-start-2 col-span-3 rows-start-1 row-span-3">
+            <table v-if="paginatedData.length" class="table-auto table-xs">
+                <thead class="bg-gray-100">
                     <tr>
                         <th v-for="(header, index) in csvHeaders" :key="index">{{ header }}</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr v-for="(row, rowIndex) in paginatedData" :key="rowIndex">
-                        <td v-for="(value, colIndex) in row" :key="colIndex">{{ value }}</td>
+                    <tr v-for="(row, rowIndex) in paginatedData" :key="rowIndex"
+                        :class="{ 'bg-gray-100': rowIndex % 2 === 0 }">
+                        <td v-for="(value, colIndex) in row" :key="colIndex">
+                            {{ value }}
+                        </td>
                     </tr>
                 </tbody>
             </table>
             <!-- Pagination Controls -->
-            <div class="col-start-2 col-end-5 rows-start-4 rows-end-4 col-span-4 join" v-if="csvData.length">
-                <label for="rowsPerPage">Rows per page:</label>
-                <select v-model="rowsPerPage" @change="resetPagination">
-                    <option v-for="option in rowsPerPageOptions" :key="option" :value="option">
-                        {{ option }}
-                    </option>
-                </select>
+            <div class="col-start-2 col-end-5 rows-start-4 rows-end-4 col-span-4" v-if="csvData.length">
                 <button class="btn btn-s" @click="prevPage" :disabled="currentPage === 1">Previous</button>
                 <span>Page {{ currentPage }} of {{ totalPages }}</span>
                 <button class="btn btn-s" @click="nextPage" :disabled="currentPage === totalPages">Next</button>
@@ -51,7 +48,8 @@
                     <option disabled value="">Select a district</option>
                     <option v-for="district in districts" :key="district" :value="district">{{ district }}</option>
                 </select> -->
-                <input type="file" class="join-item file-input file-input-bordered" @change="handleFileSelection" accept=".xlsx, .xls, .csv" />
+                <input type="file" class="join-item file-input file-input-bordered" @change="handleFileSelection"
+                    accept=".xlsx, .xls, .csv" />
                 <button class="btn btn-s join-item" @click="uploadFile">Upload Costar Vacancies
                     Report</button>
                 <button class="btn btn-s join-item" @click="downloadVacanciesReport">Download Vacancies Report</button>
@@ -71,7 +69,7 @@ export default {
             csvHeaders: [], // Array to store table headers
             csvData: [], // Array to store all rows of data
             currentPage: 1, // Current page for pagination
-            rowsPerPage: 10, // Number of rows displayed per page
+            rowsPerPage: 15, // Number of rows displayed per page
             rowsPerPageOptions: [10, 20, 50], // Options for rows per page
             selectedFile: null, // Currently selected file for upload
         };
@@ -225,19 +223,6 @@ export default {
 
 
 <style scoped>
-
-
-.sidebar {
-    width: 220px;
-    background-color: #d1dede;
-    padding: 2rem 1rem;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    height:100vh;
-    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
-}
-
 .logo-section {
     margin-bottom: 2rem;
 }
@@ -293,7 +278,7 @@ export default {
 }
 
 .table-section {
-  margin-top: 20px;
+    margin-top: 20px;
 }
 
 .pagination-controls {
