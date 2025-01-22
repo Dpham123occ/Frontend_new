@@ -1,7 +1,7 @@
 <template>
     <div class="grid grid-cols-6 gap-20-px">
         <!-- Vertical Navigation Bar -->
-        <div class="row-span-5 w-275 bg-side-bar p-4 flex flex-col items-center shadow-md h-screen">
+        <div class="row-span-5 bg-side-bar p-4 flex flex-col items-center h-screen">
             <!-- Logo Section -->
             <div class="logo-section">
                 <img src="../assets/TSBlack.png" alt="Trailspur Logo" class="logo" />
