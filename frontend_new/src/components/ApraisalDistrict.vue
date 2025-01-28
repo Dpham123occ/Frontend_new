@@ -111,7 +111,7 @@ export default {
     },
     async showTable() {
       try {
-        const response = await axios.get("http://127.0.0.1:8000/get-data/");
+        const response = await axios.get("http://127.0.0.1:8000/fetch-costar-data/");
         if (response.data.status === "success") {
           this.csvHeaders = Object.keys(response.data.data[0]);
           this.csvData = response.data.data.map((row) =>
