@@ -42,7 +42,7 @@
                 </tbody>
             </table>
             <!-- Pagination Controls -->
-            <div class="col-start-2 col-end-5 rows-start-4 rows-end-4 col-span-4" v-if="csvData.length">
+            <div class="col-start-2 col-end-5 rows-start-4 rows-end-4 col-span-4 flex justify-center items-center gap-4" v-if="csvData.length">
                 <button class="btn btn-s" @click="prevPage" :disabled="currentPage === 1">Previous</button>
                 <span>Page {{ currentPage }} of {{ totalPages }}</span>
                 <button class="btn btn-s" @click="nextPage" :disabled="currentPage === totalPages">Next</button>
