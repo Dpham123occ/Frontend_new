@@ -42,23 +42,22 @@
                 </tbody>
             </table>
             <!-- Pagination Controls -->
-            <div class="col-start-2 col-end-5 rows-start-4 rows-end-4 col-span-4" v-if="csvData.length">
+            <div class="col-start-2 col-end-5 rows-start-4 rows-end-4 col-span-4 flex justify-center items-center gap-4" v-if="csvData.length">
                 <button class="btn btn-s" @click="prevPage" :disabled="currentPage === 1">Previous</button>
                 <span>Page {{ currentPage }} of {{ totalPages }}</span>
                 <button class="btn btn-s" @click="nextPage" :disabled="currentPage === totalPages">Next</button>
             </div>
 
-            <!-- Upload & Download Buttons -->
+            <!-- Upload & Process& Download Buttons -->
             <div class="col-start-2 col-end-5 rows-start-5 rows-end-5 col-span-4 join">
                 <!-- <label for="districtSelect">Select District:</label>
                 <select v-model="uploadRegion" id="districtSelect">
                     <option disabled value="">Select a district</option>
                     <option v-for="district in districts" :key="district" :value="district">{{ district }}</option>
                 </select> -->
-                <input type="file" class="join-item file-input file-input-bordered" @change="handleFileSelection"
-                    accept=".xlsx, .xls, .csv" />
-                <button class="btn btn-s join-item" @click="uploadFile">Upload Costar Vacancies
-                    Report</button>
+                <input type="file" class="join-item file-input file-input-bordered" @change="handleFileSelection" accept=".xlsx, .xls, .csv" />
+                <button class="btn btn-s join-item" @click="uploadFile">Upload Costar Vacancies Report</button>
+                <button class="btn btn-s join-item" @click="processVacanciesReport">Process Vacancies Report</button>
                 <button class="btn btn-s join-item" @click="downloadVacanciesReport">Download Vacancies Report</button>
             </div>
         </div>
@@ -134,9 +133,8 @@ export default {
       if (this.selectedFile) {
         const formData = new FormData();
         formData.append("file", this.selectedFile);
-
         try {
-          const response = await axios.post("http://127.0.0.1:8000/upload-excel/", formData, {
+          const response = await axios.post("http://127.0.0.1:8000/upload-costar-file/", formData, {
             headers: {
               "Content-Type": "multipart/form-data",
             },
@@ -148,6 +146,15 @@ export default {
         }
       } else {
         alert("Please select a file to upload.");
+      }
+    },
+    async processVacanciesReport() {
+      try {
+        const response = await axios.post("http://127.0.0.1:8000/process-costar-file/");
+        alert(response.data.message);
+      } catch (error) {
+        console.error("Error processing file:", error.message);
+        alert("An error occurred while processing the file.");
       }
     },
     nextPage() {
