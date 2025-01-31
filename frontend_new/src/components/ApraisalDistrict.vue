@@ -135,6 +135,7 @@ export default {
         formData.append("file", this.selectedFile);
 
         try {
+duy-branch
           const response = await axios.post("http://127.0.0.1:8000/upload-costar-file/", formData, {
             headers: {
               "Content-Type": "multipart/form-data",
@@ -157,7 +158,7 @@ export default {
         console.error("Error processing file:", error.message);
         alert("An error occurred while processing the file.");
       }
-    },
+    },=
     nextPage() {
       if (this.currentPage < this.totalPages) this.currentPage++;
     },
