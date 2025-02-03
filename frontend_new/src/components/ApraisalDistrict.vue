@@ -1,14 +1,14 @@
 <template>
-  <div class="grid grid-cols-6">
+  <div class="grid grid-cols-6 h-screen">
     <!-- Sidebar Container -->
-    <div class="sidebar-container col-span-1">
+    <div class="sidebar-container col-span-1 bg-gray-200 p-4 flex flex-col">
       <!-- Logo Section -->
       <div class="logo-section">
         <img src="../assets/TSBlack.png" alt="Trailspur Logo" class="logo" />
       </div>
 
       <!-- Nav Items -->
-      <nav class="nav-menu">
+      <nav class="nav-menu flex flex-col gap-2">
         <button class="nav-item" @click="showTable">
           Display Tarrant's Vacancies
         </button>
@@ -22,45 +22,48 @@
           Back
         </button>
       </nav>
-    </div>  
+    </div>
 
     <!-- Table and Buttons Section -->
-    <div class="col-start-2 col-span-3 rows-start-1 row-span-3">
-            <table v-if="paginatedData.length" class="table-auto table-xs">
-                <thead class="bg-gray-100">
-                    <tr>
-                        <th v-for="(header, index) in csvHeaders" :key="index">{{ header }}</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr v-for="(row, rowIndex) in paginatedData" :key="rowIndex"
-                        :class="{ 'bg-gray-100': rowIndex % 2 === 0 }">
-                        <td v-for="(value, colIndex) in row" :key="colIndex">
-                            {{ value }}
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-            <!-- Pagination Controls -->
-            <div class="col-start-2 col-end-5 rows-start-4 rows-end-4 col-span-4 flex justify-center items-center gap-4" v-if="csvData.length">
-                <button class="btn btn-s" @click="prevPage" :disabled="currentPage === 1">Previous</button>
-                <span>Page {{ currentPage }} of {{ totalPages }}</span>
-                <button class="btn btn-s" @click="nextPage" :disabled="currentPage === totalPages">Next</button>
-            </div>
+    <div class="col-start-2 col-span-5 flex flex-col h-screen p-4">
+      <div class="flex-grow overflow-auto">
+        <table v-if="paginatedData.length" class="overflow-x-auto table table-md">
+          <thead class="bg-gray-100">
+            <tr>
+              <th v-for="(header, index) in csvHeaders" :key="index">{{ header }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="(row, rowIndex) in paginatedData" :key="rowIndex" :class="{ 'bg-gray-100': rowIndex % 2 === 0 }">
+              <td v-for="(value, colIndex) in row" :key="colIndex">
+                {{ value }}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <!-- Pagination Controls -->
+        <div class="col-start-2 col-end-5 rows-start-4 rows-end-4 col-span-4 flex justify-center items-center gap-4"
+          v-if="csvData.length">
+          <button class="btn btn-s" @click="prevPage" :disabled="currentPage === 1">Previous</button>
+          <span>Page {{ currentPage }} of {{ totalPages }}</span>
+          <button class="btn btn-s" @click="nextPage" :disabled="currentPage === totalPages">Next</button>
+        </div>
 
-            <!-- Upload & Process& Download Buttons -->
-            <div class="col-start-2 col-end-5 rows-start-5 rows-end-5 col-span-4 join">
-                <!-- <label for="districtSelect">Select District:</label>
+        <!-- Upload & Process& Download Buttons -->
+        <div class="col-start-2 col-end-5 rows-start-5 rows-end-5 col-span-4 join">
+          <!-- <label for="districtSelect">Select District:</label>
                 <select v-model="uploadRegion" id="districtSelect">
                     <option disabled value="">Select a district</option>
                     <option v-for="district in districts" :key="district" :value="district">{{ district }}</option>
                 </select> -->
-                <input type="file" class="join-item file-input file-input-bordered" @change="handleFileSelection" accept=".xlsx, .xls, .csv" />
-                <button class="btn btn-s join-item" @click="uploadFile">Upload Costar Vacancies Report</button>
-                <button class="btn btn-s join-item" @click="processVacanciesReport">Process Vacancies Report</button>
-                <button class="btn btn-s join-item" @click="downloadVacanciesReport">Download Vacancies Report</button>
-            </div>
+          <input type="file" class="join-item file-input file-input-bordered" @change="handleFileSelection"
+            accept=".xlsx, .xls, .csv" />
+          <button class="btn btn-s join-item" @click="uploadFile">Upload Costar Vacancies Report</button>
+          <button class="btn btn-s join-item" @click="processVacanciesReport">Process Vacancies Report</button>
+          <button class="btn btn-s join-item" @click="downloadVacanciesReport">Download Vacancies Report</button>
         </div>
+      </div>
+    </div>
   </div>
 </template>
 
