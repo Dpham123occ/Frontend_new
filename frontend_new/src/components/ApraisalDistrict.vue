@@ -9,16 +9,16 @@
 
       <!-- Nav Items -->
       <nav class="nav-menu flex flex-col gap-2">
-        <button class="nav-item" @click="showTable">
+        <button class="nav-item bg-button" @click="showTable">
           Display Tarrant's Vacancies
         </button>
-        <button class="nav-item" @click="downloadTAD">
+        <button class="nav-item bg-button" @click="downloadTAD">
           Download TAD Parcel
         </button>
-        <button class="nav-item" @click="spatialMerge">
+        <button class="nav-item bg-button" @click="spatialMerge">
           Perform Spatial Merge
         </button>
-        <button class="nav-item back-button" @click="goback">
+        <button class="nav-item bg-button back-button" @click="goback">
           Back
         </button>
       </nav>
@@ -134,18 +134,28 @@ export default {
     },
     async uploadFile() {
       if (this.selectedFile) {
-        const formData = new FormData();
-        formData.append("file", this.selectedFile);
-        try {
-          const response = await axios.post("http://127.0.0.1:8000/upload-costar-file/", formData, {
-            headers: {
-              "Content-Type": "multipart/form-data",
-            },
-          });
-          alert(response.data.message);
-        } catch (error) {
-          console.error("Error uploading file:", error.message);
-          alert("An error occurred while uploading the file.");
+        const file = this.selectedFile; 
+        const fileName = this.selectedFile.name;
+
+        const supabaseUrl = import.meta.env.VITE_SUPABASE_URL; 
+        const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+        const bucketName = 'CoStarCSV';
+
+        const uploadUrl = `${supabaseUrl}/storage/v1/object/${bucketName}/${fileName}`;
+
+        const response = await fetch(uploadUrl, {
+          method: "PUT",
+          headers: {
+            "Authorization": `Bearer ${supabaseKey}`,
+            "Content-Type": "text/csv"
+          },
+          body: file
+        });
+
+        if (response.ok) {
+          console.log("File uploaded successfully!");
+        } else {
+          console.error("Upload failed", await response.text());
         }
       } else {
         alert("Please select a file to upload.");
