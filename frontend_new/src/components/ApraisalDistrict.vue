@@ -134,10 +134,10 @@ export default {
     },
     async uploadFile() {
       if (this.selectedFile) {
-        const file = this.selectedFile; 
+        const file = this.selectedFile;
         const fileName = this.selectedFile.name;
 
-        const supabaseUrl = import.meta.env.VITE_SUPABASE_URL; 
+        const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
         const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
         const bucketName = 'CoStarCSV';
 
@@ -162,12 +162,16 @@ export default {
       }
     },
     async processVacanciesReport() {
-      try {
-        const response = await axios.post("http://127.0.0.1:8000/process-costar-file/");
-        alert(response.data.message);
-      } catch (error) {
-        console.error("Error processing file:", error.message);
-        alert("An error occurred while processing the file.");
+      if (!this.selectedFile) {
+        alert("Please select a file to process.");
+      } else {
+        try {
+          const response = await axios.post("http://127.0.0.1:8000/process-costar-file/");
+          alert(response.data.message);
+        } catch (error) {
+          console.error("Error processing file:", error.message);
+          alert("An error occurred while processing the file.");
+        }
       }
     },
     nextPage() {
