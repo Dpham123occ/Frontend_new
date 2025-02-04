@@ -3,10 +3,9 @@
     <!-- Sidebar Container -->
     <div class="sidebar-container col-span-1 bg-gray-200 p-4 flex flex-col">
       <!-- Logo Section -->
-      <div class="logo-section">
+      <router-link to="/home">
         <img src="../assets/TSBlack.png" alt="Trailspur Logo" class="logo" />
-      </div>
-
+      </router-link>
       <!-- Nav Items -->
       <nav class="nav-menu flex flex-col gap-2">
         <button class="nav-item bg-button" @click="showTable">

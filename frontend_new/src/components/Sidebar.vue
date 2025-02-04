@@ -2,7 +2,9 @@
   <div class="sidebar-container">
     <!-- Logo Section -->
     <div class="logo-section">
-      <img src="../assets/TSBlack.png" alt="Trailspur Logo" class="logo" />
+      <router-link to="/home">
+        <img src="../assets/TSBlack.png" alt="Trailspur Logo" class="logo" />
+      </router-link>
     </div>
     <nav class="nav-menu">
       <router-link to="/appraisaldistrict" class="nav-item">
@@ -19,20 +21,11 @@
       </router-link>
 
       <!-- Conditional Buttons -->
-      <button
-        v-if="isHomePage"
-        class="nav-item logout-button"
-
-        @click="logOut"
-      >
+      <button v-if="isHomePage" class="nav-item logout-button" @click="logOut">
 
         Log Out
       </button>
-      <button
-        v-else
-        class="nav-item back-button"
-        @click="goBack"
-      >
+      <button v-else class="nav-item back-button" @click="goBack">
         Back
       </button>
     </nav>
@@ -51,8 +44,7 @@ export default {
     const route = useRoute();
     const router = useRouter();
     const isHomePage = route.path === '/home';
-    const logOut = () =>
-    {
+    const logOut = () => {
       logout({ returnTo: window.location.origin });
     };
 
@@ -68,7 +60,8 @@ export default {
 <style scoped>
 /* Container for the sidebar */
 .sidebar-container {
-  width: 250px; /* or 220px, if you prefer a narrower bar */
+  width: 250px;
+  /* or 220px, if you prefer a narrower bar */
   background-color: #ffffff;
   height: 100vh;
   position: fixed;
