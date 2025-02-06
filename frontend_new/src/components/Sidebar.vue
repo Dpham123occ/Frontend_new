@@ -62,7 +62,7 @@ export default {
 .sidebar-container {
   width: 250px;
   /* or 220px, if you prefer a narrower bar */
-  background-color: #ffffff;
+  background-color:#d1dde6;
   height: 100vh;
   position: fixed;
   top: 0;
@@ -103,28 +103,29 @@ export default {
 }
 
 /* Shared nav-item styles (works for <router-link> and <button>) */
+/* Shared nav-item styles (works for <router-link> and <button>) */
 .nav-item {
   display: block;
   width: 100%;
   background-color: transparent;
   border: none;
-  color: #2c3e50;
+  color: #353535;
   text-align: left;
   font-weight: 500;
-  font-size: 16px;
+  font-size: 20px;
   cursor: pointer;
-
   padding: 0.75rem 1rem;
   margin-bottom: 0.5rem;
   border-radius: 4px;
-
-  transition: background-color 0.2s ease, color 0.2s ease;
+  transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease;
 }
 
 /* Hover/active state */
 .nav-item:hover,
 .nav-item:focus {
-  background-color: #f2f2f2;
+  background-color: #d6d2c4; /* Changed to the desired color */
+  color: #2c3e50;            /* Ensuring the text remains visible */
+  transform: scale(1.05);    /* Optional: adds a slight zoom effect like the acquisition list */
 }
 
 /* "Back" and "Log Out" are styled similarly but with a darker background */
@@ -140,4 +141,5 @@ export default {
 .logout-button:hover {
   background-color: #1a252f;
 }
+
 </style>

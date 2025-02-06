@@ -48,7 +48,7 @@ export default {
 
 <style scoped>
 .sidebar-container {
-  background-color: #ffffff;
+  background-color: #d1dde6;
   height: 100vh;
   display: flex;
   flex-direction: column;

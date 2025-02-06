@@ -273,7 +273,7 @@ export default {
 /* Match the look of the first sidebar */
 
 .sidebar-container {
-  background-color: #ffffff;
+  background-color: #d1dde6;
   height: 100vh;
   display: flex;
   flex-direction: column;
@@ -313,6 +313,13 @@ export default {
   width: 100%;
 }
 
+/* Navigation Menu */
+.nav-menu {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
 /* Shared nav-item styles */
 .nav-item {
   display: block;
@@ -322,31 +329,37 @@ export default {
   color: #2c3e50;
   text-align: left;
   font-weight: 500;
-  font-size: 16px;
+  font-size: 20px;
   cursor: pointer;
 
   padding: 0.75rem 1rem;
   margin-bottom: 0.5rem;
   border-radius: 4px;
 
-  transition: background-color 0.2s ease, color 0.2s ease;
+  /* Adding transition for smooth hover effect */
+  transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease;
 }
 
+/* Hover/active state with zoom effect */
 .nav-item:hover,
 .nav-item:focus {
-  background-color: #f2f2f2;
+  background-color: #d6d2c4; /* Light hover color */
+  color: #2c3e50;            /* Text color stays dark */
+  transform: scale(1.05);    /* Adds the zoom effect */
 }
 
-/* Special back-button style (similar to logout) */
+/* Special back-button style */
 .back-button {
   background-color: #2c3e50;
   color: #ffffff;
   margin-top: 1rem;
   text-align: center;
+  transition: background-color 0.3s ease, transform 0.2s ease; /* Smooth hover transition */
 }
 
 .back-button:hover {
   background-color: #1a252f;
+  transform: scale(1.05); /* Zoom effect for back button */
 }
 
 .highlight {
