@@ -2,6 +2,9 @@
   <div class="grid grid-cols-8 h-screen bg-gray-50">
     <!-- Sidebar Component -->
     <Sidebar />
+    <div>
+      <DownloadButton />
+    </div>
 
     <!-- Acquisition List Section -->
     <div class="col-start-2 col-span-6 flex flex-col h-screen p-8 bg-[#f9f9f9] rounded-lg shadow-inner flex-grow mx-auto justify-start items-center mt-8">
@@ -27,6 +30,7 @@ export default {
   name: 'AcquisitionList',
   components: {
     Sidebar,
+    DownloadButton,
   },
   data() {
     return {
@@ -44,6 +48,9 @@ export default {
     },
   },
 };
+import DownloadButton from "./DownloadButton.vue";
+
+
 </script>
 
 <style scoped>
