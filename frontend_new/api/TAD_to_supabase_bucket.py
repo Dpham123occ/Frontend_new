@@ -2,6 +2,7 @@ import os
 import urllib.request
 from supabase import create_client, Client
 
+# Load environment variables
 VITE_SUPABASE_URL = os.getenv("VITE_SUPABASE_URL")
 VITE_SUPABASE_ANON_KEY = os.getenv("VITE_SUPABASE_ANON_KEY")
 BUCKET_NAME = os.getenv("BUCKET_NAME")
@@ -32,7 +33,7 @@ def handler(request):
         else:
             return {
                 "statusCode": 500,
-                "bodyCode": "Upload to Supabase failed."
+                "body": "Upload to Supabase failed."
             }
         
     except Exception as e:
