@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@auth0/auth0-vue": "^2.3.3",
+    "@supabase/supabase-js": "^2.48.1",
     "axios": "^1.7.7",
     "frontend_new": "file:",
     "papaparse": "^5.4.1",

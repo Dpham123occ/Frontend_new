@@ -1,5 +1,6 @@
 import HomePage from "../components/HomePage.vue";
 import { createRouter, createWebHistory } from "vue-router";
+import { useAuth0 } from "@auth0/auth0-vue";
 import App from '../App.vue'
 import ApraisalDistrict from '../components/ApraisalDistrict.vue';
 import AcquisitionList from '../components/AcquisitionList.vue';
@@ -18,7 +19,8 @@ const routes = [
   {
     path: '/home',
     name: 'HomePage',
-    component: HomePage
+    component: HomePage,
+    meta: { requiresAuth: true }
   },
   {
     path: '/appraisaldistrict',
@@ -62,5 +64,16 @@ const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes,
 })
+
+router.beforeEach(async (to, from, next) => {
+  const auth0 = useAuth0();
+  const isAuthenticated = auth0.isAuthenticated.value;
+
+  if (to.meta.requiresAuth && !isAuthenticated) {
+    next("/"); // Redirect to login if not authenticated
+  } else {
+    next();
+  }
+});
 
 export default router

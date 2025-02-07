@@ -3,6 +3,7 @@ export default {
       extend: {
         colors: {
           'side-bar': '#d1dede',
+          'button': '#2c3e50',
         },
       }
     },
