@@ -12,11 +12,8 @@
           <tr v-for="(row, rowIndex) in paginatedData" :key="rowIndex">
             <td v-for="(value, colIndex) in row" :key="colIndex">{{ value }}</td>
             <td>
-              <textarea
-                v-model="notes[rowIndex + (currentPage - 1) * rowsPerPage]"
-                placeholder="Add notes here"
-                rows="2"
-              ></textarea>
+              <textarea v-model="notes[rowIndex + (currentPage - 1) * rowsPerPage]" placeholder="Add notes here"
+                rows="2"></textarea>
             </td>
           </tr>
         </tbody>
@@ -52,8 +49,10 @@
 </template>
 
 <script>
-import axios from "axios";
+
+// unsused: import axios from "axios";
 import Papa from "papaparse";
+import { supabase } from "../lib/supabase.js";
 
 export default {
   name: "TableView",
@@ -80,27 +79,38 @@ export default {
   methods: {
     async fetchCSVFile() {
       try {
-        const response = await axios.get("http://127.0.0.1:8000/fetch-csv-all/", {
-          responseType: "blob", // Ensure response is treated as a binary file
+        // Fetch data from Supabase
+        let { data: master_acquisition_list, error } = await supabase
+          .from("master_acquisition_list")
+          .select("*");
+
+        if (error) {
+          throw error;
+        }
+
+        if (!master_acquisition_list || master_acquisition_list.length === 0) {
+          console.warn("No data found in Supabase table.");
+          alert("No data available.");
+          return;
+        }
+
+        // Convert JSON to CSV format
+        const csvString = Papa.unparse(master_acquisition_list);
+
+        // Parse CSV using PapaParse
+        Papa.parse(csvString, {
+          header: true, // Extract headers dynamically
+          skipEmptyLines: true, // Skip empty rows
+          complete: (results) => {
+            this.csvHeaders = results.meta.fields; // Extract headers
+            this.csvData = results.data; // Extract rows
+            this.resetPagination();
+          },
         });
 
-        // Read the file content using PapaParse
-        const reader = new FileReader();
-        reader.onload = () => {
-          Papa.parse(reader.result, {
-            header: true, // Extract headers dynamically
-            skipEmptyLines: true, // Skip empty rows
-            complete: (results) => {
-              this.csvHeaders = results.meta.fields; // Extract headers
-              this.csvData = results.data; // Extract rows
-              this.resetPagination();
-            },
-          });
-        };
-        reader.readAsText(response.data);
       } catch (error) {
-        console.error("Error fetching CSV file:", error);
-        alert("Failed to load CSV file.");
+        console.error("Error fetching data from Supabase:", error);
+        alert("Failed to load data from Supabase.");
       }
     },
     nextPage() {
@@ -143,8 +153,10 @@ export default {
 }
 
 textarea {
-  width: 100%; /* Ensures textarea spans the cell */
-  resize: none; /* Prevents resizing */
+  width: 100%;
+  /* Ensures textarea spans the cell */
+  resize: none;
+  /* Prevents resizing */
 }
 
 textarea {
