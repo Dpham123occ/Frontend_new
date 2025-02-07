@@ -323,7 +323,7 @@ export default {
   width: 100%;
   background-color: transparent;
   border: none;
-  color: #2c3e50;
+  color: #231F20;
   text-align: left;
   font-weight: 500;
   font-size: 20px;
