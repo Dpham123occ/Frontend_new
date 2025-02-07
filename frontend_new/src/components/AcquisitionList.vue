@@ -2,6 +2,9 @@
   <div class="main-container">
     <!-- Sidebar Component -->
     <Sidebar />
+    <div>
+      <DownloadButton />
+    </div>
 
     <!-- Acquisition List Component -->
     <div class="acquisition-list-container">
@@ -28,6 +31,7 @@ export default {
   name: 'AcquisitionList',
   components: {
     Sidebar,
+    DownloadButton,
   },
   data() {
     return {
@@ -45,6 +49,9 @@ export default {
     },
   },
 };
+import DownloadButton from "./DownloadButton.vue";
+
+
 </script>
 
 <style scoped>
