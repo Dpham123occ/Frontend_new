@@ -69,8 +69,8 @@
                 </select> -->
           <input type="file" class="join-item file-input file-input-bordered" @change="handleFileSelection"
             accept=".xlsx, .xls, .csv" /> 
-          <button class="btn btn-s join-item" @click="uploadFile">Upload Costar Vacancies Report</button>
-          <button class="btn btn-s join-item" @click="processVacanciesReport">Process Vacancies Report</button>
+          <button class="btn btn-s join-item" @click="uploadFile">Process Costar Vacancies Report</button>
+          <!-- <button class="btn btn-s join-item" @click="processVacanciesReport">Process Vacancies Report</button> -->
           <button class="btn btn-s join-item" @click="downloadVacanciesReport">Download Vacancies Report</button>
         </div>
       </div>
@@ -142,6 +142,7 @@ export default {
       return Math.ceil(this.csvData.length / this.rowsPerPage) || 1;
     },
   },
+  
   methods: {
     sortTable(column) {
       if (this.sortKey === column) {
@@ -151,12 +152,14 @@ export default {
         this.sortOrder = "asc";
       }
     },
+
     highlightMatch(value) {
       if (!this.searchQuery || typeof value !== "string") return value;
       const regex = new RegExp(`(${this.searchQuery})`, "gi");
       const highlighted = value.toString().replace(regex, `<span class="highlight">$1</span>`);
       return highlighted;
     },
+
     clearSearch() {
       this.searchQuery = "";
     }, async spatialMerge() {
@@ -168,6 +171,7 @@ export default {
         alert("Failed to call API");
       }
     },
+
     async downloadTAD() {
       try {
         const response = await axios.get(`http://127.0.0.1:8000/download-tad`);
@@ -177,6 +181,7 @@ export default {
         alert("Failed to call API");
       }
     },
+
     async showTable() {
       try {
         const response = await axios.get("http://127.0.0.1:8000/get-data/");
@@ -192,54 +197,46 @@ export default {
         alert("Failed to fetch data.");
       }
     },
+
     goback() {
       router.push("/home");
     },
+
     handleFileSelection(event) {
       this.selectedFile = event.target.files[0];
     },
+
     async uploadFile() {
       if (this.selectedFile) {
         const file = this.selectedFile;
-        const fileName = this.selectedFile.name;
-
-        const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-        const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
-        const bucketName = 'CoStarCSV';
-
-        const uploadUrl = `${supabaseUrl}/storage/v1/object/${bucketName}/${fileName}`;
-
-        const response = await fetch(uploadUrl, {
-          method: "PUT",
-          headers: {
-            "Authorization": `Bearer ${supabaseKey}`,
-            "Content-Type": "text/csv"
-          },
-          body: file
-        });
-
-        if (response.ok) {
-          console.log("File uploaded successfully!");
-        } else {
-          console.error("Upload failed", await response.text());
-        }
-      } else {
-        alert("Please select a file to upload.");
-      }
-    },
-    async processVacanciesReport() {
-      if (!this.selectedFile) {
-        alert("Please select a file to process.");
-      } else {
+        // const fileName = this.selectedFile.name;
         try {
-          const response = await axios.post("http://127.0.0.1:8000/process-costar-file/");
-          alert(response.data.message);
-        } catch (error) {
-          console.error("Error processing file:", error.message);
-          alert("An error occurred while processing the file.");
+          const formData = new FormData();
+          formData.append('file', file); // Append the file to the form data
+
+          const response = await axios.post("http://127.0.0.1:8000/upload-costar-file/", formData, {
+            headers: {
+              'Content-Type': 'multipart/form-data' // Important: Set the correct content type
+            }
+          });
+
+          console.log("File uploaded successfully:", response.data);  // Log the successful response
+          alert(response.data.message || "File uploaded successfully!"); // Display a success message, or the one from the server
+
+          // Call processVacanciesReport immediately after successful upload if needed.
+          // await this.processVacanciesReport(); // Uncomment if you want to auto-process after upload.
+
+        } 
+        catch (error) {
+          console.error("Error uploading file:", error); // Log the full error object for debugging
+          alert("An error occurred while uploading the file: " + (error.response?.data?.message || error.message) ); // Display user-friendly error message, including server error if available.
         }
+      } 
+      else {
+        alert("Please select a file.");
       }
     },
+
     nextPage() {
       if (this.currentPage < this.totalPages) this.currentPage++;
     },
