@@ -173,14 +173,22 @@ export default {
     },
 
     async downloadTAD() {
-      try {
-        const response = await axios.get(`http://127.0.0.1:8000/download-tad`);
-        alert("API called successfully: " + response.data.statusCode);
-      } catch (error) {
-        console.error("Error calling API:", error);
-        alert("Failed to call API");
-      }
-    },
+  try {
+    // Use the Vercel-deployed API endpoint
+    const response = await axios.get(`https://trailspurdata.vercel.app/appraisaldistrict/api/TAD_to_supabase_bucket.py`);
+    
+    // Check if the request was successful
+    if (response.status === 200) {
+      alert("API called successfully: " + response.data.body);
+    } else {
+      alert("Unexpected response from API");
+    }
+  } catch (error) {
+    console.error("Error calling API:", error);
+    alert("Failed to call API");
+  }
+},
+
 
     async showTable() {
       try {
