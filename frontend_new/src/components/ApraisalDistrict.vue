@@ -28,7 +28,7 @@
       <div class="flex-grow overflow-auto">
         <div class="mb-4 flex items-center gap-2">
           <input type="text" v-model="searchQuery" placeholder="Search table..." class="border p-2 rounded-md w-1/3" />
-      <button class="btn btn-s" @click="clearSearch">Clear</button>
+          <button class="btn btn-s" @click="clearSearch">Clear</button>
         </div>
         <table v-if="filteredData.length" class="overflow-x-auto table table-md">
           <thead class="bg-gray-100">
@@ -52,11 +52,11 @@
           </tbody>
         </table>
         <!-- Pagination Controls -->
-        <div class="col-start-2 col-end-5 rows-start-4 rows-end-4 col-span-4 flex justify-center items-center gap-4" 
-        v-if="csvData.length">
-          <button class="btn btn-s"@click="prevPage" :disabled="currentPage === 1">Previous</button>
-      <span>Page {{ currentPage }} of {{ totalPages }}</span>
-        <button class="btn btn-s" @click="nextPage" :disabled="currentPage === totalPages">Next</button>
+        <div class="col-start-2 col-end-5 rows-start-4 rows-end-4 col-span-4 flex justify-center items-center gap-4"
+          v-if="csvData.length">
+          <button class="btn btn-s" @click="prevPage" :disabled="currentPage === 1">Previous</button>
+          <span>Page {{ currentPage }} of {{ totalPages }}</span>
+          <button class="btn btn-s" @click="nextPage" :disabled="currentPage === totalPages">Next</button>
 
         </div>
 
@@ -68,7 +68,7 @@
                     <option v-for="district in districts" :key="district" :value="district">{{ district }}</option>
                 </select> -->
           <input type="file" class="join-item file-input file-input-bordered" @change="handleFileSelection"
-            accept=".xlsx, .xls, .csv" /> 
+            accept=".xlsx, .xls, .csv" />
           <button class="btn btn-s join-item" @click="uploadFile">Process Costar Vacancies Report</button>
           <!-- <button class="btn btn-s join-item" @click="processVacanciesReport">Process Vacancies Report</button> -->
           <button class="btn btn-s join-item" @click="downloadVacanciesReport">Download Vacancies Report</button>
@@ -142,7 +142,7 @@ export default {
       return Math.ceil(this.csvData.length / this.rowsPerPage) || 1;
     },
   },
-  
+
   methods: {
     sortTable(column) {
       if (this.sortKey === column) {
@@ -173,22 +173,20 @@ export default {
     },
 
     async downloadTAD() {
-  try {
-    // Use the Vercel-deployed API endpoint
-    const response = await axios.get(`https://trailspurdata.vercel.app/appraisaldistrict/api/TAD_to_supabase_bucket.py`);
-    
-    // Check if the request was successful
-    if (response.status === 200) {
-      alert("API called successfully: " + response.data.body);
-    } else {
-      alert("Unexpected response from API");
-    }
-  } catch (error) {
-    console.error("Error calling API:", error);
-    alert("Failed to call API");
-  }
-},
+      try {
+        // Adjusted to call the Vercel API correctly
+        const response = await axios.get(`/api/TAD_to_supabase_bucket.py`);
 
+        if (response.status === 200) {
+          alert("API called successfully: " + response.data.body);
+        } else {
+          alert("Unexpected response from API");
+        }
+      } catch (error) {
+        console.error("Error calling API:", error);
+        alert("Failed to call API");
+      }
+    },
 
     async showTable() {
       try {
@@ -234,12 +232,12 @@ export default {
           // Call processVacanciesReport immediately after successful upload if needed.
           // await this.processVacanciesReport(); // Uncomment if you want to auto-process after upload.
 
-        } 
+        }
         catch (error) {
           console.error("Error uploading file:", error); // Log the full error object for debugging
-          alert("An error occurred while uploading the file: " + (error.response?.data?.message || error.message) ); // Display user-friendly error message, including server error if available.
+          alert("An error occurred while uploading the file: " + (error.response?.data?.message || error.message)); // Display user-friendly error message, including server error if available.
         }
-      } 
+      }
       else {
         alert("Please select a file.");
       }
@@ -348,9 +346,12 @@ export default {
 /* Hover/active state with zoom effect */
 .nav-item:hover,
 .nav-item:focus {
-  background-color: #d6d2c4; /* Light hover color */
-  color: #2c3e50;            /* Text color stays dark */
-  transform: scale(1.05);    /* Adds the zoom effect */
+  background-color: #d6d2c4;
+  /* Light hover color */
+  color: #2c3e50;
+  /* Text color stays dark */
+  transform: scale(1.05);
+  /* Adds the zoom effect */
 }
 
 /* Special back-button style */
@@ -359,12 +360,14 @@ export default {
   color: #ffffff;
   margin-top: 1rem;
   text-align: center;
-  transition: background-color 0.3s ease, transform 0.2s ease; /* Smooth hover transition */
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  /* Smooth hover transition */
 }
 
 .back-button:hover {
   background-color: #1a252f;
-  transform: scale(1.05); /* Zoom effect for back button */
+  transform: scale(1.05);
+  /* Zoom effect for back button */
 }
 
 .highlight {
