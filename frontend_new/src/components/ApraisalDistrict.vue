@@ -175,7 +175,7 @@ export default {
     async downloadTAD() {
       try {
         // Adjusted to call the Vercel API correctly
-        const response = await axios.get(`/api/TAD_to_supabase_bucket.py`);
+        const response = await axios.get(`/api/TAD_to_supabase_bucket`);
 
         if (response.status === 200) {
           alert("API called successfully: " + response.data.body);

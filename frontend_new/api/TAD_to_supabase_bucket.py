@@ -13,7 +13,7 @@ file_url = "https://www.tad.org/content/gis-data/Parcels_GeoDatabase.zip"
 # Initialize Supabase client
 supabase: Client = create_client(VITE_SUPABASE_URL, VITE_SUPABASE_ANON_KEY)
 
-def handler(request):
+def lambda_handler(request):
     try:
         # Download the file
         req = urllib.request.Request(file_url)
