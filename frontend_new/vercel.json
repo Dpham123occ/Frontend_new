@@ -1,11 +1,8 @@
 {
-    "rewrites": [
-      { "source": "/home", "destination": "/" }
-    ],
-    "functions": {
-      "api/TAD_to_supabase_bucket.py": {
-        "runtime": "python3.9"
-      }
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
     }
-  }
-  
+  ]
+}

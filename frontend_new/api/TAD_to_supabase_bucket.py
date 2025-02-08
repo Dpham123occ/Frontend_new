@@ -2,10 +2,9 @@ import os
 import urllib.request
 from supabase import create_client, Client
 
-# Load environment variables
 VITE_SUPABASE_URL = os.getenv("VITE_SUPABASE_URL")
 VITE_SUPABASE_ANON_KEY = os.getenv("VITE_SUPABASE_ANON_KEY")
-BUCKET_NAME = "CoStarCSV"
+BUCKET_NAME = os.getenv("BUCKET_NAME")
 
 file_key = "Parcels_GeoDatabase.zip"
 file_url = "https://www.tad.org/content/gis-data/Parcels_GeoDatabase.zip"
@@ -13,7 +12,8 @@ file_url = "https://www.tad.org/content/gis-data/Parcels_GeoDatabase.zip"
 # Initialize Supabase client
 supabase: Client = create_client(VITE_SUPABASE_URL, VITE_SUPABASE_ANON_KEY)
 
-def lambda_handler(request):
+
+def handler(request):
     try:
         # Download the file
         req = urllib.request.Request(file_url)
@@ -32,7 +32,7 @@ def lambda_handler(request):
         else:
             return {
                 "statusCode": 500,
-                "body": "Upload to Supabase failed."
+                "bodyCode": "Upload to Supabase failed."
             }
         
     except Exception as e:
