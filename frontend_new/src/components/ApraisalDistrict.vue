@@ -184,17 +184,69 @@ export default {
 
     async showTable() {
       try {
-        const response = await axios.get("http://127.0.0.1:8000/get-data/");
-        if (response.data.status === "success") {
-          this.csvHeaders = Object.keys(response.data.data[0]);
-          this.csvData = response.data.data.map((row) =>
-            Object.values(row).map((cell) => (cell !== null ? cell : "N/A"))
-          );
-          this.currentPage = 1;
+        // Fetch data from Supabase
+        try {
+        // Fetch data from Supabase
+        let { data: master_acquisition_list, error } = await supabase
+          .from("master_acquisition_list")
+          .select("*");
+
+        if (error) {
+          throw error;
         }
+
+        if (!master_acquisition_list || master_acquisition_list.length === 0) {
+          console.warn("No data found in Supabase table.");
+          alert("No data available.");
+          return;
+        }
+
+        // Convert JSON to CSV format
+        const csvString = Papa.unparse(master_acquisition_list);
+
+        // Parse CSV using PapaParse
+        Papa.parse(csvString, {
+          header: true, // Extract headers dynamically
+          skipEmptyLines: true, // Skip empty rows
+          complete: (results) => {
+            this.csvHeaders = results.meta.fields; // Extract headers
+            this.csvData = results.data; // Extract rows
+            this.resetPagination();
+          },
+        });
+
       } catch (error) {
-        console.error("Error fetching data:", error);
-        alert("Failed to fetch data.");
+        console.error("Error fetching data from Supabase:", error);
+        alert("Failed to load data from Supabase.");
+      }
+
+        if (error) {
+          throw error;
+        }
+
+        if (!master_acquisition_list || master_acquisition_list.length === 0) {
+          console.warn("No data found in Supabase table.");
+          alert("No data available.");
+          return;
+        }
+
+        // Convert JSON to CSV format
+        const csvString = Papa.unparse(master_acquisition_list);
+
+        // Parse CSV using PapaParse
+        Papa.parse(csvString, {
+          header: true, // Extract headers dynamically
+          skipEmptyLines: true, // Skip empty rows
+          complete: (results) => {
+            this.csvHeaders = results.meta.fields; // Extract headers
+            this.csvData = results.data; // Extract rows
+            this.resetPagination();
+          },
+        });
+
+      } catch (error) {
+        console.error("Error fetching data from Supabase:", error);
+        alert("Failed to load data from Supabase.");
       }
     },
 
