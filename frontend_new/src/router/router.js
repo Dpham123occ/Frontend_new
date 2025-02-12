@@ -9,6 +9,7 @@ import LightIndustrialUB from "../AcquisitionComponents/LightIndustrialUB.vue";
 import IOSExsisting from "../AcquisitionComponents/IOSExsisting.vue";
 import IOSDevelopment from "../AcquisitionComponents/IOSDevelopment.vue";
 import View from "../components/View.vue";
+import Tarrant from "../components/AppraisalDistrict/TarrantCounty.vue";
 
 const routes = [
   {
@@ -26,6 +27,11 @@ const routes = [
     path: '/appraisaldistrict',
     name: 'Appraisal District',
     component: ApraisalDistrict,
+  },
+  {
+    path: '/appraisaldistrict/tarrant',
+    name: 'Tarrant County',
+    component: Tarrant,
   },
   {
     path: '/acquisitionlist',
