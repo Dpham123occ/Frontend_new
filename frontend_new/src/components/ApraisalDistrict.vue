@@ -341,13 +341,13 @@ export default {
 .nav-item:hover,
 .nav-item:focus {
   background-color: #d6d2c4; /* Light hover color */
-  color: #2c3e50;            /* Text color stays dark */
+  color: #231F20;;            /* Text color stays dark */
   transform: scale(1.05);    /* Adds the zoom effect */
 }
 
 /* Special back-button style */
 .back-button {
-  background-color: #2c3e50;
+  background-color: #231F20;;
   color: #ffffff;
   margin-top: 1rem;
   text-align: center;
@@ -355,7 +355,8 @@ export default {
 }
 
 .back-button:hover {
-  background-color: #1a252f;
+  background-color: #000000;
+  color: #ffffff !important;
   transform: scale(1.05); /* Zoom effect for back button */
 }
 
