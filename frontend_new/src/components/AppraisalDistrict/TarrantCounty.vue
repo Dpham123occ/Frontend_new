@@ -11,10 +11,8 @@
         class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50"
       >
         <!-- Spinner -->
-        <div
-          class="spinner border-4 border-transparent border-t-blue-500 rounded-full w-12 h-12 animate-spin"
-        ></div>
-        <p class="text-white text-lg mt-4">Loading, please wait...</p>
+        <div class="loading-infinity"></div>
+        <p class="text-white text-lg mt-4">Task in progress, please wait...</p>
       </div>
       <!-- Logo Section -->
       <router-link to="/home">
@@ -34,12 +32,27 @@
             Actions
           </button>
           <!-- Dropdown Menu to the right of the button -->
-          <div v-if="isDropdownOpen" class="absolute left-full top-0 ml-5 py-2 w-64 bg-side-bar shadow-xl z-10 rounded-md">
-            <button class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left" @click="downloadTAD">
+          <div
+            v-if="isDropdownOpen"
+            class="absolute left-full top-0 ml-5 py-2 w-64 bg-side-bar shadow-xl z-10 rounded-md"
+          >
+            <button
+              class="block px-4 py-2 text-gray-900 text-left font-medium text-xl"
+              @click="downloadTAD"
+            >
               Import TAD's Appraisal Data - Take time
             </button>
-            <button class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left" @click="spatialMerge">
+            <button
+              class="block px-4 py-2 text-gray-900 text-left font-medium text-xl"
+              @click="spatialMerge"
+            >
               Perform Spatial Merge - Take time
+            </button>
+            <button
+              class="block px-4 py-2 text-gray-900 text-left font-medium text-xl"
+              @click="uploadFile"
+            >
+              Process TAD Data
             </button>
           </div>
         </div>
@@ -130,15 +143,6 @@
             Download Vacancies Report
           </button>
         </div>
-        <div class="flex items-center mt-8">
-          <input
-            type="text"
-            v-model="searchQuery"
-            placeholder="Search table..."
-            class="border p-2 rounded-md w-1/3"
-          />
-          <button class="btn btn-s" @click="clearSearch">Clear</button>
-        </div>
       </div>
     </div>
   </div>
@@ -147,6 +151,8 @@
 <script>
 import router from "../../router/router";
 import axios from "axios";
+import papaparse from "papaparse";
+import { supabase } from "../../lib/supabase";
 
 export default {
   name: "Tarrant",
@@ -248,9 +254,6 @@ export default {
       return highlighted;
     },
 
-    clearSearch() {
-      this.searchQuery = "";
-    },
     async spatialMerge() {
       this.isLoading = true; // Start loading
       try {
@@ -281,71 +284,39 @@ export default {
     },
 
     async showTable() {
+      this.isLoading = true;
       try {
-        // Fetch data from Supabase
-        try {
-          // Fetch data from Supabase
-          let { data: master_acquisition_list, error } = await supabase
-            .from("master_acquisition_list")
-            .select("*");
-
-          if (error) {
-            throw error;
-          }
-
-          if (
-            !master_acquisition_list ||
-            master_acquisition_list.length === 0
-          ) {
-            console.warn("No data found in Supabase table.");
-            alert("No data available.");
-            return;
-          }
-
-          // Convert JSON to CSV format
-          const csvString = Papa.unparse(master_acquisition_list);
-
-          // Parse CSV using PapaParse
-          Papa.parse(csvString, {
-            header: true, // Extract headers dynamically
-            skipEmptyLines: true, // Skip empty rows
-            complete: (results) => {
-              this.csvHeaders = results.meta.fields; // Extract headers
-              this.csvData = results.data; // Extract rows
-              this.resetPagination();
-            },
-          });
-        } catch (error) {
-          console.error("Error fetching data from Supabase:", error);
-          alert("Failed to load data from Supabase.");
-        }
+        let { data: master_vacancy_list, error } = await supabase
+          .from("master_vacancy_list")
+          .select("*");
 
         if (error) {
           throw error;
         }
 
-        if (!master_acquisition_list || master_acquisition_list.length === 0) {
+        if (!master_vacancy_list || master_vacancy_list.length === 0) {
           console.warn("No data found in Supabase table.");
           alert("No data available.");
           return;
         }
 
         // Convert JSON to CSV format
-        const csvString = Papa.unparse(master_acquisition_list);
+        const csvString = papaparse.unparse(master_vacancy_list);
 
         // Parse CSV using PapaParse
-        Papa.parse(csvString, {
+        papaparse.parse(csvString, {
           header: true, // Extract headers dynamically
           skipEmptyLines: true, // Skip empty rows
           complete: (results) => {
             this.csvHeaders = results.meta.fields; // Extract headers
             this.csvData = results.data; // Extract rows
-            this.resetPagination();
           },
         });
       } catch (error) {
         console.error("Error fetching data from Supabase:", error);
         alert("Failed to load data from Supabase.");
+      } finally {
+        this.isLoading = false; // Ensure isLoading is updated when the operation completes
       }
     },
 
