@@ -1,15 +1,19 @@
 <template>
   <div class="grid grid-cols-8 h-screen bg-gray-50">
     <!-- Sidebar Component -->
-    <Sidebar />
+    <Sidebar @sidebarToggle="handleSidebarToggle" />
+
     <div>
       <DownloadButton />
     </div>
 
     <!-- Acquisition List Section -->
-    <div class="col-start-2 col-span-6 flex flex-col h-screen p-8 bg-[#f9f9f9] rounded-lg shadow-inner flex-grow mx-auto justify-start items-center mt-8">
+    <div 
+      :class="['col-start-2 col-span-6 flex flex-col h-screen p-8 bg-[#f9f9f9] rounded-lg shadow-inner flex-grow mx-auto justify-start items-center mt-8', {'shifted': isSidebarOpen }]"
+    >
       <h2 class="title text-3xl font-bold text-center text-[#967444] mb-6">Acquisition List</h2>
-      <div class="button-list flex flex-col gap-4 items-center w-full max-w-2xl">
+      
+<div class="button-list flex flex-col gap-4 items-center w-full max-w-2xl">
         <button
           v-for="property in properties"
           :key="property.name"
@@ -25,6 +29,7 @@
 
 <script>
 import Sidebar from './Sidebar.vue';
+import DownloadButton from './DownloadButton.vue';
 
 export default {
   name: 'AcquisitionList',
@@ -40,99 +45,57 @@ export default {
         { name: 'IOS - Existing', route: '/acquisition-list/IOSExisting' },
         { name: 'IOS - Developable Land', route: '/acquisition-list/IOSDevelopment' },
       ],
+      isSidebarOpen: true, // ✅ Sidebar starts open
     };
   },
   methods: {
     selectProperty(property) {
       this.$router.push(property.route);
     },
+    handleSidebarToggle(isOpen) {
+      this.isSidebarOpen = isOpen;
+    },
   },
 };
-import DownloadButton from "./DownloadButton.vue";
-
-
 </script>
 
 <style scoped>
-.sidebar-container {
-  background-color: #d1dde6;
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 2rem 1rem;
-  box-sizing: border-box;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-  border-right: 1px solid #e6e6e6;
-  z-index: 999;
-  min-width: 250px;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+/* Acquisition List Section */
+.col-start-2 {
+  flex: 1;
+  transition: transform 0.3s ease-in-out; /* ✅ Smooth transition both ways */
+  transform: translateX(0px); /* ✅ Sidebar starts open */
 }
 
-.logo {
-  width: 200px;
-  height: auto;
-  object-fit: contain;
+/* Shift back when sidebar is closed */
+.shifted {
+  transform: translateX(120px); /* ✅ Moves back when sidebar closes */
 }
 
-.nav-menu {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-}
-
-.nav-item {
-  display: block;
-  width: 100%;
-  background-color: transparent;
-  border: none;
-  color: #2c3e50;
-  text-align: left;
-  font-weight: 500;
-  font-size: 16px;
-  cursor: pointer;
-  padding: 0.75rem 1rem;
-  margin-bottom: 0.5rem;
-  border-radius: 4px;
-  transition: background-color 0.2s ease, color 0.2s ease;
-}
-
-.nav-item:hover {
-  background-color: #f2f2f2;
-}
-
-.back-button {
-  background-color: #2c3e50;
-  color: #ffffff;
-  text-align: center;
-  border-radius: 8px;
-  padding: 1rem;
-}
-
-.back-button:hover {
-  background-color: #1a252f;
-}
-
+/* Button List - Expand Width */
 .button-list {
   display: flex;
   flex-direction: column;
   gap: 1rem;
   align-items: center;
   width: 100%;
-  max-width: 600px;
+  max-width: 1000px;
 }
 
+/* Property Buttons */
 .property-button {
-  background-color: #ffffff;
-  color: #2c3e50;
+  width: 100%; /* Make buttons take full width */
+  max-width: 900px; /* Adjust as needed */
   padding: 1.5rem;
-  border: 1px solid #d8d2c4;
   border-radius: 12px;
   font-weight: 600;
+  font-size: 1.2rem;
   cursor: pointer;
-  transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease;
-  width: 100%;
   text-align: center;
+  background-color: white;
+  color: #2c3e50;
+  border: 1px solid #d8d2c4;
+  transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
 .property-button:hover {
@@ -140,11 +103,5 @@ import DownloadButton from "./DownloadButton.vue";
   color: white;
   transform: scale(1.05);
   border: none;
-}
-
-.title {
-  font-family: "Inglesia Caps Variable", serif;
-  color: #967444;
-  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
 }
 </style>
