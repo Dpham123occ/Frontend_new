@@ -14,7 +14,7 @@
         Acquisition List
       </router-link>
       <router-link to="/view" class="nav-item">
-        View Reports
+        View Change Reports
       </router-link>
       <router-link to="/settings" class="nav-item">
         Settings

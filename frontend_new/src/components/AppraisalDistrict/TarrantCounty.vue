@@ -1,28 +1,27 @@
 <template>
   <div class="grid grid-cols-6 h-screen">
-    <!-- Loading Overlay -->
-    <!-- Loading Overlay using TailwindCSS -->
-    <div
-      v-if="isLoading"
-      class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50"
-    >
-      <!-- Spinner -->
-      <div
-        class="spinner border-4 border-transparent border-t-blue-500 rounded-full w-12 h-12 animate-spin"
-      ></div>
-      <p class="text-white text-lg mt-4">Loading, please wait...</p>
-    </div>
-
     <!-- Sidebar Container -->
     <div
       class="sidebar-container w-[250px] col-span-1 bg-gray-200 p-4 flex flex-col"
     >
+      <!-- Loading Overlay -->
+      <!-- Loading Overlay using TailwindCSS -->
+      <div
+        v-if="isLoading"
+        class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50"
+      >
+        <!-- Spinner -->
+        <div
+          class="spinner border-4 border-transparent border-t-blue-500 rounded-full w-12 h-12 animate-spin"
+        ></div>
+        <p class="text-white text-lg mt-4">Loading, please wait...</p>
+      </div>
       <!-- Logo Section -->
       <router-link to="/home">
         <img
           src="../../assets/trailspur-logo.svg"
           alt="Trailspur Logo"
-          class="logo"
+          class="logo mb-8"
         />
       </router-link>
       <!-- Nav Items -->
@@ -30,12 +29,20 @@
         <button class="nav-item bg-button" @click="showTable">
           Display Tarrant County Vacancy Report
         </button>
-        <button class="nav-item bg-button" @click="downloadTAD">
-          Import TAD's Appraial Data - Take time
-        </button>
-        <button class="nav-item bg-button" @click="spatialMerge">
-          Perform Spatial Merge - Take time
-        </button>
+        <div class="relative">
+          <button class="nav-item bg-button" @click="toggleDropdown">
+            Actions
+          </button>
+          <!-- Dropdown Menu to the right of the button -->
+          <div v-if="isDropdownOpen" class="absolute left-full top-0 ml-5 py-2 w-64 bg-side-bar shadow-xl z-10 rounded-md">
+            <button class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left" @click="downloadTAD">
+              Import TAD's Appraisal Data - Take time
+            </button>
+            <button class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left" @click="spatialMerge">
+              Perform Spatial Merge - Take time
+            </button>
+          </div>
+        </div>
         <button class="nav-item bg-button back-button" @click="goback">
           Back
         </button>
@@ -45,15 +52,6 @@
     <!-- Table and Buttons Section -->
     <div class="col-start-2 col-span-5 flex flex-col h-screen p-4">
       <div class="flex-grow overflow-auto">
-        <div class="mb-4 flex items-center gap-2">
-          <input
-            type="text"
-            v-model="searchQuery"
-            placeholder="Search table..."
-            class="border p-2 rounded-md w-1/3"
-          />
-          <button class="btn btn-s" @click="clearSearch">Clear</button>
-        </div>
         <table
           v-if="filteredData.length"
           class="overflow-x-auto table table-md"
@@ -109,7 +107,7 @@
           </button>
         </div>
 
-        <!-- Upload & Process& Download Buttons -->
+        <!-- Upload & Process & Download Buttons -->
         <div
           class="col-start-2 col-end-5 rows-start-5 rows-end-5 col-span-4 join"
         >
@@ -131,6 +129,15 @@
           <button class="btn btn-s join-item" @click="downloadVacanciesReport">
             Download Vacancies Report
           </button>
+        </div>
+        <div class="flex items-center mt-8">
+          <input
+            type="text"
+            v-model="searchQuery"
+            placeholder="Search table..."
+            class="border p-2 rounded-md w-1/3"
+          />
+          <button class="btn btn-s" @click="clearSearch">Clear</button>
         </div>
       </div>
     </div>
@@ -154,6 +161,7 @@ export default {
       sortKey: "", // Column to sort by
       sortOrder: "asc", // Sorting order (ascending/descending)
       isLoading: false,
+      isDropdownOpen: false, // State to control the dropdown visibility
     };
   },
   computed: {
@@ -219,6 +227,9 @@ export default {
   },
 
   methods: {
+    toggleDropdown() {
+      this.isDropdownOpen = !this.isDropdownOpen; // Toggle the dropdown open state
+    },
     sortTable(column) {
       if (this.sortKey === column) {
         this.sortOrder = this.sortOrder === "asc" ? "desc" : "asc";
@@ -466,9 +477,8 @@ export default {
 .nav-item {
   display: block;
   width: 100%;
-  background-color: transparent;
   border: none;
-  color: #231f20;
+  color: white;
   text-align: left;
   font-weight: 500;
   font-size: 20px;
