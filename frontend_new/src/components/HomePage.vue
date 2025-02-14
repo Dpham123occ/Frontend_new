@@ -17,7 +17,7 @@
 
       <!-- Table Section -->
       <div class="table-container">
-        <div v-if="selectedCategory" class="table-wrapper">
+        <div v-if="selectedCategory" class="table-wrapper ml-60">
           <h3 class="text-xl font-semibold text-[#2c3e50] mb-4 text-center">{{ selectedCategory }}</h3>
           <div class="overflow-x-auto">
             <table class="table">

@@ -26,33 +26,41 @@
       <nav class="nav-menu flex flex-col gap-2">
         <button class="nav-item bg-button" @click="showTable">
           Display Tarrant County Vacancy Report
+          
         </button>
         <div class="relative">
           <button class="nav-item bg-button" @click="toggleDropdown">
             Actions
+            <span :class="{'rotate-180': isDropdownOpen, 'rotate-0': !isDropdownOpen}" class="ml-2 inline-block transition-transform">
+              ▲ <!-- This is a simple down arrow -->
+            </span>
           </button>
+          
           <!-- Dropdown Menu to the right of the button -->
           <div
             v-if="isDropdownOpen"
-            class="absolute left-full top-0 ml-5 py-2 w-64 bg-side-bar shadow-xl z-10 rounded-md"
+            class="absolute left-full top-0 ml-5 py-2 w-64 shadow-xl z-10 rounded-md"
           >
             <button
-              class="block px-4 py-2 text-gray-900 text-left font-medium text-xl"
+              class="nav-item bg-button block px-4 py-2 text-left font-medium text-xl"
               @click="downloadTAD"
             >
               Import TAD's Appraisal Data - Take time
             </button>
             <button
-              class="block px-4 py-2 text-gray-900 text-left font-medium text-xl"
+              class="nav-item bg-button block px-4 py-2 text-left font-medium text-xl"
               @click="spatialMerge"
             >
               Perform Spatial Merge - Take time
             </button>
             <button
-              class="block px-4 py-2 text-gray-900 text-left font-medium text-xl"
+              class=" nav-item bg-button block px-4 py-2 text-left font-medium text-xl"
               @click="uploadFile"
             >
               Process TAD Data
+            </button>
+            <button class="nav-item bg-button block px-4 py-2 text-left font-medium text-xl" @click="downloadVacanciesReport">
+              Download Vacancies Report
             </button>
           </div>
         </div>
@@ -74,13 +82,9 @@
               <th
                 v-for="(header, index) in csvHeaders"
                 :key="index"
-                @click="sortTable(header)"
                 class="cursor-pointer"
               >
                 {{ header }}
-                <span v-if="sortKey === header">
-                  {{ sortOrder === "asc" ? "↑" : "↓" }}
-                </span>
               </th>
             </tr>
           </thead>
