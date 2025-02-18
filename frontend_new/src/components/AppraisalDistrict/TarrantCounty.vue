@@ -2,7 +2,7 @@
   <div class="grid grid-cols-6 h-screen">
     <!-- Sidebar Container -->
     <div
-      class="sidebar-container w-[250px] col-span-1 bg-gray-200 p-4 flex flex-col"
+      class="sidebar-container w-[250px] col-span-1 bg-side-bar-2 p-4 flex flex-col"
     >
       <!-- Loading Overlay -->
       <!-- Loading Overlay using TailwindCSS -->
@@ -24,12 +24,12 @@
       </router-link>
       <!-- Nav Items -->
       <nav class="nav-menu flex flex-col gap-2">
-        <button class="nav-item bg-button" @click="showTable">
+        <button class="nav-item" @click="showTable">
           Display Tarrant County Vacancy Report
           
         </button>
         <div class="relative">
-          <button class="nav-item bg-button" @click="toggleDropdown">
+          <button class="nav-item bg-side-bar-2" @click="toggleDropdown">
             Actions
             <span :class="{'rotate-180': isDropdownOpen, 'rotate-0': !isDropdownOpen}" class="ml-2 inline-block transition-transform">
               ▲ <!-- This is a simple down arrow -->
@@ -39,32 +39,32 @@
           <!-- Dropdown Menu to the right of the button -->
           <div
             v-if="isDropdownOpen"
-            class="absolute left-full top-0 ml-5 py-2 w-64 shadow-xl z-10 rounded-md"
+            class="absolute left-full top-0 ml-5 py-2 w-64 bg-side-bar-2 z-10 rounded-md"
           >
             <button
-              class="nav-item bg-button block px-4 py-2 text-left font-medium text-xl"
+              class="nav-item block px-4 py-2 text-left font-medium text-xl"
               @click="downloadTAD"
             >
               Import TAD's Appraisal Data - Take time
             </button>
             <button
-              class="nav-item bg-button block px-4 py-2 text-left font-medium text-xl"
+              class="nav-item block px-4 py-2 text-left font-medium text-xl"
               @click="spatialMerge"
             >
               Perform Spatial Merge - Take time
             </button>
             <button
-              class=" nav-item bg-button block px-4 py-2 text-left font-medium text-xl"
+              class=" nav-item block px-4 py-2 text-left font-medium text-xl"
               @click="uploadFile"
             >
               Process TAD Data
             </button>
-            <button class="nav-item bg-button block px-4 py-2 text-left font-medium text-xl" @click="downloadVacanciesReport">
+            <button class="nav-item block px-4 py-2 text-left font-medium text-xl" @click="downloadVacanciesReport">
               Download Vacancies Report
             </button>
           </div>
         </div>
-        <button class="nav-item bg-button back-button" @click="goback">
+        <button class="nav-item" @click="goback">
           Back
         </button>
       </nav>
@@ -325,7 +325,7 @@ export default {
     },
 
     goback() {
-      router.push("/home");
+      router.back();
     },
 
     handleFileSelection(event) {
@@ -400,7 +400,7 @@ export default {
 /* Match the look of the first sidebar */
 
 .sidebar-container {
-  background-color: #d1dde6;
+  background-color: side-bar-2;
   height: 100vh;
   display: flex;
   flex-direction: column;
