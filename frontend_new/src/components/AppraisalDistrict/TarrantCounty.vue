@@ -325,7 +325,7 @@ export default {
     },
 
     goback() {
-      router.push("/home");
+      router.back();
     },
 
     handleFileSelection(event) {
