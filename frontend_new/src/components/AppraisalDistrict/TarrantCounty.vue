@@ -1,62 +1,42 @@
 <template>
   <div class="grid grid-cols-6 h-screen">
     <!-- Sidebar Container -->
-    <div
-      class="sidebar-container w-[250px] col-span-1 bg-side-bar-2 p-4 flex flex-col"
-    >
+    <div class="sidebar-container w-[250px] col-span-1 bg-side-bar-2 p-4 flex flex-col">
       <!-- Loading Overlay -->
       <!-- Loading Overlay using TailwindCSS -->
-      <div
-        v-if="isLoading"
-        class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50"
-      >
+      <div v-if="isLoading" class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
         <!-- Spinner -->
         <div class="loading loading-spinner loading-lg"></div>
         <p class="text-white text-lg mt-4">Task in progress, please wait...</p>
       </div>
       <!-- Logo Section -->
       <router-link to="/home">
-        <img
-          src="../../assets/trailspur-logo.svg"
-          alt="Trailspur Logo"
-          class="logo mb-8"
-        />
+        <img src="../../assets/trailspur-logo.svg" alt="Trailspur Logo" class="logo mb-8" />
       </router-link>
       <!-- Nav Items -->
       <nav class="nav-menu flex flex-col gap-2">
         <button class="nav-item" @click="showTable">
           Display Tarrant County Vacancy Report
-          
+
         </button>
         <div class="relative">
           <button class="nav-item bg-side-bar-2" @click="toggleDropdown">
             Actions
-            <span :class="{'rotate-180': isDropdownOpen, 'rotate-0': !isDropdownOpen}" class="ml-2 inline-block transition-transform">
+            <span :class="{ 'rotate-180': isDropdownOpen, 'rotate-0': !isDropdownOpen }"
+              class="ml-2 inline-block transition-transform">
               ▲ <!-- This is a simple down arrow -->
             </span>
           </button>
-          
+
           <!-- Dropdown Menu to the right of the button -->
-          <div
-            v-if="isDropdownOpen"
-            class="absolute left-full top-0 ml-5 py-2 w-64 bg-side-bar-2 z-10 rounded-md"
-          >
-            <button
-              class="nav-item block px-4 py-2 text-left font-medium text-xl"
-              @click="downloadTAD"
-            >
+          <div v-if="isDropdownOpen" class="absolute left-full top-0 ml-5 py-2 w-64 bg-side-bar-2 z-10 rounded-md">
+            <button class="nav-item block px-4 py-2 text-left font-medium text-xl" @click="downloadTAD">
               Import TAD's Appraisal Data - Take time
             </button>
-            <button
-              class="nav-item block px-4 py-2 text-left font-medium text-xl"
-              @click="spatialMerge"
-            >
+            <button class="nav-item block px-4 py-2 text-left font-medium text-xl" @click="spatialMerge">
               Perform Spatial Merge - Take time
             </button>
-            <button
-              class=" nav-item block px-4 py-2 text-left font-medium text-xl"
-              @click="uploadFile"
-            >
+            <button class=" nav-item block px-4 py-2 text-left font-medium text-xl" @click="uploadFile">
               Process TAD Data
             </button>
             <button class="nav-item block px-4 py-2 text-left font-medium text-xl" @click="downloadVacanciesReport">
@@ -73,72 +53,42 @@
     <!-- Table and Buttons Section -->
     <div class="col-start-2 col-span-5 flex flex-col h-screen p-4">
       <div class="flex-grow overflow-auto">
-        <table
-          v-if="filteredData.length"
-          class="overflow-x-auto table table-md"
-        >
+        <table v-if="filteredData.length" class="overflow-x-auto table table-md">
           <thead class="bg-gray-100">
             <tr>
-              <th
-                v-for="(header, index) in csvHeaders"
-                :key="index"
-                class="cursor-pointer"
-              >
+              <th v-for="(header, index) in csvHeaders" :key="index" class="cursor-pointer">
                 {{ header }}
               </th>
             </tr>
           </thead>
           <tbody>
-            <tr
-              v-for="(row, rowIndex) in paginatedSortedData"
-              :key="rowIndex"
-              :class="{ 'bg-gray-100': rowIndex % 2 === 0 }"
-            >
-              <td
-                v-for="(value, colIndex) in row"
-                :key="colIndex"
-                v-html="highlightMatch(value)"
-              ></td>
+            <tr v-for="(row, rowIndex) in paginatedSortedData" :key="rowIndex"
+              :class="{ 'bg-gray-100': rowIndex % 2 === 0 }">
+              <td v-for="(value, colIndex) in row" :key="colIndex" v-html="highlightMatch(value)"></td>
             </tr>
           </tbody>
         </table>
         <!-- Pagination Controls -->
-        <div
-          class="col-start-2 col-end-5 rows-start-4 rows-end-4 col-span-4 flex justify-center items-center gap-4"
-          v-if="csvData.length"
-        >
-          <button
-            class="btn btn-s"
-            @click="prevPage"
-            :disabled="currentPage === 1"
-          >
+        <div class="col-start-2 col-end-5 rows-start-4 rows-end-4 col-span-4 flex justify-center items-center gap-4"
+          v-if="csvData.length">
+          <button class="btn btn-s" @click="prevPage" :disabled="currentPage === 1">
             Previous
           </button>
           <span>Page {{ currentPage }} of {{ totalPages }}</span>
-          <button
-            class="btn btn-s"
-            @click="nextPage"
-            :disabled="currentPage === totalPages"
-          >
+          <button class="btn btn-s" @click="nextPage" :disabled="currentPage === totalPages">
             Next
           </button>
         </div>
 
         <!-- Upload & Process & Download Buttons -->
-        <div
-          class="col-start-2 col-end-5 rows-start-5 rows-end-5 col-span-4 join"
-        >
+        <div class="col-start-2 col-end-5 rows-start-5 rows-end-5 col-span-4 join">
           <!-- <label for="districtSelect">Select District:</label>
                   <select v-model="uploadRegion" id="districtSelect">
                       <option disabled value="">Select a district</option>
                       <option v-for="district in districts" :key="district" :value="district">{{ district }}</option>
                   </select> -->
-          <input
-            type="file"
-            class="join-item file-input file-input-bordered"
-            @change="handleFileSelection"
-            accept=".xlsx, .xls, .csv"
-          />
+          <input type="file" class="join-item file-input file-input-bordered" @change="handleFileSelection"
+            accept=".xlsx, .xls, .csv" />
           <button class="btn btn-s join-item" @click="uploadFile">
             Process Costar Vacancies Report
           </button>
@@ -273,7 +223,7 @@ export default {
         this.isLoading = false; // End loading
       }
     },
-
+    // Import TAD package - Take time since it's a large file
     async downloadTAD() {
       this.isLoading = true; // Start loading
       try {
@@ -359,7 +309,7 @@ export default {
           console.error("Error uploading file:", error); // Log the full error object for debugging
           alert(
             "An error occurred while uploading the file: " +
-              (error.response?.data?.message || error.message)
+            (error.response?.data?.message || error.message)
           ); // Display user-friendly error message, including server error if available.
         }
       } else {
@@ -374,11 +324,32 @@ export default {
       if (this.currentPage > 1) this.currentPage--;
     },
     async downloadVacanciesReport() {
+      this.isLoading = true;
       try {
-        const response = await axios.get("http://127.0.0.1:8000/export-csv/", {
-          responseType: "blob",
-        });
-        const blob = new Blob([response.data], { type: "text/csv" });
+        // Fetch data from Supabase
+        let { data, error } = await supabase
+          .from("master_vacancy_list") // Use correct table name as a string
+          .select("*");
+
+        if (error) {
+          throw error;
+        }
+
+        if (!data || data.length === 0) {
+          console.warn("No data found in Supabase table.");
+          alert("No data available.");
+          return;
+        }
+
+        // Convert JSON to CSV format
+        const csvString = papaparse.unparse(data);
+
+        // Extract headers and data (if needed for UI updates)
+        this.csvHeaders = Object.keys(data[0] || {}); // Extract column headers
+        this.csvData = data; // Store data for UI
+
+        // Create CSV file and trigger download
+        const blob = new Blob([csvString], { type: "text/csv" });
         const url = window.URL.createObjectURL(blob);
         const link = document.createElement("a");
         link.href = url;
@@ -387,11 +358,16 @@ export default {
         link.click();
         document.body.removeChild(link);
         window.URL.revokeObjectURL(url);
+
+        // Call processVacanciesReport() if needed
+        // await this.processVacanciesReport(); 
       } catch (error) {
         console.error("Error downloading CSV:", error);
         alert("Failed to download CSV.");
+      } finally {
+        this.isLoading = false; // Ensure isLoading is updated
       }
-    },
+    }
   },
 };
 </script>
@@ -470,9 +446,12 @@ export default {
 /* Hover/active state with zoom effect */
 .nav-item:hover,
 .nav-item:focus {
-  background-color: #d6d2c4; /* Light hover color */
-  color: #2c3e50; /* Text color stays dark */
-  transform: scale(1.05); /* Adds the zoom effect */
+  background-color: #d6d2c4;
+  /* Light hover color */
+  color: #2c3e50;
+  /* Text color stays dark */
+  transform: scale(1.05);
+  /* Adds the zoom effect */
 }
 
 /* Special back-button style */
@@ -481,12 +460,14 @@ export default {
   color: #ffffff;
   margin-top: 1rem;
   text-align: center;
-  transition: background-color 0.3s ease, transform 0.2s ease; /* Smooth hover transition */
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  /* Smooth hover transition */
 }
 
 .back-button:hover {
   background-color: #1a252f;
-  transform: scale(1.05); /* Zoom effect for back button */
+  transform: scale(1.05);
+  /* Zoom effect for back button */
 }
 
 .highlight {
