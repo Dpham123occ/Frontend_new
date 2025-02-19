@@ -439,7 +439,7 @@ export default {
 
 /* The sidebar container is fixed to the left, hidden by default (-250px). */
 .sidebar-container {
-  background-color: #d1dde6;
+  background-color: black;
   height: 100vh;
   position: fixed;
   top: 0;
