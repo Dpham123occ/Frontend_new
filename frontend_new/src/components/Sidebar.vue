@@ -6,20 +6,32 @@
     </button>
 
     <!-- Sidebar -->
-    <div :class="['sidebar-container', { 'open': isSidebarOpen }]">
+    <div :class="['sidebar-container', { open: isSidebarOpen }]">
       <!-- Logo Section -->
       <div class="logo-section">
         <router-link to="/home">
-          <img src="../assets/TSBlack.png" alt="Trailspur Logo" class="logo" />
+          <img
+            src="../assets/trailspur-logo.svg"
+            alt="Trailspur Logo"
+            class="logo"
+          />
         </router-link>
       </div>
 
       <!-- Navigation Menu -->
       <nav class="nav-menu">
-        <router-link to="/appraisaldistrict" class="nav-item" @click="closeSidebar">
+        <router-link
+          to="/appraisaldistrict"
+          class="nav-item"
+          @click="closeSidebar"
+        >
           Appraisal District
         </router-link>
-        <router-link to="/acquisitionlist" class="nav-item" @click="closeSidebar">
+        <router-link
+          to="/acquisitionlist"
+          class="nav-item"
+          @click="closeSidebar"
+        >
           Acquisition List
         </router-link>
         <router-link to="/view" class="nav-item" @click="closeSidebar">
@@ -30,7 +42,11 @@
         </router-link>
 
         <!-- Conditional Buttons -->
-        <button v-if="isHomePage" class="nav-item logout-button" @click="logOut">
+        <button
+          v-if="isHomePage"
+          class="nav-item logout-button"
+          @click="logOut"
+        >
           Log Out
         </button>
         <button v-else class="nav-item back-button" @click="goBack">
@@ -42,28 +58,28 @@
 </template>
 
 <script>
-import { ref, defineEmits } from 'vue';
-import { useAuth0 } from '@auth0/auth0-vue';
-import { useRoute, useRouter } from 'vue-router';
+import { ref, defineEmits } from "vue";
+import { useAuth0 } from "@auth0/auth0-vue";
+import { useRoute, useRouter } from "vue-router";
 
 export default {
-  name: 'Sidebar',
+  name: "Sidebar",
   setup(_, { emit }) {
     const { logout } = useAuth0();
     const route = useRoute();
     const router = useRouter();
-    const isHomePage = route.path === '/home';
+    const isHomePage = route.path === "/home";
 
     const isSidebarOpen = ref(true);
 
     const toggleSidebar = () => {
       isSidebarOpen.value = !isSidebarOpen.value;
-      emit('sidebarToggle', isSidebarOpen.value); // Notify parent component
+      emit("sidebarToggle", isSidebarOpen.value); // Notify parent component
     };
 
     const closeSidebar = () => {
       isSidebarOpen.value = false;
-      emit('sidebarToggle', false);
+      emit("sidebarToggle", false);
     };
 
     const logOut = () => {
@@ -74,7 +90,14 @@ export default {
       router.back();
     };
 
-    return { isHomePage, logOut, goBack, isSidebarOpen, toggleSidebar, closeSidebar };
+    return {
+      isHomePage,
+      logOut,
+      goBack,
+      isSidebarOpen,
+      toggleSidebar,
+      closeSidebar,
+    };
   },
 };
 </script>
@@ -83,7 +106,7 @@ export default {
 /* Sidebar Styles */
 .sidebar-container {
   width: 250px;
-  background-color: #d1dde6;
+  background-color: #231f20;
   height: 100vh;
   position: fixed;
   top: 0;
@@ -114,6 +137,7 @@ export default {
   font-size: 28px;
   cursor: pointer;
   z-index: 1000;
+  color: #967444;
 }
 
 /* Animate Hamburger Icon */
@@ -149,10 +173,11 @@ export default {
   width: 100%;
   background-color: transparent;
   border: none;
-  color: #231F20;
+  color: #ffffff;
   text-align: left;
   font-weight: 500;
   font-size: 20px;
+  font-family: "Sentinel – Book Aa", serif;
   cursor: pointer;
   padding: 0.75rem 1rem;
   margin-bottom: 0.5rem;
@@ -161,13 +186,13 @@ export default {
 }
 
 .nav-item:hover {
-  background-color: #d6d2c4;
+  background-color: #967444;
   transform: scale(1.05);
 }
 
 .back-button,
 .logout-button {
-  background-color: #231F20;
+  background-color: #231f20;
   color: #ffffff;
   margin-top: 1rem;
   text-align: center;

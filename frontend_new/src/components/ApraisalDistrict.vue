@@ -1,19 +1,26 @@
 <template>
-  <div>
-    <Sidebar />
+  <div class="grid grid-cols-8 h-screen bg-[#fff]">
+    <!-- Sidebar Component -->
+    <Sidebar @sidebarToggle="handleSidebarToggle" />
+
+    <!-- Appraisal District Section -->
     <div
-      class="col-start-2 col-span-6 flex flex-col h-screen p-8 bg-[#f9f9f9] rounded-lg shadow-inner flex-grow mx-auto justify-start items-center mt-8"
+      :class="[
+        'col-start-2 col-span-6 flex flex-col h-screen p-8 bg-[#fff] rounded-lg shadow-inner flex-grow mx-auto justify-start items-center mt-8',
+        { shifted: isSidebarOpen },
+      ]"
     >
-      <h2 class="title text-3xl font-bold text-center text-[#967444] mb-6">
-        Appraisal District 
+      <h2 class="title text-3xl font-bold text-center text-[#231f20] mb-6">
+        Appraisal District
       </h2>
+
       <div
         class="button-list flex flex-col gap-4 items-center w-full max-w-2xl"
       >
         <button
           v-for="property in properties"
           :key="property.name"
-          class="property-button w-full p-4 bg-[#ffffff] text-[#2c3e50] rounded-lg font-semibold shadow-md hover:bg-[#967444] hover:text-white transition-transform transform hover:scale-105 border border-gray-300"
+          class="property-button w-full p-4 bg-[#fff] text-[#ffff] rounded-lg font-semibold shadow-md hover:bg-[#967444] hover:text-white transition-transform transform hover:scale-105 border border-gray-300"
           @click="selectProperty(property)"
         >
           {{ property.name }}
@@ -42,122 +49,74 @@ export default {
           name: "Dallas County",
           route: "/appraisaldistrict/dallas",
         },
-        { name: "Harris County", 
-          route: "/appraisaldistrict/harris" },
+        {
+          name: "Harris County",
+          route: "/appraisaldistrict/harris",
+        },
         {
           name: "Collin County",
-          route: "/appraisaldistrict/tarrant",
+          route: "/appraisaldistrict/collin",
         },
       ],
+      isSidebarOpen: true,
     };
   },
   methods: {
     selectProperty(property) {
       this.$router.push(property.route);
     },
+    handleSidebarToggle(isOpen) {
+      this.isSidebarOpen = isOpen;
+    },
   },
 };
 </script>
 
 <style scoped>
-/* Match the look of the first sidebar */
+/* Appraisal District Section */
+.col-start-2 {
+  flex: 1;
+  transition: transform 0.3s ease-in-out;
+  transform: translateX(0px);
+  font-family: "Sentinel – Book Aa", serif;
+}
 
-.sidebar-container {
-  background-color: #d1dde6;
-  height: 100vh;
+/* Shift back when sidebar is closed */
+.shifted {
+  transform: translateX(120px);
+}
+
+/* Button List - Expand Width */
+.button-list {
   display: flex;
   flex-direction: column;
+  gap: 1rem;
   align-items: center;
-  padding: 2rem 1rem;
-  box-sizing: border-box;
-
-  /* Subtle shadow + border for a modern look */
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  border-right: 1px solid #e6e6e6;
-  z-index: 999;
-
-  /* Same width as the other sidebar (250px).
-     Because we use grid, we set col-span-1 for 6 columns.
-     Ensure your overall container is wide enough that col-span-1 ~ 250px. */
-  min-width: 250px;
-
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-    "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
-    "Segoe UI Symbol";
-}
-
-.logo-section {
-  margin-bottom: 2rem;
-  text-align: center;
-}
-
-.logo {
-  width: 200px;
-  height: auto;
-  object-fit: contain;
-}
-
-/* Navigation Menu */
-.nav-menu {
-  display: flex;
-  flex-direction: column;
   width: 100%;
+  width: 500px;
 }
 
-/* Navigation Menu */
-.nav-menu {
-  display: flex;
-  flex-direction: column;
+/* Property Buttons */
+.property-button {
   width: 100%;
-}
-
-/* Shared nav-item styles */
-.nav-item {
-  display: block;
-  width: 100%;
-  background-color: transparent;
-  border: none;
-  color: #231f20;
-  text-align: left;
-  font-weight: 500;
-  font-size: 20px;
+  width: 500px;
+  padding: 1.5rem;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 1.2rem;
+  font-family: "Sentinel – Book Aa", serif;
   cursor: pointer;
-
-  padding: 0.75rem 1rem;
-  margin-bottom: 0.5rem;
-  border-radius: 4px;
-
-  /* Adding transition for smooth hover effect */
-  transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease;
-}
-
-/* Hover/active state with zoom effect */
-.nav-item:hover,
-.nav-item:focus {
-  background-color: #d6d2c4; /* Light hover color */
-
-  color: #2c3e50; /* Text color stays dark */
-  transform: scale(1.05); /* Adds the zoom effect */
-
-}
-
-/* Special back-button style */
-.back-button {
-  background-color: #231F20;;
-  color: #ffffff;
-  margin-top: 1rem;
   text-align: center;
-  transition: background-color 0.3s ease, transform 0.2s ease; /* Smooth hover transition */
+  background-color: #231f20;
+  color: #ffff;
+  border: 1px solid #d8d2c4;
+  transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
-.back-button:hover {
-  background-color: #000000;
-  color: #ffffff !important;
-  transform: scale(1.05); /* Zoom effect for back button */
-}
-
-.highlight {
-  background-color: yellow;
-  font-weight: bold;
+.property-button:hover {
+  background-color: #967444;
+  color: white;
+  transform: scale(1.05);
+  border: none;
 }
 </style>
