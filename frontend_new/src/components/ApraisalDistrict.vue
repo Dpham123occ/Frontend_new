@@ -46,7 +46,7 @@ export default {
           route: "/appraisaldistrict/harris" },
         {
           name: "Collin County",
-          route: "/appraisaldistrict/tarrant",
+          route: "/appraisaldistrict/collin",
         },
       ],
     };
