@@ -372,8 +372,8 @@ export default {
 
     /* ----------- NAVIGATE BACK ---------- */
     goback() {
+ sidebar
       this.closeSidebar();
-      router.back();
     },
 
     /* ----------- FILE HANDLING ---------- */
