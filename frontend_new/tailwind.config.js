@@ -3,7 +3,9 @@ module.exports = {
     extend: {
       colors: {
         'side-bar': '#d1dede',
+        'side-bar-2': '#231F20',
         'button': '#2c3e50',
+        'gold': "#967444",
       },
     },
   },

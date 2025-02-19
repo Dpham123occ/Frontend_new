@@ -10,11 +10,7 @@
       <!-- Logo Section -->
       <div class="logo-section">
         <router-link to="/home">
-          <img
-            src="../assets/trailspur-logo.svg"
-            alt="Trailspur Logo"
-            class="logo"
-          />
+          <img src="../assets/trailspur-logo.svg" alt="Trailspur Logo" class="logo" />
         </router-link>
       </div>
 

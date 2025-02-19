@@ -12,7 +12,7 @@ import { RouterView } from 'vue-router';
       <div class="login-box">
         <!-- Logo Section Inside Login Box -->
         <div class="logo-section">
-          <img src="../assets/TSBlack.png" alt="Trailspur Logo" class="logo" />
+          <img src="../assets/trailspur-logo.svg" alt="Trailspur Logo" class="logo" />
         </div>
 
         <!-- Login Button Section -->
