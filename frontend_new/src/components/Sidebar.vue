@@ -83,15 +83,45 @@ export default {
 
     const logOut = async () => {
       try {
-        const { error } = await supabase.auth.signOut(); // Sign out using Supabase
+        // Check if a valid session exists
+        const {
+          data: { session },
+          error: sessionError,
+        } = await supabase.auth.getSession();
+
+        if (!session || sessionError) {
+          console.warn(
+            "No active session found. Clearing local state and redirecting to login."
+          );
+          // Clear local storage
+          localStorage.removeItem(`sb-${supabaseUrl.split(".")[0]}-auth-token`);
+          // Redirect to login page
+          router.push("/");
+          return;
+        }
+
+        // Sign out the user
+        const { error } = await supabase.auth.signOut();
         if (error) throw error;
 
-        // Redirect to the login page or home page after logout
+        // Clear local storage
+        localStorage.removeItem(`sb-${supabaseUrl.split(".")[0]}-auth-token`);
+
+        // Redirect to the login page after logout
         router.push("/");
-      } catch (error) {
-        console.error("Error logging out:", error.message);
+      } catch (err) {
+        console.error("Error logging out:", err.message);
+        // Redirect to login page even if there's an error
+        router.push("/");
       }
     };
+
+    // Listen for authentication state changes
+    supabase.auth.onAuthStateChange((event, session) => {
+      if (event === "SIGNED_OUT" || event === "USER_DELETED") {
+        router.push("/");
+      }
+    });
 
     const goBack = () => {
       router.back();
