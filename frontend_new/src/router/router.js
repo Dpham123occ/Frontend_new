@@ -10,6 +10,7 @@ import IOSExsisting from "../AcquisitionComponents/IOSExsisting.vue";
 import IOSDevelopment from "../AcquisitionComponents/IOSDevelopment.vue";
 import View from "../components/View.vue";
 import Tarrant from "../components/AppraisalDistrict/TarrantCounty.vue";
+import Setting from "../components/Setting.vue";
 
 const routes = [
   {
@@ -71,6 +72,11 @@ const routes = [
     component: View,
     meta: { requiresAuth : true }
   },
+  {
+    path: '/settings',
+    name: 'Setting',
+    component: Setting,
+    meta: { requiresAuth : true }  }
 ];
 
 const router = createRouter({
