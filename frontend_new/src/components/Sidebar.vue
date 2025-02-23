@@ -10,7 +10,11 @@
       <!-- Logo Section -->
       <div class="logo-section">
         <router-link to="/home">
-          <img src="../assets/trailspur-logo.svg" alt="Trailspur Logo" class="logo" />
+          <img
+            src="../assets/trailspur-logo.svg"
+            alt="Trailspur Logo"
+            class="logo"
+          />
         </router-link>
       </div>
 
@@ -55,13 +59,12 @@
 
 <script>
 import { ref, defineEmits } from "vue";
-import { useAuth0 } from "@auth0/auth0-vue";
 import { useRoute, useRouter } from "vue-router";
+import { supabase } from "../lib/supabase";
 
 export default {
   name: "Sidebar",
   setup(_, { emit }) {
-    const { logout } = useAuth0();
     const route = useRoute();
     const router = useRouter();
     const isHomePage = route.path === "/home";
@@ -78,8 +81,16 @@ export default {
       emit("sidebarToggle", false);
     };
 
-    const logOut = () => {
-      logout({ returnTo: window.location.origin });
+    const logOut = async () => {
+      try {
+        const { error } = await supabase.auth.signOut(); // Sign out using Supabase
+        if (error) throw error;
+
+        // Redirect to the login page or home page after logout
+        router.push("/");
+      } catch (error) {
+        console.error("Error logging out:", error.message);
+      }
     };
 
     const goBack = () => {

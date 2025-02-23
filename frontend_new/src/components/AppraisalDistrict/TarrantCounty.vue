@@ -338,7 +338,7 @@ export default {
 
     /* ----------- NAVIGATE BACK ---------- */
     goback() {
-      router.push("/home");
+      router.back();
     },
 
     /* ----------- FILE HANDLING ---------- */

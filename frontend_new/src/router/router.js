@@ -1,6 +1,6 @@
 import HomePage from "../components/HomePage.vue";
 import { createRouter, createWebHistory } from "vue-router";
-import { useAuth0 } from "@auth0/auth0-vue";
+import { supabase } from "../lib/supabase";
 import App from '../App.vue'
 import ApraisalDistrict from '../components/ApraisalDistrict.vue';
 import AcquisitionList from '../components/AcquisitionList.vue';
@@ -21,65 +21,79 @@ const routes = [
     path: '/home',
     name: 'HomePage',
     component: HomePage,
-    meta: { requiresAuth: true }
+    meta: { requiresAuth : true }
   },
   {
     path: '/appraisaldistrict',
     name: 'Appraisal District',
     component: ApraisalDistrict,
+    meta: { requiresAuth : true }
   },
   {
     path: '/appraisaldistrict/tarrant',
     name: 'Tarrant County',
     component: Tarrant,
+    meta: { requiresAuth : true }
   },
   {
     path: '/acquisitionlist',
     name: 'Acquisition List',
     component: AcquisitionList,
+    meta: { requiresAuth : true }
   },
   {
-    path: '/acquisition-list/LightIndustrialMT', // Update to match component route
+    path: '/acquisition-list/LightIndustrialMT',
     name: 'Light Industrial Multi Tenant',
     component: LightIndustrialMT,
+    meta: { requiresAuth : true }
   },
-
   {
-    path: '/acquisition-list/LightIndustrialUB', // Update to match component route
+    path: '/acquisition-list/LightIndustrialUB',
     name: 'Light Industrial User Building',
     component: LightIndustrialUB,
+    meta: { requiresAuth : true }
   },
   {
-    path: '/acquisition-list/IOSExsiting', // Update to match component route
-    name: 'IOS Exsiting',
+    path: '/acquisition-list/IOSExsiting',
+    name: 'IOS Existing',
     component: IOSExsisting,
+    meta: { requiresAuth : true }
   },
   {
-    path: '/acquisition-list/IOSDevelopment', // Update to match component route
+    path: '/acquisition-list/IOSDevelopment',
     name: 'IOS Development',
     component: IOSDevelopment,
+    meta: { requiresAuth : true }
   },
   {
     path: '/view',
     name: 'View',
     component: View,
+    meta: { requiresAuth : true }
   },
 ];
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes,
-})
+});
 
 router.beforeEach(async (to, from, next) => {
-  const auth0 = useAuth0();
-  const isAuthenticated = auth0.isAuthenticated.value;
+  // Check if the route requires authentication
+  if (to.meta.requiresAuth) {
+    // Get the current session from Supabase
+    const { data: { session }, error } = await supabase.auth.getSession();
 
-  if (to.meta.requiresAuth && !isAuthenticated) {
-    next("/"); // Redirect to login if not authenticated
+    if (!session || error) {
+      // If no session or error, redirect to the root route
+      next({ path: '/' });
+    } else {
+      // If authenticated, allow navigation
+      next();
+    }
   } else {
+    // If the route does not require authentication, allow navigation
     next();
   }
 });
-
-export default router
+export default router;
