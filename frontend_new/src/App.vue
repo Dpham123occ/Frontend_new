@@ -3,12 +3,21 @@
     <div class="login-container">
       <div class="login-box">
         <div class="logo-section">
-          <img src="./assets/trailspur-logo.svg" alt="Trailspur Logo" class="logo" />
+          <img
+            src="./assets/trailspur-logo.svg"
+            alt="Trailspur Logo"
+            class="logo"
+          />
         </div>
         <!-- Login form -->
         <form @submit.prevent="login" class="form-section">
           <input v-model="email" type="email" placeholder="Email" required />
-          <input v-model="password" type="password" placeholder="Password" required />
+          <input
+            v-model="password"
+            type="password"
+            placeholder="Password"
+            required
+          />
           <button class="btn" type="submit">Login</button>
           <p v-if="error">{{ error }}</p>
         </form>
@@ -21,27 +30,41 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
-import { useRouter, RouterView } from 'vue-router';
-import { supabase } from './lib/supabase';
+import { ref, onMounted } from "vue";
+import { useRouter, RouterView } from "vue-router";
+import { supabase } from "./lib/supabase";
 
-const email = ref('');
-const password = ref('');
+const email = ref("");
+const password = ref("");
 const error = ref(null);
 const isAuthenticated = ref(false);
 const router = useRouter();
 
 // Check authentication state on component mount
 onMounted(async () => {
-  const { data: { session }, error: authError } = await supabase.auth.getSession();
+  try {
+    const {
+      data: { session },
+      error: authError,
+    } = await supabase.auth.getSession();
 
-  if (session) {
-    isAuthenticated.value = true; // User is authenticated
-    if(router.currentRoute ==='/') {
-      router.push('/home')
+    if (authError) {
+      console.error("Error fetching session:", authError.message);
+      isAuthenticated.value = false; // Assume user is not authenticated
+      return;
     }
-  } else {
-    isAuthenticated.value = false; // User is not authenticated
+
+    if (session) {
+      isAuthenticated.value = true; // User is authenticated
+      if (router.currentRoute === "/") {
+        router.push("/home"); // Redirect to home if on the login page
+      }
+    } else {
+      isAuthenticated.value = false; // User is not authenticated
+    }
+  } catch (err) {
+    console.error("Unexpected error:", err);
+    isAuthenticated.value = false; // Assume user is not authenticated
   }
 });
 
@@ -49,18 +72,18 @@ async function login() {
   try {
     const { user, error: loginError } = await supabase.auth.signInWithPassword({
       email: email.value,
-      password: password.value
+      password: password.value,
     });
 
     if (loginError) {
       error.value = loginError.message;
     } else {
       isAuthenticated.value = true; // Update the authentication state
-      router.push('/home'); // Redirect to home
+      router.push("/home"); // Redirect to home
     }
   } catch (err) {
     error.value = err.message; // Assign error properly
-    console.error('Login error', err);
+    console.error("Login error", err);
   }
 }
 </script>
