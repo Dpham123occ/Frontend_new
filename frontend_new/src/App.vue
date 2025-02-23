@@ -21,7 +21,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import { useRouter, RouterView } from 'vue-router';
 import { supabase } from './lib/supabase';
 
@@ -30,6 +30,17 @@ const password = ref('');
 const error = ref(null);
 const isAuthenticated = ref(false);
 const router = useRouter();
+
+// Check authentication state on component mount
+onMounted(async () => {
+  const { data: { session }, error: authError } = await supabase.auth.getSession();
+
+  if (session) {
+    isAuthenticated.value = true; // User is authenticated
+  } else {
+    isAuthenticated.value = false; // User is not authenticated
+  }
+});
 
 async function login() {
   try {
