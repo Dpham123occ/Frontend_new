@@ -1,46 +1,99 @@
 <template>
-  <html data-theme="coporate">
-  <LoginPage msg="Welcome to Trailspur"/>
-  </html>
+  <div v-if="!isAuthenticated">
+    <div class="login-container">
+      <div class="login-box">
+        <div class="logo-section">
+          <img src="./assets/trailspur-logo.svg" alt="Trailspur Logo" class="logo" />
+        </div>
+        <!-- Login form -->
+        <form @submit.prevent="login" class="form-section">
+          <input v-model="email" type="email" placeholder="Email" required />
+          <input v-model="password" type="password" placeholder="Password" required />
+          <button class="btn" type="submit">Login</button>
+          <p v-if="error">{{ error }}</p>
+        </form>
+      </div>
+    </div>
+  </div>
+  <div v-else>
+    <RouterView />
+  </div>
 </template>
 
 <script setup>
-  import LoginPage from './components/LoginPage.vue'
-  import { onMounted, watch } from "vue";
-  import { useAuth0 } from "@auth0/auth0-vue";
-  import { useRouter } from "vue-router";
+import { ref } from 'vue';
+import { useRouter, RouterView } from 'vue-router';
+import { supabase } from './lib/supabase';
 
-  const { isAuthenticated, isLoading } = useAuth0();
-  const router = useRouter();
+const email = ref('');
+const password = ref('');
+const error = ref(null);
+const isAuthenticated = ref(false);
+const router = useRouter();
 
-  // Check authentication and redirect if authenticated
-  onMounted(() => {
-    if (!isLoading.value && isAuthenticated.value) {
-      router.replace("/home");
+async function login() {
+  try {
+    const { user, error: loginError } = await supabase.auth.signInWithPassword({
+      email: email.value,
+      password: password.value
+    });
+
+    if (loginError) {
+      error.value = loginError.message;
+    } else {
+      isAuthenticated.value = true; // Update the authentication state
+      router.push('/home'); // Redirect to home
     }
-  });
-
-  // Watch for authentication changes
-  watch(isAuthenticated, (newValue) => {
-    if (newValue && router.currentRoute.value.path === "/" ) {
-      router.replace("/home");
-    }
-  });
+  } catch (err) {
+    error.value = err.message; // Assign error properly
+    console.error('Login error', err);
+  }
+}
 </script>
 
 <style scoped>
+/* Main container */
+.login-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  background-color: #d1dede;
+  /* texas-sky */
+}
+
+/* Centered box */
+.login-box {
+  background-color: white;
+  padding: 2rem;
+  border-radius: 10px;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+  max-width: 600px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  /* Stack items vertically */
+  align-items: center;
+  /* Center the contents horizontally */
+}
+
+/* Logo Section Inside Login Box */
+.logo-section {
+  margin-bottom: 2rem;
+  /* Add spacing below the logo */
+}
+
 .logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
+  width: 180px;
+  height: auto;
+  object-fit: contain;
 }
 
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-
-.logo.vue:hover {
-  filter: drop-shadow(0 0 2em #42b883aa);
+/* Login Button Section */
+.button-section {
+  display: flex;
+  justify-content: center;
+  /* Center the button */
+  width: 100%;
 }
 </style>
