@@ -37,7 +37,7 @@ onMounted(async () => {
 
   if (session) {
     isAuthenticated.value = true; // User is authenticated
-    if(router.currentRoute='/') {
+    if(router.currentRoute ==='/') {
       router.push('/home')
     }
   } else {
