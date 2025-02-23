@@ -53,14 +53,15 @@ onMounted(async () => {
       isAuthenticated.value = false; // Assume user is not authenticated
       return;
     }
-
     if (session) {
       isAuthenticated.value = true; // User is authenticated
-      if (router.currentRoute === "/") {
-        router.push("/home"); // Redirect to home if on the login page
+      if (session && !error && window.location.pathname === "/") {
+        // If the user is authenticated and on the root path, redirect to '/home'
+        router.push("/home");
       }
     } else {
       isAuthenticated.value = false; // User is not authenticated
+      router.push("/");
     }
   } catch (err) {
     console.error("Unexpected error:", err);

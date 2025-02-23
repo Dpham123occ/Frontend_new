@@ -91,9 +91,21 @@ router.beforeEach(async (to, from, next) => {
       // If authenticated, allow navigation
       next();
     }
+  } else if (to.path === '/') {
+    // Check if the user is on the root path
+    const { data: { session }, error } = await supabase.auth.getSession();
+
+    if (session && !error) {
+      // If the user is authenticated and on the root path, redirect to '/home'
+      next({ path: '/home' });
+    } else {
+      // If the user is not authenticated, allow navigation to the root path
+      next();
+    }
   } else {
     // If the route does not require authentication, allow navigation
     next();
   }
 });
+
 export default router;
