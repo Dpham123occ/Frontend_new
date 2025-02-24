@@ -87,6 +87,7 @@ export default {
         }, 2000);
       } catch (err) {
         console.error("Error updating password:", err.message);
+        alert("Error updating password:", err.message);
         error.value = "Failed to update password. Please try again.";
         successMessage.value = ""; // Clear any previous success message
       }
