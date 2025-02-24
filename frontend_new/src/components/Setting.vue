@@ -12,8 +12,9 @@
         <div class="profile-detail">
           <strong>Email:</strong> {{ user?.email }}
         </div>
+        <UpdatePassword></UpdatePassword>
       </div>
-
+      
       <!-- Error Message -->
       <p v-if="error" class="error-message">{{ error }}</p>
     </div>
@@ -25,9 +26,10 @@ import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
 import { supabase } from "../lib/supabase";
 import Sidebar from "./Sidebar.vue";
+import UpdatePassword from "./UpdatePassword.vue";
 
 export default {
-  components: { Sidebar },
+  components: { Sidebar, UpdatePassword },
   name: "Setting",
   setup() {
     const user = ref(null); // Store the user's information
