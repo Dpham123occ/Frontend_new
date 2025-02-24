@@ -1,7 +1,6 @@
 import HomePage from "../components/HomePage.vue";
 import { createRouter, createWebHistory } from "vue-router";
 import { supabase } from "../lib/supabase";
-import App from '../App.vue'
 import ApraisalDistrict from '../components/ApraisalDistrict.vue';
 import AcquisitionList from '../components/AcquisitionList.vue';
 import LightIndustrialMT from "../AcquisitionComponents/LightIndustrialMT.vue";
@@ -11,12 +10,14 @@ import IOSDevelopment from "../AcquisitionComponents/IOSDevelopment.vue";
 import View from "../components/View.vue";
 import Tarrant from "../components/AppraisalDistrict/TarrantCounty.vue";
 import Setting from "../components/Setting.vue";
-
+import ForgotPassword from '../components/ForgotPassword.vue';
+import UpdatePassword from '../components/UpdatePassword.vue';
+import LoginPage from "../components/LoginPage.vue";
 const routes = [
   {
     path: '/',
-    name: 'base',
-    component: App,
+    name: 'LoginPage',
+    component: LoginPage,
   },
   {
     path: '/home',
@@ -76,7 +77,18 @@ const routes = [
     path: '/settings',
     name: 'Setting',
     component: Setting,
-    meta: { requiresAuth : true }  }
+    meta: { requiresAuth : true }  
+  },
+  {
+    path: '/forgot-password',
+    name: 'ForgotPassword',
+    component: ForgotPassword,
+  },
+  {
+    path: '/update-password',
+    name: 'UpdatePassword',
+    component: UpdatePassword,
+  },
 ];
 
 const router = createRouter({
