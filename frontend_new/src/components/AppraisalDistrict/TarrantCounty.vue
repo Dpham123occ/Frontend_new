@@ -26,6 +26,7 @@
       <nav class="nav-menu flex flex-col gap-2">
         <button class="nav-item bg-button" @click="showTable">
           Display Tarrant County Vacancy Report
+          
         </button>
 
         <!-- ACTIONS DROPDOWN -->
@@ -69,6 +70,8 @@
     </div>
 
     <!-- TABLE & BUTTONS SECTION -->
+    <!-- Occupies the rest of the screen using col-start-2 col-span-5. -->
+    <!-- Wrap in main-content + conditionally add 'shifted' to move it right when sidebar is open -->
     <div
       :class="['main-content', { shifted: isSidebarOpen }]"
       class="col-start-2 col-span-5 flex flex-col h-screen p-4"
@@ -83,23 +86,46 @@
               <th
                 v-for="(header, index) in csvHeaders"
                 :key="index"
+                class="cursor-pointer"
               >
                 {{ header }}
               </th>
             </tr>
           </thead>
           <tbody>
-            <tr v-for="(row, rowIndex) in filteredData" :key="rowIndex"
+            <tr v-for="(row, rowIndex) in paginatedSortedData" :key="rowIndex"
               :class="{ 'bg-gray-100': rowIndex % 2 === 0 }">
               <td v-for="(value, colIndex) in row" :key="colIndex" v-html="highlightMatch(value)"></td>
             </tr>
           </tbody>
         </table>
+        <!-- Pagination Controls -->
+        <div
+          class="col-start-2 col-end-5 rows-start-4 rows-end-4 col-span-4 flex justify-center items-center gap-4"
+          v-if="csvData.length"
+        >
+          <button
+            class="btn btn-s"
+            @click="prevPage"
+            :disabled="currentPage === 1"
+          >
+            Previous
+          </button>
+          <span>Page {{ currentPage }} of {{ totalPages }}</span>
+          <button class="btn btn-s" @click="nextPage" :disabled="currentPage === totalPages">
+            Next
+          </button>
+        </div>
 
         <!-- Upload & Process & Download Buttons -->
         <div
           class="col-start-2 col-end-5 rows-start-5 rows-end-5 col-span-4 join"
         >
+          <!-- <label for="districtSelect">Select District:</label>
+                  <select v-model="uploadRegion" id="districtSelect">
+                      <option disabled value="">Select a district</option>
+                      <option v-for="district in districts" :key="district" :value="district">{{ district }}</option>
+                  </select> -->
           <input
             type="file"
             class="join-item file-input file-input-bordered"
@@ -140,6 +166,8 @@ export default {
 
       /* SEARCH & SORT */
       searchQuery: "", // Search query for filtering table
+      sortKey: "", // Column to sort by
+      sortOrder: "asc", // Sorting order (ascending/descending)
 
       /* UI STATES */
       isLoading: false,
@@ -148,6 +176,47 @@ export default {
     };
   },
   computed: {
+    /* TOTAL PAGES for pagination */
+    totalPages() {
+      return Math.ceil(this.filteredData.length / this.rowsPerPage) || 1;
+    },
+
+    /* SORT THE DATA */
+    sortedData() {
+      // If no sort key is chosen, return the filtered data as-is
+      if (!this.sortKey) return this.filteredData;
+
+      return [...this.filteredData].sort((a, b) => {
+        const valueA = a[this.csvHeaders.indexOf(this.sortKey)];
+        const valueB = b[this.csvHeaders.indexOf(this.sortKey)];
+
+        // Convert certain fields to numbers for correct sorting
+        const numericFields = [
+          "id",
+          "Longitude",
+          "Latitude",
+          "Year_Built",
+          "Total_Available_Space",
+          "Rent_SF_Yr",
+          "last_updated",
+        ];
+        const isNumeric = numericFields.includes(this.sortKey);
+
+        let comparison = isNumeric
+          ? Number(valueA) - Number(valueB)
+          : String(valueA).localeCompare(String(valueB));
+
+        return this.sortOrder === "asc" ? comparison : -comparison;
+      });
+    },
+
+    /* PAGINATED + SORTED DATA */
+    paginatedSortedData() {
+      const start = (this.currentPage - 1) * this.rowsPerPage;
+      const end = start + this.rowsPerPage;
+      return this.sortedData.slice(start, end);
+    },
+
     /* FILTERED DATA (by search) */
     filteredData() {
       // If no search query, return the entire csvData
@@ -176,6 +245,18 @@ export default {
     /* ----------- DROPDOWN TOGGLE ---------- */
     toggleDropdown() {
       this.isDropdownOpen = !this.isDropdownOpen;
+    },
+
+    /* ----------- TABLE SORTING ---------- */
+    sortTable(column) {
+      if (this.sortKey === column) {
+        // If user clicks the same column, toggle sort order
+        this.sortOrder = this.sortOrder === "asc" ? "desc" : "asc";
+      } else {
+        // Otherwise, set the sort key to the new column, default to ascending
+        this.sortKey = column;
+        this.sortOrder = "asc";
+      }
     },
 
     /* ----------- SEARCH HIGHLIGHTING ---------- */
@@ -293,6 +374,14 @@ export default {
       }
     },
 
+    /* ----------- PAGINATION CONTROLS ---------- */
+    nextPage() {
+      if (this.currentPage < this.totalPages) this.currentPage++;
+    },
+    prevPage() {
+      if (this.currentPage > 1) this.currentPage--;
+    },
+
     /* ----------- API CALL: DOWNLOAD VACANCIES REPORT ---------- */
     async downloadVacanciesReport() {
       this.isLoading = true;
@@ -329,6 +418,9 @@ export default {
         link.click();
         document.body.removeChild(link);
         window.URL.revokeObjectURL(url);
+
+        // Call processVacanciesReport() if needed
+        // await this.processVacanciesReport(); 
       } catch (error) {
         console.error("Error downloading CSV:", error);
         alert("Failed to download CSV.");
@@ -437,6 +529,13 @@ export default {
   transform: scale(1.05); /* Zoom effect for back button */
 }
 
+/* ----------------------------------------------------------------------------
+   HIGHLIGHT STYLES FOR SEARCH MATCHES
+   ---------------------------------------------------------------------------- */
+.highlight {
+  background-color: yellow;
+  font-weight: bold;
+}
 
 /* ----------------------------------------------------------------------------
    SHIFT MAIN CONTENT WHEN SIDEBAR IS OPEN
