@@ -1,22 +1,22 @@
 <template>
   <div>
     <Sidebar></Sidebar>
-    <div class="profile-container">
+    <div class="max-w-2xl mx-auto p-8 text-center">
       <!-- Loading State -->
-      <div v-if="isLoading" class="loading-spinner">Loading...</div>
+      <div v-if="isLoading" class="text-gray-600 text-lg">Loading...</div>
 
       <!-- Profile Information -->
-      <div v-else class="profile-info">
-        <h1 class="profile-title">Profile</h1>
-        <div class="profile-detail"><strong>UID:</strong> {{ user?.id }}</div>
-        <div class="profile-detail">
+      <div v-else class="bg-white p-8 rounded-lg shadow-md">
+        <h1 class="text-3xl font-bold mb-6 text-gray-800">Profile</h1>
+        <div class="text-lg mb-4 text-gray-700"><strong>UID:</strong> {{ user?.id }}</div>
+        <div class="text-lg mb-4 text-gray-700">
           <strong>Email:</strong> {{ user?.email }}
         </div>
         <UpdatePassword></UpdatePassword>
       </div>
       
       <!-- Error Message -->
-      <p v-if="error" class="error-message">{{ error }}</p>
+      <p v-if="error" class="text-red-500 text-base mt-4">{{ error }}</p>
     </div>
   </div>
 </template>
@@ -76,42 +76,3 @@ export default {
   },
 };
 </script>
-
-<style scoped>
-.profile-container {
-  max-width: 600px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
-}
-
-.loading-spinner {
-  font-size: 1.2rem;
-  color: #666;
-}
-
-.profile-info {
-  background-color: #fff;
-  padding: 2rem;
-  border-radius: 8px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
-
-.profile-title {
-  font-size: 2rem;
-  margin-bottom: 1.5rem;
-  color: #333;
-}
-
-.profile-detail {
-  font-size: 1.1rem;
-  margin-bottom: 1rem;
-  color: #555;
-}
-
-.error-message {
-  color: #ff4d4f;
-  font-size: 1rem;
-  margin-top: 1rem;
-}
-</style>
