@@ -82,12 +82,18 @@ export default {
         error.value = ""; // Clear any previous error
 
         // Redirect to login page after a short delay
-        setTimeout(() => {
-          router.push("/");
-        }, 2000);
+        if (router.currentRoute.value.path === "/update-password") {
+          alert(
+            "Password updated successfully. You will be redirected to the home page shortly."
+          );
+          setTimeout(() => {
+            router.push("/");
+          }, 2000);
+        }
+
       } catch (err) {
         console.error("Error updating password:", err.message);
-        alert("Error updating password:", err.message);
+        alert("Error updating password: " + err.message);
         error.value = "Failed to update password. Please try again.";
         successMessage.value = ""; // Clear any previous success message
       }

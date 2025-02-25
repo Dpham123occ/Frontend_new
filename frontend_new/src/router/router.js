@@ -88,6 +88,7 @@ const routes = [
     path: '/update-password',
     name: 'UpdatePassword',
     component: UpdatePassword,
+    meta: { requiresAuth : true }
   },
 ];
 
