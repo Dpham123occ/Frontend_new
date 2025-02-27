@@ -58,10 +58,7 @@ export default {
 
         // Send password reset email
         const { error: resetError } = await supabase.auth.resetPasswordForEmail(
-          email.value,
-          {
-            redirectTo: 'http://localhost:5173/update-password', // Redirect URL after reset
-          }
+          email.value
         );
 
         if (resetError) {

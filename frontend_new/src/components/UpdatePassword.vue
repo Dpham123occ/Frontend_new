@@ -20,7 +20,10 @@
 
       <!-- Confirm New Password Input -->
       <div class="mb-6 text-left">
-        <label for="confirm-password" class="block font-medium text-gray-700 mb-2">
+        <label
+          for="confirm-password"
+          class="block font-medium text-gray-700 mb-2"
+        >
           Confirm New Password
         </label>
         <input
@@ -55,7 +58,7 @@
 </template>
 
 <script>
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 import { supabase } from "../lib/supabase";
 import { useRouter } from "vue-router";
 
@@ -67,6 +70,17 @@ export default {
     const successMessage = ref("");
     const error = ref("");
     const router = useRouter();
+
+    // Listen for the PASSWORD_RECOVERY event
+    onMounted(() => {
+      supabase.auth.onAuthStateChange((event, session) => {
+        if (event === "PASSWORD_RECOVERY") {
+          // The user has clicked the reset link and is redirected here
+          // You can now prompt them to update their password
+          console.log("PASSWORD_RECOVERY event detected");
+        }
+      });
+    });
 
     // Update Password Function
     const updatePassword = async () => {
@@ -92,15 +106,11 @@ export default {
         successMessage.value = "Password updated successfully!";
         error.value = ""; // Clear any previous error
 
-        // Redirect to login page after a short delay
-        if (router.currentRoute.value.path === "/update-password") {
-          alert(
-            "Password updated successfully. You will be redirected to the home page shortly."
-          );
-          setTimeout(() => {
-            router.push("/");
-          }, 2000);
-        }
+        // Redirect to home page after a short delay
+        setTimeout(() => {
+          router.push("/");
+        }, 2000);
+        
       } catch (err) {
         console.error("Error updating password:", err.message);
         alert("Error updating password: " + err.message);
