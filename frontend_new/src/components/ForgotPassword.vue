@@ -4,7 +4,9 @@
 
     <!-- Email Input -->
     <div class="mb-4 text-left">
-      <label for="email" class="block font-medium text-gray-700 mb-2">Email</label>
+      <label for="email" class="block font-medium text-gray-700 mb-2"
+        >Email</label
+      >
       <input
         v-model="email"
         type="email"
@@ -36,47 +38,50 @@
 </template>
 
 <script>
-import { ref } from 'vue';
-import { supabase } from '../lib/supabase';
-import { useRouter } from 'vue-router';
+import { ref } from "vue";
+import { supabase } from "../lib/supabase";
+import { useRouter } from "vue-router";
 
 export default {
-  name: 'ForgotPassword',
+  name: "ForgotPassword",
   setup() {
-    const email = ref(''); // Store the user's email
-    const successMessage = ref(''); // Success message
-    const error = ref(''); // Error message
+    const email = ref(""); // Store the user's email
+    const successMessage = ref(""); // Success message
+    const error = ref(""); // Error message
     const router = useRouter();
 
     // Send Reset Link Function
     const sendResetLink = async () => {
       try {
         if (!email.value) {
-          error.value = 'Please enter your email address.';
+          error.value = "Please enter your email address.";
           return;
         }
 
         // Send password reset email
         const { error: resetError } = await supabase.auth.resetPasswordForEmail(
-          email.value
+          email.value,
+          {
+            redirectTo: "https://trailspurdata.vercel.app/update-password", // Update this URL
+          }
         );
 
         if (resetError) {
           // Check if the error is due to the email not existing
-          if (resetError.message.includes('user not found')) {
-            error.value = 'No account found with this email address.';
+          if (resetError.message.includes("user not found")) {
+            error.value = "No account found with this email address.";
           } else {
             throw resetError;
           }
         } else {
           // Show success message
-          successMessage.value = 'Password reset email sent! Check your inbox.';
-          error.value = ''; // Clear any previous error
+          successMessage.value = "Password reset email sent! Check your inbox.";
+          error.value = ""; // Clear any previous error
         }
       } catch (err) {
-        console.error('Error sending reset link:', err.message);
-        error.value = 'Failed to send reset email. Please try again.';
-        successMessage.value = ''; // Clear any previous success message
+        console.error("Error sending reset link:", err.message);
+        error.value = "Failed to send reset email. Please try again.";
+        successMessage.value = ""; // Clear any previous success message
       }
     };
 
