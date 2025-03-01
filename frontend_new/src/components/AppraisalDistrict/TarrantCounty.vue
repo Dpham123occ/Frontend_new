@@ -6,10 +6,15 @@
       <span :class="{ open: isSidebarOpen }">&#9776;</span>
     </button>
     <!-- SIDEBAR CONTAINER -->
-    <div :class="['sidebar-container', { open: isSidebarOpen }]"
-      class="w-[250px] col-span-1 bg-side-bar-2 p-4 flex flex-col">
+    <div
+      :class="['sidebar-container', { open: isSidebarOpen }]"
+      class="w-[250px] col-span-1 bg-side-bar-2 p-4 flex flex-col"
+    >
       <!-- LOADING OVERLAY -->
-      <div v-if="isLoading" class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+      <div
+        v-if="isLoading"
+        class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50"
+      >
         <div class="loading loading-spinner loading-lg"></div>
         <p class="text-white text-lg mt-4">Task in progress, please wait...</p>
       </div>
@@ -26,18 +31,24 @@
       <nav class="nav-menu flex flex-col gap-2">
         <button class="nav-item bg-button" @click="showTable">
           Display Tarrant County Vacancy Report
-          
         </button>
 
         <!-- ACTIONS DROPDOWN -->
         <div class="relative">
           <button class="nav-item bg-side-bar-2" @click="toggleDropdown">
             Actions
-            <span :class="{'rotate-180': isDropdownOpen, 'rotate-0': !isDropdownOpen}" class="ml-2 inline-block transition-transform">
-              ▲ <!-- This is a simple down arrow -->
+            <span
+              :class="{
+                'rotate-180': isDropdownOpen,
+                'rotate-0': !isDropdownOpen,
+              }"
+              class="ml-2 inline-block transition-transform"
+            >
+              ▲
+              <!-- This is a simple down arrow -->
             </span>
           </button>
-          
+
           <!-- Dropdown Menu to the right of the button -->
           <div
             v-if="isDropdownOpen"
@@ -49,16 +60,22 @@
             >
               Import TAD's Appraisal Data - Take time
             </button>
-            <button class="nav-item block px-4 py-2 text-left font-medium text-xl" @click="spatialMerge">
+            <button
+              class="nav-item block px-4 py-2 text-left font-medium text-xl"
+              @click="spatialMerge"
+            >
               Perform Spatial Merge - Take time
             </button>
             <button
-              class=" nav-item bg-button block px-4 py-2 text-left font-medium text-xl"
+              class="nav-item bg-button block px-4 py-2 text-left font-medium text-xl"
               @click="uploadFile"
             >
               Process TAD Data
             </button>
-            <button class="nav-item bg-button block px-4 py-2 text-left font-medium text-xl" @click="downloadVacanciesReport">
+            <button
+              class="nav-item bg-button block px-4 py-2 text-left font-medium text-xl"
+              @click="downloadVacanciesReport"
+            >
               Download Vacancies Report
             </button>
           </div>
@@ -93,9 +110,16 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-for="(row, rowIndex) in paginatedSortedData" :key="rowIndex"
-              :class="{ 'bg-gray-100': rowIndex % 2 === 0 }">
-              <td v-for="(value, colIndex) in row" :key="colIndex" v-html="highlightMatch(value)"></td>
+            <tr
+              v-for="(row, rowIndex) in paginatedSortedData"
+              :key="rowIndex"
+              :class="{ 'bg-gray-100': rowIndex % 2 === 0 }"
+            >
+              <td
+                v-for="(value, colIndex) in row"
+                :key="colIndex"
+                v-html="highlightMatch(value)"
+              ></td>
             </tr>
           </tbody>
         </table>
@@ -112,7 +136,11 @@
             Previous
           </button>
           <span>Page {{ currentPage }} of {{ totalPages }}</span>
-          <button class="btn btn-s" @click="nextPage" :disabled="currentPage === totalPages">
+          <button
+            class="btn btn-s"
+            @click="nextPage"
+            :disabled="currentPage === totalPages"
+          >
             Next
           </button>
         </div>
@@ -420,14 +448,14 @@ export default {
         window.URL.revokeObjectURL(url);
 
         // Call processVacanciesReport() if needed
-        // await this.processVacanciesReport(); 
+        // await this.processVacanciesReport();
       } catch (error) {
         console.error("Error downloading CSV:", error);
         alert("Failed to download CSV.");
       } finally {
         this.isLoading = false; // Ensure isLoading is updated
       }
-    }
+    },
   },
 };
 </script>
@@ -439,7 +467,7 @@ export default {
 
 /* The sidebar container is fixed to the left, hidden by default (-250px). */
 .sidebar-container {
-  background-color: #231F20;
+  background-color: #231f20;
   height: 100vh;
   position: fixed;
   top: 0;
@@ -525,7 +553,8 @@ export default {
   transition: background-color 0.3s ease, transform 0.2s ease; /* Smooth hover transition */
 }
 .back-button:hover {
-  background-color: #1a252f;
+  background-color: #000000;
+  color: #ffffff !important;
   transform: scale(1.05); /* Zoom effect for back button */
 }
 
