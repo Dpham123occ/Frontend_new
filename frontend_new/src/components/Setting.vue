@@ -8,13 +8,15 @@
       <!-- Profile Information -->
       <div v-else class="bg-white p-8 rounded-lg shadow-md">
         <h1 class="text-3xl font-bold mb-6 text-gray-800">Profile</h1>
-        <div class="text-lg mb-4 text-gray-700"><strong>UID:</strong> {{ user?.id }}</div>
+        <div class="text-lg mb-4 text-gray-700">
+          <strong>UID:</strong> {{ user?.id }}
+        </div>
         <div class="text-lg mb-4 text-gray-700">
           <strong>Email:</strong> {{ user?.email }}
         </div>
         <UpdatePassword></UpdatePassword>
       </div>
-      
+
       <!-- Error Message -->
       <p v-if="error" class="text-red-500 text-base mt-4">{{ error }}</p>
     </div>

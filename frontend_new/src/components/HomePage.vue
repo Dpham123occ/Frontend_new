@@ -177,7 +177,8 @@ export default {
 
 .main-content {
   flex: 1;
-  transition: margin-left 0.3s ease-in-out;
+  /* Combine both transitions into one line. */
+  transition: margin-left 0.3s ease-in-out, transform 0.3s ease-in-out;
   margin-top: 25px;
   margin-left: -180px; /* Shift left when sidebar is closed */
   padding: 2rem;
@@ -185,11 +186,16 @@ export default {
   display: flex;
   flex-direction: column;
   align-items: center;
+
+  /* Default: full size */
+  transform: scale(1);
+  transform-origin: top left;
 }
 
-/* Shift content further left when sidebar is open */
+/* When sidebar is open, shift margin and shrink everything */
 .main-content.shifted {
-  margin-left: 60px; /* Reduce this value if you want it closer */
+  margin-left: 60px;
+  transform: scale(0.8);
 }
 
 /* Wrapper for dropdown and table alignment */
@@ -201,8 +207,23 @@ export default {
   width: 100%;
 }
 
-/* Table Container */
 .table-container {
+  margin-left: -40px;
+}
+
+@media (min-width: 1600px) {
+  .table-container {
+    /* Larger screens (≥1600px wide) */
+    margin-left: -120px;
+    transform: scale(0.95);
+  }
+
+  .main-content.shifted {
+    margin-left: -25px;
+    transform: scale(0.9);
+  }
+}
+.main-content.shifted .table-container {
   width: 100vw;
   display: flex;
   justify-content: flex-start;
