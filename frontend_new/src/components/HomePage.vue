@@ -99,11 +99,11 @@ export default {
         "Industrial User Buildings",
         "IOS Existing",
       ],
-      selectedCategory: "Light Industrial Multi Tenant Business Parks",
+      selectedCategory: "Light Industrial Multi Tenant",
       isSidebarOpen: true, // Sidebar state
 
       tableData: {
-        "Light Industrial Multi Tenant Business Parks": [
+        "Light Industrial Multi Tenant": [
           {
             id: "001",
             costar_tag: "LIMTB-1",
