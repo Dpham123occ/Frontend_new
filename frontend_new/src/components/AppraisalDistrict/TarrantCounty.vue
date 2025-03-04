@@ -201,6 +201,12 @@ export default {
       isLoading: false,
       isDropdownOpen: false, // State to control the dropdown visibility
       isSidebarOpen: true, // Start the sidebar open
+
+      /* AWS S3 CONFIG */
+      uploadStatus: '',
+      apiGatewayUrl: 'YOUR_API_GATEWAY_URL_PRESIGNED', // API Gateway for pre-signed URL
+      apiGatewayUrlLambda: 'YOUR_API_GATEWAY_URL_LAMBDA', // API Gateway to trigger Lambda
+      presignedUrl: null, // Presigned URL for S3 upload
     };
   },
   computed: {
@@ -375,7 +381,7 @@ export default {
     },
 
     /* ----------- API CALL: UPLOAD FILE ---------- */
-    async uploadFile() {
+    async deprecatedUploadFile() {
       if (this.selectedFile) {
         const file = this.selectedFile;
         try {
@@ -456,6 +462,49 @@ export default {
         this.isLoading = false; // Ensure isLoading is updated
       }
     },
+
+
+    /* ----------- AWS S3 UPLOAD & LAMBDA TRIGGER ---------- */
+    async getPresignedUrl() {
+      try {
+        const response = await axios.post(this.apiGatewayUrl, {
+          file_name: this.selectedFile.name,
+        });
+        this.presignedUrl = response.data.presigned_url;
+      } catch (error) {
+        console.error('Error getting pre-signed URL:', error);
+        this.uploadStatus = `Error getting pre-signed URL: ${error.message}`;
+      }
+    },
+
+    async uploadFile() {
+      if (!this.selectedFile) {
+        return;
+      }
+      this.uploadStatus = 'Uploading...';
+      await this.getPresignedUrl();
+      try {
+        await fetch(this.presignedUrl, {
+          method: 'PUT',
+          body: this.selectedFile,
+        });
+        this.uploadStatus = 'File uploaded successfully!';
+        this.triggerLambda();
+      } catch (error) {
+        console.error('Error uploading file:', error);
+        this.uploadStatus = `Upload failed: ${error.message}`;
+      }
+    },
+
+    async triggerLambda(){
+        try{
+            await axios.post(this.apiGatewayUrlLambda, {file_name: this.file.name});
+            this.uploadStatus = "Lambda function triggered.";
+        }catch(error){
+            console.error("error triggering lambda", error);
+            this.uploadStatus = `Error triggering Lambda: ${error.message}`;
+        }
+    }
   },
 };
 </script>
