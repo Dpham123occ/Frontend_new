@@ -481,6 +481,7 @@ export default {
       if (!this.selectedFile) {
         return;
       }
+      this.isLoading = true;
       this.uploadStatus = 'Uploading...';
       await this.getPresignedUrl();
       try {
@@ -493,6 +494,9 @@ export default {
       } catch (error) {
         console.error('Error uploading file:', error);
         this.uploadStatus = `Upload failed: ${error.message}`;
+      }
+      finally {
+        this.isLoading = false;
       }
     },
 
