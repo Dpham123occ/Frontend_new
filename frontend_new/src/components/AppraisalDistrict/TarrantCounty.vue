@@ -202,6 +202,12 @@ export default {
       isLoading: false,
       isDropdownOpen: false, // State to control the dropdown visibility
       isSidebarOpen: true, // Start the sidebar open
+
+      /* AWS S3 CONFIG */
+      uploadStatus: '',
+      apiGatewayUrl: 'YOUR_API_GATEWAY_URL_PRESIGNED', // API Gateway for pre-signed URL
+      apiGatewayUrlLambda: 'YOUR_API_GATEWAY_URL_LAMBDA', // API Gateway to trigger Lambda
+      presignedUrl: null, // Presigned URL for S3 upload
     };
   },
   computed: {
@@ -407,7 +413,7 @@ export default {
     },
 
     /* ----------- API CALL: UPLOAD FILE ---------- */
-    async uploadFile() {
+    async deprecatedUploadFile() {
       if (this.selectedFile) {
         const file = this.selectedFile;
         try {
@@ -487,7 +493,7 @@ export default {
       } finally {
         this.isLoading = false; // Ensure isLoading is updated
       }
-    },
+    }
   },
 };
 </script>
@@ -585,7 +591,8 @@ export default {
   transition: background-color 0.3s ease, transform 0.2s ease; /* Smooth hover transition */
 }
 .back-button:hover {
-  background-color: #1a252f;
+  background-color: #000000;
+  color: #ffffff !important;
   transform: scale(1.05); /* Zoom effect for back button */
 }
 
