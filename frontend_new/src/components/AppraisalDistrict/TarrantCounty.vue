@@ -357,16 +357,7 @@ export default {
 
     /* ----------- SHOW TABLE (FROM SUPABASE) ---------- */
     async showTable() {
-      this.isLoading = true;
-
-        const token = await getUserJWT();
-        if (!token) {
-          throw new Error("Failed to retrieve JWT token.");
-        }
-
-        alert(token)
-
-        
+      this.isLoading = true; 
       try {
         let { data: master_vacancy_list, error } = await supabase
           .from("master_vacancy_list")
