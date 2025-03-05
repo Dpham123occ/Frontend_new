@@ -11,3 +11,15 @@ export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
       storage: localStorage, // Use localStorage for session persistence
     },
 });
+
+// Get the JWT
+export async function getUserJWT() {
+  const { data, error } = await supabase.auth.getSession();
+  if (error) {
+    console.error("Error fetching session:", error);
+    return null;
+  }
+  return data.session.access_token;
+}
+
+
