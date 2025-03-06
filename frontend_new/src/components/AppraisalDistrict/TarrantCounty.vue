@@ -6,25 +6,16 @@
       <span :class="{ open: isSidebarOpen }">&#9776;</span>
     </button>
     <!-- SIDEBAR CONTAINER -->
-    <div
-      :class="['sidebar-container', { open: isSidebarOpen }]"
-      class="w-[250px] col-span-1 bg-side-bar-2 p-4 flex flex-col"
-    >
+    <div :class="['sidebar-container', { open: isSidebarOpen }]"
+      class="w-[250px] col-span-1 bg-side-bar-2 p-4 flex flex-col">
       <!-- LOADING OVERLAY -->
-      <div
-        v-if="isLoading"
-        class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50"
-      >
+      <div v-if="isLoading" class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
         <div class="loading loading-spinner loading-lg"></div>
         <p class="text-white text-lg mt-4">Task in progress, please wait...</p>
       </div>
       <!-- Logo Section -->
       <router-link to="/home">
-        <img
-          src="../../assets/trailspur-logo.svg"
-          alt="Trailspur Logo"
-          class="logo mb-8"
-        />
+        <img src="../../assets/trailspur-logo.svg" alt="Trailspur Logo" class="logo mb-8" />
       </router-link>
 
       <!-- NAVIGATION MENU -->
@@ -37,45 +28,28 @@
         <div class="relative">
           <button class="nav-item bg-side-bar-2" @click="toggleDropdown">
             Actions
-            <span
-              :class="{
-                'rotate-180': isDropdownOpen,
-                'rotate-0': !isDropdownOpen,
-              }"
-              class="ml-2 inline-block transition-transform"
-            >
+            <span :class="{
+              'rotate-180': isDropdownOpen,
+              'rotate-0': !isDropdownOpen,
+            }" class="ml-2 inline-block transition-transform">
               ▲
               <!-- This is a simple down arrow -->
             </span>
           </button>
 
           <!-- Dropdown Menu to the right of the button -->
-          <div
-            v-if="isDropdownOpen"
-            class="absolute left-full top-0 ml-5 py-2 w-64 shadow-xl z-10 rounded-md"
-          >
-            <button
-              class="nav-item bg-button block px-4 py-2 text-left font-medium text-xl"
-              @click="downloadTAD"
-            >
+          <div v-if="isDropdownOpen" class="absolute left-full top-0 ml-5 py-2 w-64 shadow-xl z-10 rounded-md">
+            <button class="nav-item bg-button block px-4 py-2 text-left font-medium text-xl" @click="downloadTAD">
               Import TAD's Appraisal Data - Take time
             </button>
-            <button
-              class="nav-item block px-4 py-2 text-left font-medium text-xl"
-              @click="spatialMerge"
-            >
+            <button class="nav-item block px-4 py-2 text-left font-medium text-xl" @click="spatialMerge">
               Perform Spatial Merge - Take time
             </button>
-            <button
-              class="nav-item bg-button block px-4 py-2 text-left font-medium text-xl"
-              @click="uploadFile"
-            >
+            <button class="nav-item bg-button block px-4 py-2 text-left font-medium text-xl" @click="uploadFile">
               Process TAD Data
             </button>
-            <button
-              class="nav-item bg-button block px-4 py-2 text-left font-medium text-xl"
-              @click="downloadVacanciesReport"
-            >
+            <button class="nav-item bg-button block px-4 py-2 text-left font-medium text-xl"
+              @click="downloadVacanciesReport">
               Download Vacancies Report
             </button>
           </div>
@@ -89,77 +63,45 @@
     <!-- TABLE & BUTTONS SECTION -->
     <!-- Occupies the rest of the screen using col-start-2 col-span-5. -->
     <!-- Wrap in main-content + conditionally add 'shifted' to move it right when sidebar is open -->
-    <div
-      :class="['main-content', { shifted: isSidebarOpen }]"
-      class="col-start-2 col-span-5 flex flex-col h-screen p-4"
-    >
+    <div :class="['main-content', { shifted: isSidebarOpen }]"
+      class="col-start-2 col-span-5 flex flex-col h-screen p-4">
       <div class="flex-grow overflow-auto">
-        <table
-          v-if="filteredData.length"
-          class="overflow-x-auto table table-md"
-        >
+        <table v-if="filteredData.length" class="overflow-x-auto table table-md">
           <thead class="bg-gray-100">
             <tr>
-              <th
-                v-for="(header, index) in csvHeaders"
-                :key="index"
-                class="cursor-pointer"
-              >
+              <th v-for="(header, index) in csvHeaders" :key="index" class="cursor-pointer">
                 {{ header }}
               </th>
             </tr>
           </thead>
           <tbody>
-            <tr
-              v-for="(row, rowIndex) in paginatedSortedData"
-              :key="rowIndex"
-              :class="{ 'bg-gray-100': rowIndex % 2 === 0 }"
-            >
-              <td
-                v-for="(value, colIndex) in row"
-                :key="colIndex"
-                v-html="highlightMatch(value)"
-              ></td>
+            <tr v-for="(row, rowIndex) in paginatedSortedData" :key="rowIndex"
+              :class="{ 'bg-gray-100': rowIndex % 2 === 0 }">
+              <td v-for="(value, colIndex) in row" :key="colIndex" v-html="highlightMatch(value)"></td>
             </tr>
           </tbody>
         </table>
         <!-- Pagination Controls -->
-        <div
-          class="col-start-2 col-end-5 rows-start-4 rows-end-4 col-span-4 flex justify-center items-center gap-4"
-          v-if="csvData.length"
-        >
-          <button
-            class="btn btn-s"
-            @click="prevPage"
-            :disabled="currentPage === 1"
-          >
+        <div class="col-start-2 col-end-5 rows-start-4 rows-end-4 col-span-4 flex justify-center items-center gap-4"
+          v-if="csvData.length">
+          <button class="btn btn-s" @click="prevPage" :disabled="currentPage === 1">
             Previous
           </button>
           <span>Page {{ currentPage }} of {{ totalPages }}</span>
-          <button
-            class="btn btn-s"
-            @click="nextPage"
-            :disabled="currentPage === totalPages"
-          >
+          <button class="btn btn-s" @click="nextPage" :disabled="currentPage === totalPages">
             Next
           </button>
         </div>
 
         <!-- Upload & Process & Download Buttons -->
-        <div
-          class="col-start-2 col-end-5 rows-start-5 rows-end-5 col-span-4 join"
-        >
+        <div class="col-start-2 col-end-5 rows-start-5 rows-end-5 col-span-4 join">
           <!-- <label for="districtSelect">Select District:</label>
                   <select v-model="uploadRegion" id="districtSelect">
                       <option disabled value="">Select a district</option>
                       <option v-for="district in districts" :key="district" :value="district">{{ district }}</option>
                   </select> -->
-          <input
-            type="file"
-            class="join-item file-input file-input-bordered"
-            @change="handleFileSelection"
-            accept=".xlsx, .xls, .csv"
-          />
+          <input type="file" class="join-item file-input file-input-bordered" @change="handleFileSelection"
+            accept=".xlsx, .xls, .csv" />
           <button class="btn btn-s join-item" @click="uploadFile">
             Process Costar Vacancies Report
           </button>
@@ -320,8 +262,8 @@ export default {
       }
     },
 
+    // ----------- API CALL: DOWNLOAD TAD ---------- Testing with HelloWorld First
     async downloadTAD() {
-
       try {
         const token = await getUserJWT();
         if (!token) {
@@ -331,16 +273,13 @@ export default {
         console.log("JWT Token: " + token);
 
         const response = await fetch(
-          "https://qx1eeoe192.execute-api.us-east-1.amazonaws.com/trailspur-lambda-stack-TadToSupabucketFunction-kWXBQfEnlGk4",
+          "https://ik5h8rxa35.execute-api.us-east-1.amazonaws.com/dev/hello",
           {
-            method: "POST",
+            method: "GET",
             headers: {
               "Content-Type": "application/json",
-              Authorization: `Bearer ${token}`, // Attach JWT in the request
+              Authorization: `Bearer ${token}`,
             },
-            body: JSON.stringify({
-              /* Add necessary request payload */
-            }),
           }
         );
 
@@ -348,7 +287,9 @@ export default {
           throw new Error(`Request failed with status ${response.status}`);
         }
 
-        return await response.json();
+        const data = await response.json();
+        console.log("Response Data:", data);
+        return data;
       } catch (error) {
         console.error("Error in downloadTAD:", error);
         return null;
@@ -356,39 +297,43 @@ export default {
     },
 
     /* ----------- SHOW TABLE (FROM SUPABASE) ---------- */
-    async showTable() {
-      this.isLoading = true; 
+    async downloadTAD() {
+      this.isLoading = true;
       try {
-        let { data: master_vacancy_list, error } = await supabase
-          .from("master_vacancy_list")
-          .select("*");
-
-        if (error) {
-          throw error;
+        const token = await getUserJWT();
+        if (!token) {
+          throw new Error("Failed to retrieve JWT token.");
         }
 
-        if (!master_vacancy_list || master_vacancy_list.length === 0) {
-          console.warn("No data found in Supabase table.");
-          alert("No data available.");
-          return;
-        }
+        console.log("JWT Token: " + token);
 
-        // Convert JSON to CSV format
-        const csvString = papaparse.unparse(master_vacancy_list);
+        const response = await axios.post(
+          "https://d2a35niit3.execute-api.us-east-1.amazonaws.com/default/trailspur-lambda-stack-TadToSupabucketFunction-kWXBQfEnlGk4",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
 
-        // Parse CSV using PapaParse to extract headers & data
-        papaparse.parse(csvString, {
-          header: true, // Extract headers automatically
-          skipEmptyLines: true,
-          complete: (results) => {
-            this.csvHeaders = results.meta.fields;
-            this.csvData = results.data;
-          },
-        });
+        console.log("Response Data:", response.data);
+        return response.data;
       } catch (error) {
-        console.error("Error fetching data from Supabase:", error);
-        alert("Failed to load data from Supabase.");
-      } finally {
+        console.error("Error in downloadTAD:", error);
+        if (error.response) {
+          // The request was made and the server responded with a status code
+          console.error("Response status:", error.response.status);
+          console.error("Response data:", error.response.data);
+        } else if (error.request) {
+          // The request was made but no response was received
+          console.error("No response received:", error.request);
+        } else {
+          // Something happened in setting up the request
+          console.error("Error setting up the request:", error.message);
+        }
+        return null;
+      }
+      finally {
         this.isLoading = false;
       }
     },
@@ -423,7 +368,7 @@ export default {
           console.error("Error uploading file:", error);
           alert(
             "An error occurred while uploading the file: " +
-              (error.response?.data?.message || error.message)
+            (error.response?.data?.message || error.message)
           ); // Display user-friendly error message, including server error if available.
         }
       } else {
@@ -500,7 +445,8 @@ export default {
   height: 100vh;
   position: fixed;
   top: 0;
-  left: -250px; /* Hidden by default. */
+  left: -250px;
+  /* Hidden by default. */
   padding: 2rem 1rem;
   display: flex;
   flex-direction: column;
@@ -509,7 +455,8 @@ export default {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   border-right: 1px solid #e6e6e6;
   z-index: 999;
-  transition: left 0.3s ease-in-out; /* Smooth slide in/out */
+  transition: left 0.3s ease-in-out;
+  /* Smooth slide in/out */
 }
 
 /* When isSidebarOpen = true, we add the "open" class to slide the sidebar in. */
@@ -534,6 +481,7 @@ export default {
 .hamburger-btn span {
   transition: transform 0.3s ease-in-out;
 }
+
 .hamburger-btn span.open {
   transform: rotate(90deg);
 }
@@ -561,16 +509,20 @@ export default {
   padding: 0.75rem 1rem;
   margin-bottom: 0.5rem;
   border-radius: 4px;
-  background-color: #231f20; /* same as parent by default */
+  background-color: #231f20;
+  /* same as parent by default */
   transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease;
 }
 
 /* Hover effect */
 .nav-item:hover,
 .nav-item:focus {
-  background-color: #d6d2c4; /* Light hover color */
-  color: #2c3e50; /* Text color stays dark */
-  transform: scale(1.05); /* Adds the zoom effect */
+  background-color: #d6d2c4;
+  /* Light hover color */
+  color: #2c3e50;
+  /* Text color stays dark */
+  transform: scale(1.05);
+  /* Adds the zoom effect */
 }
 
 /* Special back-button style */
@@ -579,12 +531,15 @@ export default {
   color: #ffffff;
   margin-top: 1rem;
   text-align: center;
-  transition: background-color 0.3s ease, transform 0.2s ease; /* Smooth hover transition */
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  /* Smooth hover transition */
 }
+
 .back-button:hover {
   background-color: #000000;
   color: #ffffff !important;
-  transform: scale(1.05); /* Zoom effect for back button */
+  transform: scale(1.05);
+  /* Zoom effect for back button */
 }
 
 /* ----------------------------------------------------------------------------
@@ -601,7 +556,9 @@ export default {
 .main-content {
   transition: transform 0.3s ease-in-out;
 }
+
 .main-content.shifted {
-  transform: translateX(100px); /* Shift by the sidebar width */
+  transform: translateX(100px);
+  /* Shift by the sidebar width */
 }
 </style>
