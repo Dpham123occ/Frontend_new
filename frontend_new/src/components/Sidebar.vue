@@ -104,9 +104,6 @@ export default {
         const { error } = await supabase.auth.signOut();
         if (error) throw error;
 
-        // Clear local storage
-        localStorage.removeItem(`sb-${supabaseUrl.split(".")[0]}-auth-token`);
-
         // Redirect to the login page after logout
         router.push("/");
       } catch (err) {

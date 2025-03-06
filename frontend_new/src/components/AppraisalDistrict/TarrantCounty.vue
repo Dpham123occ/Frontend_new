@@ -245,6 +245,43 @@ export default {
         .replace(regex, `<span class="highlight">$1</span>`);
     },
 
+    async showTable() {
+      this.isLoading = true;
+      try {
+        let { data: master_vacancy_list, error } = await supabase
+          .from("master_vacancy_list")
+          .select("*");
+
+        if (error) {
+          throw error;
+        }
+
+        if (!master_vacancy_list || master_vacancy_list.length === 0) {
+          console.warn("No data found in Supabase table.");
+          alert("No data available.");
+          return;
+        }
+
+        // Convert JSON to CSV format
+        const csvString = papaparse.unparse(master_vacancy_list);
+
+        // Parse CSV using PapaParse to extract headers & data
+        papaparse.parse(csvString, {
+          header: true, // Extract headers automatically
+          skipEmptyLines: true,
+          complete: (results) => {
+            this.csvHeaders = results.meta.fields;
+            this.csvData = results.data;
+          },
+        });
+      } catch (error) {
+        console.error("Error fetching data from Supabase:", error);
+        alert("Failed to load data from Supabase.");
+      } finally {
+        this.isLoading = false;
+      }
+    },
+
     /* ----------- API CALL: SPATIAL MERGE ---------- */
     async spatialMerge() {
       this.isLoading = true;
