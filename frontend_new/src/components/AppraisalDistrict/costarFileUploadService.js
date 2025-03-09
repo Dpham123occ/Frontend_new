@@ -136,12 +136,12 @@ export class costarFileUploadService {
             throw new Error(`Error S3 Upload: ${error.message}`);
         }
 
-        // try{
-        //     await this.triggerLambdaProcessor(file.name);
-        // } catch (error) {
-        //     console.error('Error processing file:', error);
-        //     throw new Error(`Error Triggering Lambda: ${error.message}`);
-        // }
+        try{
+            await this.triggerLambdaProcessor(file.name);
+        } catch (error) {
+            console.error('Error processing file:', error);
+            throw new Error(`Error Triggering Lambda: ${error.message}`);
+        }
         return true;
     }
 }
