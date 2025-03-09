@@ -1,7 +1,7 @@
 <template>
   <div class="light-industrial-mt">
-    <h1>Light Industrial Multi-Tenant</h1>
-    <p>Welcome to the Light Industrial Multi-Tenant page! Use the table below to upload and manage your data.</p>
+    <h1>Light Industrial User Buildings</h1>
+    <p>Welcome to the Light Industrial User Buildings page! Use the table below to upload and manage your data.</p>
     <!-- Use TableView Component -->
     <TableView tableName="industrial_user_buildings"/>
   </div>

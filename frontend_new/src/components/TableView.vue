@@ -49,8 +49,6 @@
 </template>
 
 <script>
-
-// unsused: import axios from "axios";
 import Papa from "papaparse";
 import { supabase } from "../lib/supabase.js";
 
@@ -85,23 +83,23 @@ export default {
   methods: {
     async fetchCSVFile() {
       try {
-        // Fetch data from Supabase
-        let { data: master_acquisition_list, error } = await supabase
-          .from(this.tableName)
+        // Fetch data from Supabase using the dynamic tableName prop
+        let { data, error } = await supabase
+          .from(this.tableName) // Use the prop here
           .select("*");
 
         if (error) {
           throw error;
         }
 
-        if (!master_acquisition_list || master_acquisition_list.length === 0) {
+        if (!data || data.length === 0) {
           console.warn("No data found in Supabase table.");
           alert("No data available.");
           return;
         }
 
         // Convert JSON to CSV format
-        const csvString = Papa.unparse(master_acquisition_list);
+        const csvString = Papa.unparse(data);
 
         // Parse CSV using PapaParse
         Papa.parse(csvString, {
