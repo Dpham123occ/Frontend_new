@@ -34,12 +34,19 @@
         <span>Page {{ currentPage }} of {{ totalPages }}</span>
         <button @click="nextPage" :disabled="currentPage === totalPages">Next</button>
       </div>
+     
+        <!-- back button-->
+     <div class="button-group">
+      <button @click="goBack" class="back-button">Back</button>
+    </div>
 
-      <!-- Save Notes Button -->
-      <div class="button-group">
+       <!-- Save Notes Button -->
+       <div class="button-group">
         <button @click="saveNotes" class="save-button">Save Notes</button>
       </div>
     </div>
+     
+    
 
     <!-- Empty State -->
     <div v-else>
@@ -77,6 +84,10 @@ export default {
     },
   },
   methods: {
+    goBack() {
+      // Use window.history.back() to go back to the previous page in history
+      window.history.back();
+    },
     async fetchCSVFile() {
       try {
         // Fetch data from Supabase
@@ -157,6 +168,10 @@ textarea {
   /* Ensures textarea spans the cell */
   resize: none;
   /* Prevents resizing */
+  
+  border-radius: 4px; /* Optional: add rounded corners */
+  border: 1px solid #ccc;
+  height: 100%;
 }
 
 textarea {
@@ -169,17 +184,33 @@ textarea {
   align-items: center;
   gap: 10px;
   margin-top: 10px;
+  
+
+}
+/* Hover effect for Previous and Next buttons */
+.pagination-controls button:hover {
+  cursor: pointer; /* Change cursor to pointer when hovered */
+  transform: scale(1.1);
+}
+
+/* Style for Previous and Next buttons with constant underline */
+.pagination-controls button {
+  text-decoration: underline; /* Underline is always present */
+  cursor: default; /* Default cursor initially */
+  font-weight: bold;
 }
 
 .button-group {
   display: flex;
   justify-content: flex-end;
   margin-top: 10px;
+  
+
 }
 
 .save-button {
   padding: 10px 20px;
-  background-color: #4caf50;
+  background-color: #000000;
   color: white;
   border: none;
   cursor: pointer;
@@ -187,6 +218,66 @@ textarea {
 }
 
 .save-button:hover {
-  background-color: #45a049;
+  background-color:#000000;
+  transform: scale(1.05);
 }
+/* Add grid lines to the table */
+table {
+  border-collapse: collapse; /* Ensures no space between borders */
+  width: 100%;
+}
+
+th, td {
+  border: 1px solid black; /* Defines grid lines */
+  padding: 8px; /* Adds some spacing inside cells */
+  text-align: left; /* Aligns text to the left */
+}
+
+/* Optional: Add a border to the table itself */
+table {
+  border: 2px solid black;
+  min-width: 100%; /* Ensures the table expands horizontally */
+  border-collapse: collapse; /* Removes extra spacing */
+}
+/* Add horizontal scrolling */
+.overflow-x-auto {
+  overflow-x: auto; /* Enables horizontal scrolling */
+  white-space: nowrap; /* Prevents table content from wrapping */
+}
+/* Style for table headers */
+th {
+  background-color: #d3d3d3; /* Light grey background */
+  color: black; /* Text color */
+  font-weight: bold; /* Make header text bold */
+  padding: 10px; /* Add spacing */
+  text-align: left; /* Align text to the left */
+  text-transform: uppercase;
+}
+/* Target the last column of the table */
+table td:last-child, table th:last-child {
+  width: 200px; /* Adjust the width as per your requirement */
+}
+ 
+.back-button {
+  padding: 10px 20px;
+  background-color: #000000;
+  color: white;
+  border: none;
+  cursor: pointer;
+  border-radius: 4px;
+  
+  
+}
+
+.back-button:hover {
+  background-color:#000000;
+  transform: scale(1.05);
+}
+.save-button, .back-button {
+  width: 10%; /* Make both buttons the same width */
+}
+
+
+
+
 </style>
