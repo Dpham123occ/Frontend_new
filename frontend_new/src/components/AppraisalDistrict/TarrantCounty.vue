@@ -120,6 +120,7 @@ import router from "../../router/router";
 import axios from "axios";
 import papaparse from "papaparse";
 import { supabase } from "../../lib/supabase";
+import { costarFileUploadService } from "./costarFileUploadService";
 import { getUserJWT } from "../../lib/supabase";
 
 export default {
@@ -147,11 +148,18 @@ export default {
 
       /* AWS S3 CONFIG */
       uploadStatus: '',
-      apiGatewayUrl: 'YOUR_API_GATEWAY_URL_PRESIGNED', // API Gateway for pre-signed URL
-      apiGatewayUrlLambda: 'YOUR_API_GATEWAY_URL_LAMBDA', // API Gateway to trigger Lambda
-      presignedUrl: null, // Presigned URL for S3 upload
+      fileUploadService: null,
     };
   },
+
+  created() {
+    // Initialize services with configuration
+    this.fileUploadService = new costarFileUploadService({
+      genPresignedUrlGateway: 'https://22w1dz4z65.execute-api.us-east-1.amazonaws.com/dev/generate-presigned-url',
+      processCostarFileGateway: 'https://22w1dz4z65.execute-api.us-east-1.amazonaws.com/dev/process-costar-file',
+    });
+  },
+
   computed: {
     /* TOTAL PAGES for pagination */
     totalPages() {
@@ -382,7 +390,8 @@ export default {
 
     /* ----------- FILE HANDLING ---------- */
     handleFileSelection(event) {
-      this.selectedFile = event.target.files[0];
+      this.selectedFile = event.target.files[0] || null;
+      this.uploadStatus = this.selectedFile ? `Selected: ${this.selectedFile.name}` : '';
     },
 
     /* ----------- API CALL: UPLOAD FILE ---------- */
@@ -465,6 +474,30 @@ export default {
         alert("Failed to download CSV.");
       } finally {
         this.isLoading = false; // Ensure isLoading is updated
+      }
+    },
+
+
+    /* ----------- AWS S3 UPLOAD & LAMBDA TRIGGER ---------- */
+    async uploadFile() {
+      if (!this.selectedFile) {
+        this.uploadStatus = 'Please select a file first';
+        return;
+      }
+      
+      this.isLoading = true;
+      this.uploadStatus = 'Uploading and processing...';
+      
+      try {
+        await this.fileUploadService.processFile(this.selectedFile);
+        this.uploadStatus = 'File processed successfully!';
+      } catch (error) {
+        this.uploadStatus = error.message;
+        alert('Error processing file: ' + error.message);
+      } finally {
+        this.isLoading = false;
+      }
+    },
       }
     }
   },
