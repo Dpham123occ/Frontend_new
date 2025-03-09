@@ -161,7 +161,9 @@ export default {
 
 .table-section {
   margin-top: 20px;
+  overflow-y: auto;  /* Enables vertical scrolling */
 }
+
 
 textarea {
   width: 100%;
@@ -244,6 +246,10 @@ table {
   overflow-x: auto; /* Enables horizontal scrolling */
   white-space: nowrap; /* Prevents table content from wrapping */
 }
+.overflow-y-auto{
+  overflow-y: auto; /* Enables horizontal scrolling */
+  white-space: nowrap;
+}
 /* Style for table headers */
 th {
   background-color: #d3d3d3; /* Light grey background */
@@ -252,6 +258,10 @@ th {
   padding: 10px; /* Add spacing */
   text-align: left; /* Align text to the left */
   text-transform: uppercase;
+  position: sticky;
+  top: 0;
+  z-index: 2; /* Ensure header stays above table rows */
+ 
 }
 /* Target the last column of the table */
 table td:last-child, table th:last-child {
