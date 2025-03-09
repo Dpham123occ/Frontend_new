@@ -1,13 +1,20 @@
 <template>
   <div class="light-industrial-mt">
-    <h1>IOS Exsisting</h1>
-    <p>Welcome to the IOS Exsiting Building page! This is a placeholder component to test routing.</p>
+    <h1>IOS Existing</h1>
+    <p>Welcome to the IOS Existing page! Use the table below to upload and manage your data.</p>
+    <!-- Use TableView Component -->
+    <TableView tableName="ios_existing"/>
   </div>
 </template>
 
 <script>
+import TableView from "../components/TableView.vue"; // Adjust the path to your TableView component
+
 export default {
-  name: 'LightIndustrialMT',
+  name: "IOSExisting",
+  components: {
+    TableView,
+  },  
 };
 </script>
 

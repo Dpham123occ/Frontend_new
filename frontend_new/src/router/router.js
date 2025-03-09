@@ -56,7 +56,7 @@ const routes = [
     meta: { requiresAuth : true }
   },
   {
-    path: '/acquisition-list/IOSExsiting',
+    path: '/acquisition-list/IOSExisting',
     name: 'IOS Existing',
     component: IOSExsisting,
     meta: { requiresAuth : true }

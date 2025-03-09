@@ -3,7 +3,7 @@
     <h1>Light Industrial Multi-Tenant</h1>
     <p>Welcome to the Light Industrial Multi-Tenant page! Use the table below to upload and manage your data.</p>
     <!-- Use TableView Component -->
-    <TableView />
+    <TableView tableName="light_industrial_multitenant"/>
   </div>
 </template>
 
@@ -14,7 +14,7 @@ export default {
   name: "LightIndustrialMT",
   components: {
     TableView,
-  },
+  },  
 };
 </script>
 

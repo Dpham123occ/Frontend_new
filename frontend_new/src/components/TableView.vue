@@ -56,6 +56,12 @@ import { supabase } from "../lib/supabase.js";
 
 export default {
   name: "TableView",
+  props: {
+    tableName: {
+      type: String,
+      required: true, // Ensure the parent component always provides a table name
+    },
+  },
   data() {
     return {
       csvHeaders: [], // Array to store headers
@@ -81,7 +87,7 @@ export default {
       try {
         // Fetch data from Supabase
         let { data: master_acquisition_list, error } = await supabase
-          .from("master_acquisition_list")
+          .from(this.tableName)
           .select("*");
 
         if (error) {
