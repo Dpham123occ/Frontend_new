@@ -45,38 +45,48 @@ export default {
       this.errorMessage = null;
 
       try {
+        // Make the GET request to the Lambda function URL
         const response = await axios.get(
-          "https://your-lambda-url.amazonaws.com/default/generate-change-report",
-          { responseType: "blob" } // Get file as a binary blob
+          "https://mywi1gh4w2.execute-api.us-east-1.amazonaws.com/dev/generate-change-report",
+          { responseType: "json" } // Expect a JSON response containing base64 data
         );
 
-        // Extract filename from headers, defaulting if not found
-        let fileName = "change_report.xlsx";
-        const contentDisposition = response.headers["content-disposition"];
-        if (contentDisposition) {
-          const match = contentDisposition.match(/filename="(.+?)"/);
-          if (match) {
-            fileName = match[1];
-          }
+        // Extract base64-encoded file data from the response
+        const base64Data = response.data.body;
+        
+        // Decode the base64 string into a binary string
+        const binaryData = atob(base64Data); 
+
+        // Convert the binary string to an ArrayBuffer
+        const byteArray = new Uint8Array(binaryData.length);
+        for (let i = 0; i < binaryData.length; i++) {
+          byteArray[i] = binaryData.charCodeAt(i);
         }
 
-        // Create a downloadable file link
-        const blob = new Blob([response.data], {
+        // Create a Blob from the binary data
+        const blob = new Blob([byteArray], {
           type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
         });
+
+        // Create a temporary download link
         const url = URL.createObjectURL(blob);
         const link = document.createElement("a");
         link.href = url;
-        link.download = fileName;
+        link.download = "change_report.xlsx"; // Default file name or extracted filename from headers
+
+        // Programmatically click the link to start the download
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
+
+        // Revoke the object URL after the download
         URL.revokeObjectURL(url);
       } catch (error) {
         console.error("Error generating report:", error);
         this.errorMessage = "An error occurred while generating the report.";
       }
     },
+
 
     handleSidebarToggle(isOpen) {
       this.isSidebarOpen = isOpen;
