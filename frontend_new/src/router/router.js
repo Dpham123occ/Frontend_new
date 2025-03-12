@@ -69,7 +69,7 @@ const routes = [
   },
   {
     path: '/view',
-    name: 'View',
+    name: 'View2',
     component: View,
     meta: { requiresAuth : true }
   },
