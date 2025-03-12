@@ -13,6 +13,7 @@ import Setting from "../components/Setting.vue";
 import ForgotPassword from '../components/ForgotPassword.vue';
 import UpdatePassword from '../components/UpdatePassword.vue';
 import LoginPage from "../components/LoginPage.vue";
+import View2 from "../components/View2.vue";
 const routes = [
   {
     path: '/',
@@ -69,8 +70,8 @@ const routes = [
   },
   {
     path: '/view',
-    name: 'View2',
-    component: View,
+    name: 'View',
+    component: View2,
     meta: { requiresAuth : true }
   },
   {
