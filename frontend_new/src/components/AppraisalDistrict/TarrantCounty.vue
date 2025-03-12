@@ -6,16 +6,25 @@
       <span :class="{ open: isSidebarOpen }">&#9776;</span>
     </button>
     <!-- SIDEBAR CONTAINER -->
-    <div :class="['sidebar-container', { open: isSidebarOpen }]"
-      class="w-[250px] col-span-1 bg-side-bar-2 p-4 flex flex-col">
+    <div
+      :class="['sidebar-container', { open: isSidebarOpen }]"
+      class="w-[250px] col-span-1 bg-side-bar-2 p-4 flex flex-col"
+    >
       <!-- LOADING OVERLAY -->
-      <div v-if="isLoading" class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+      <div
+        v-if="isLoading"
+        class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50"
+      >
         <div class="loading loading-spinner loading-lg"></div>
         <p class="text-white text-lg mt-4">Task in progress, please wait...</p>
       </div>
       <!-- Logo Section -->
       <router-link to="/home">
-        <img src="../../assets/trailspur-logo.svg" alt="Trailspur Logo" class="logo mb-8" />
+        <img
+          src="../../assets/trailspur-logo.svg"
+          alt="Trailspur Logo"
+          class="logo mb-8"
+        />
       </router-link>
 
       <!-- NAVIGATION MENU -->
@@ -28,28 +37,45 @@
         <div class="relative">
           <button class="nav-item bg-side-bar-2" @click="toggleDropdown">
             Actions
-            <span :class="{
-              'rotate-180': isDropdownOpen,
-              'rotate-0': !isDropdownOpen,
-            }" class="ml-2 inline-block transition-transform">
+            <span
+              :class="{
+                'rotate-180': isDropdownOpen,
+                'rotate-0': !isDropdownOpen,
+              }"
+              class="ml-2 inline-block transition-transform"
+            >
               ▲
               <!-- This is a simple down arrow -->
             </span>
           </button>
 
           <!-- Dropdown Menu to the right of the button -->
-          <div v-if="isDropdownOpen" class="absolute left-full top-0 ml-5 py-2 w-64 shadow-xl z-10 rounded-md">
-            <button class="nav-item bg-button block px-4 py-2 text-left font-medium text-xl" @click="downloadTAD">
+          <div
+            v-if="isDropdownOpen"
+            class="absolute left-full top-0 ml-5 py-2 w-64 shadow-xl z-10 rounded-md"
+          >
+            <button
+              class="nav-item bg-button block px-4 py-2 text-left font-medium text-xl"
+              @click="downloadTAD"
+            >
               Import TAD's Appraisal Data - Take time
             </button>
-            <button class="nav-item block px-4 py-2 text-left font-medium text-xl" @click="spatialMerge">
+            <button
+              class="nav-item block px-4 py-2 text-left font-medium text-xl"
+              @click="spatialMerge"
+            >
               Perform Spatial Merge - Take time
             </button>
-            <button class="nav-item bg-button block px-4 py-2 text-left font-medium text-xl" @click="uploadFile">
+            <button
+              class="nav-item bg-button block px-4 py-2 text-left font-medium text-xl"
+              @click="uploadFile"
+            >
               Process TAD Data
             </button>
-            <button class="nav-item bg-button block px-4 py-2 text-left font-medium text-xl"
-              @click="downloadVacanciesReport">
+            <button
+              class="nav-item bg-button block px-4 py-2 text-left font-medium text-xl"
+              @click="downloadVacanciesReport"
+            >
               Download Vacancies Report
             </button>
           </div>
@@ -63,45 +89,77 @@
     <!-- TABLE & BUTTONS SECTION -->
     <!-- Occupies the rest of the screen using col-start-2 col-span-5. -->
     <!-- Wrap in main-content + conditionally add 'shifted' to move it right when sidebar is open -->
-    <div :class="['main-content', { shifted: isSidebarOpen }]"
-      class="col-start-2 col-span-5 flex flex-col h-screen p-4">
+    <div
+      :class="['main-content', { shifted: isSidebarOpen }]"
+      class="col-start-2 col-span-5 flex flex-col h-screen p-4"
+    >
       <div class="flex-grow overflow-auto">
-        <table v-if="filteredData.length" class="overflow-x-auto table table-md">
+        <table
+          v-if="filteredData.length"
+          class="overflow-x-auto table table-md"
+        >
           <thead class="bg-gray-100">
             <tr>
-              <th v-for="(header, index) in csvHeaders" :key="index" class="cursor-pointer">
+              <th
+                v-for="(header, index) in csvHeaders"
+                :key="index"
+                class="cursor-pointer"
+              >
                 {{ header }}
               </th>
             </tr>
           </thead>
           <tbody>
-            <tr v-for="(row, rowIndex) in paginatedSortedData" :key="rowIndex"
-              :class="{ 'bg-gray-100': rowIndex % 2 === 0 }">
-              <td v-for="(value, colIndex) in row" :key="colIndex" v-html="highlightMatch(value)"></td>
+            <tr
+              v-for="(row, rowIndex) in paginatedSortedData"
+              :key="rowIndex"
+              :class="{ 'bg-gray-100': rowIndex % 2 === 0 }"
+            >
+              <td
+                v-for="(value, colIndex) in row"
+                :key="colIndex"
+                v-html="highlightMatch(value)"
+              ></td>
             </tr>
           </tbody>
         </table>
         <!-- Pagination Controls -->
-        <div class="col-start-2 col-end-5 rows-start-4 rows-end-4 col-span-4 flex justify-center items-center gap-4"
-          v-if="csvData.length">
-          <button class="btn btn-s" @click="prevPage" :disabled="currentPage === 1">
+        <div
+          class="col-start-2 col-end-5 rows-start-4 rows-end-4 col-span-4 flex justify-center items-center gap-4"
+          v-if="csvData.length"
+        >
+          <button
+            class="btn btn-s"
+            @click="prevPage"
+            :disabled="currentPage === 1"
+          >
             Previous
           </button>
           <span>Page {{ currentPage }} of {{ totalPages }}</span>
-          <button class="btn btn-s" @click="nextPage" :disabled="currentPage === totalPages">
+          <button
+            class="btn btn-s"
+            @click="nextPage"
+            :disabled="currentPage === totalPages"
+          >
             Next
           </button>
         </div>
 
         <!-- Upload & Process & Download Buttons -->
-        <div class="col-start-2 col-end-5 rows-start-5 rows-end-5 col-span-4 join">
+        <div
+          class="col-start-2 col-end-5 rows-start-5 rows-end-5 col-span-4 join"
+        >
           <!-- <label for="districtSelect">Select District:</label>
                   <select v-model="uploadRegion" id="districtSelect">
                       <option disabled value="">Select a district</option>
                       <option v-for="district in districts" :key="district" :value="district">{{ district }}</option>
                   </select> -->
-          <input type="file" class="join-item file-input file-input-bordered" @change="handleFileSelection"
-            accept=".xlsx, .xls, .csv" />
+          <input
+            type="file"
+            class="join-item file-input file-input-bordered"
+            @change="handleFileSelection"
+            accept=".xlsx, .xls, .csv"
+          />
           <button class="btn btn-s join-item" @click="uploadFile">
             Process Costar Vacancies Report
           </button>
@@ -147,7 +205,7 @@ export default {
       isSidebarOpen: true, // Start the sidebar open
 
       /* AWS S3 CONFIG */
-      uploadStatus: '',
+      uploadStatus: "",
       fileUploadService: null,
     };
   },
@@ -155,8 +213,10 @@ export default {
   created() {
     // Initialize services with configuration
     this.fileUploadService = new costarFileUploadService({
-      genPresignedUrlGateway: 'https://22w1dz4z65.execute-api.us-east-1.amazonaws.com/dev/generate-presigned-url',
-      processCostarFileGateway: 'https://22w1dz4z65.execute-api.us-east-1.amazonaws.com/dev/process-costar-file',
+      genPresignedUrlGateway:
+        "https://22w1dz4z65.execute-api.us-east-1.amazonaws.com/dev/generate-presigned-url",
+      processCostarFileGateway:
+        "https://22w1dz4z65.execute-api.us-east-1.amazonaws.com/dev/process-costar-file",
     });
   },
 
@@ -294,14 +354,41 @@ export default {
     async spatialMerge() {
       this.isLoading = true;
       try {
+        // Get JWT token if required
+        const token = await getUserJWT();
+        if (!token) {
+          throw new Error("Failed to retrieve JWT token.");
+        }
+
+        // Define request headers
+        const headers = {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          Authorization: `Bearer ${token}`,
+        };
+
+        // Define request body (matching PowerShell JSON structure)
+        const body = JSON.stringify({
+          body: JSON.stringify({
+            key1: "value1",
+            key2: "value2",
+            key3: ["value3"],
+          }),
+        });
+
+        // Make Axios POST request
         const response = await axios.post(
-          `http://127.0.0.1:8000/spatial-join`,
-          {}
+          "https://mxe28bc1e2.execute-api.us-east-1.amazonaws.com/default/trailspur-lambda-stack-SpatialJoinCallerFunction-lMkLcBzxb9am",
+          body,
+          { headers }
         );
-        alert("API called successfully: " + response.data.statusCode);
+
+        // Log and alert response
+        console.log("Spatial Merge Response:", response.data);
+        alert("Spatial merge completed successfully!");
       } catch (error) {
-        console.error("Error calling API:", error);
-        alert("Failed to call API");
+        console.error("Error during spatial merge:", error);
+        alert("Failed to perform spatial merge.");
       } finally {
         this.isLoading = false;
       }
@@ -377,8 +464,7 @@ export default {
           console.error("Error setting up the request:", error.message);
         }
         return null;
-      }
-      finally {
+      } finally {
         this.isLoading = false;
       }
     },
@@ -391,7 +477,9 @@ export default {
     /* ----------- FILE HANDLING ---------- */
     handleFileSelection(event) {
       this.selectedFile = event.target.files[0] || null;
-      this.uploadStatus = this.selectedFile ? `Selected: ${this.selectedFile.name}` : '';
+      this.uploadStatus = this.selectedFile
+        ? `Selected: ${this.selectedFile.name}`
+        : "";
     },
 
     /* ----------- API CALL: UPLOAD FILE ---------- */
@@ -414,7 +502,7 @@ export default {
           console.error("Error uploading file:", error);
           alert(
             "An error occurred while uploading the file: " +
-            (error.response?.data?.message || error.message)
+              (error.response?.data?.message || error.message)
           ); // Display user-friendly error message, including server error if available.
         }
       } else {
@@ -477,28 +565,27 @@ export default {
       }
     },
 
-
     /* ----------- AWS S3 UPLOAD & LAMBDA TRIGGER ---------- */
     async uploadFile() {
       if (!this.selectedFile) {
-        this.uploadStatus = 'Please select a file first';
+        this.uploadStatus = "Please select a file first";
         return;
       }
-      
+
       this.isLoading = true;
-      this.uploadStatus = 'Uploading and processing...';
-      
+      this.uploadStatus = "Uploading and processing...";
+
       try {
         await this.fileUploadService.processFile(this.selectedFile);
-        this.uploadStatus = 'File processed successfully!';
+        this.uploadStatus = "File processed successfully!";
       } catch (error) {
         this.uploadStatus = error.message;
-        alert('Error processing file: ' + error.message);
+        alert("Error processing file: " + error.message);
       } finally {
         this.isLoading = false;
       }
     },
-  }
+  },
 };
 </script>
 
