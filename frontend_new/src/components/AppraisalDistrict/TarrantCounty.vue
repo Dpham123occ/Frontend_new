@@ -385,10 +385,10 @@ export default {
 
         // Log and alert response
         console.log("Spatial Merge Response:", response.data);
-        alert("Spatial merge completed successfully!");
+        alert("Spatial merge called successfully!");
       } catch (error) {
         console.error("Error during spatial merge:", error);
-        alert("Failed to perform spatial merge.");
+        alert("Failed to call spatial merge.");
       } finally {
         this.isLoading = false;
       }
