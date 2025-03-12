@@ -576,8 +576,9 @@ export default {
       this.uploadStatus = "Uploading and processing...";
 
       try {
-        await this.fileUploadService.processFile(this.selectedFile);
+        const response = await this.fileUploadService.processFile(this.selectedFile);
         this.uploadStatus = "File processed successfully!";
+        alert(response.data.Detail || "File processed successfully!");
       } catch (error) {
         this.uploadStatus = error.message;
         alert("Error processing file: " + error.message);

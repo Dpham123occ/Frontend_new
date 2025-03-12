@@ -90,10 +90,6 @@ export class costarFileUploadService {
                 throw new Error(`Upload failed with status: ${response.status}, details: ${errorText}`);
             }
 
-            console.log('Upload response:', response);
-            const responseBody = await response.text();
-            console.log('Response body:', responseBody);
-
             return true;
         } catch (error) {
             console.error('Error uploading file:', error);
@@ -115,7 +111,7 @@ export class costarFileUploadService {
                 throw new Error(`Failed to trigger Lambda: Status code ${response.status}`);
             }
     
-            return true;
+            return response;
         } catch (error) {
             console.error("Error triggering Lambda", error);
             throw new Error(`Error triggering Lambda: ${error.message}`);
@@ -136,12 +132,13 @@ export class costarFileUploadService {
             throw new Error(`Error S3 Upload: ${error.message}`);
         }
 
+        let costar_upload_response;
         try{
-            await this.triggerLambdaProcessor(file.name);
+            costar_upload_response = await this.triggerLambdaProcessor(file.name);
         } catch (error) {
             console.error('Error processing file:', error);
             throw new Error(`Error Triggering Lambda: ${error.message}`);
         }
-        return true;
+        return costar_upload_response;
     }
 }
