@@ -30,7 +30,7 @@
       <!-- NAVIGATION MENU -->
       <nav class="nav-menu flex flex-col gap-2">
         <button class="nav-item bg-button" @click="showTable">
-          Display Tarrant County Vacancy Report
+          Display Tarrant County Costar Listings
         </button>
 
         <!-- ACTIONS DROPDOWN -->
@@ -58,25 +58,25 @@
               class="nav-item bg-button block px-4 py-2 text-left font-medium text-xl"
               @click="downloadTAD"
             >
-              Import TAD's Appraisal Data - Take time
+              Download TAD Data (GeoDB)
             </button>
             <button
               class="nav-item block px-4 py-2 text-left font-medium text-xl"
               @click="spatialMerge"
             >
-              Perform Spatial Merge - Take time
+              Generate Acquisition List
             </button>
             <button
               class="nav-item bg-button block px-4 py-2 text-left font-medium text-xl"
               @click="uploadFile"
             >
-              Process TAD Data
+              Upload Costar File
             </button>
             <button
               class="nav-item bg-button block px-4 py-2 text-left font-medium text-xl"
               @click="downloadVacanciesReport"
             >
-              Download Vacancies Report
+              Download Costar Vacancies Report
             </button>
           </div>
         </div>
@@ -161,10 +161,10 @@
             accept=".xlsx, .xls, .csv"
           />
           <button class="btn btn-s join-item" @click="uploadFile">
-            Process Costar Vacancies Report
+            Upload Costar File
           </button>
           <button class="btn btn-s join-item" @click="downloadVacanciesReport">
-            Download Vacancies Report
+            Download Trailspur Costar Data
           </button>
         </div>
       </div>
@@ -569,6 +569,7 @@ export default {
     async uploadFile() {
       if (!this.selectedFile) {
         this.uploadStatus = "Please select a file first";
+        alert("Please select a file first");
         return;
       }
 
