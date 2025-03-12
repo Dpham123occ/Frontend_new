@@ -155,11 +155,16 @@
                       <option v-for="district in districts" :key="district" :value="district">{{ district }}</option>
                   </select> -->
           <input
+            :key="fileInputKey"
+            ref="fileInput"
             type="file"
             class="join-item file-input file-input-bordered"
             @change="handleFileSelection"
             accept=".xlsx, .xls, .csv"
           />
+          <button v-if="selectedFile" class="btn btn-error join-item" @click="clearFile">
+            ✕
+          </button>
           <button class="btn btn-s join-item" @click="uploadFile">
             Upload Costar File
           </button>
@@ -193,6 +198,7 @@ export default {
 
       /* FILE UPLOAD */
       selectedFile: null, // Currently selected file for upload
+      fileInputKey: 0, // Key to reset file input field
 
       /* SEARCH & SORT */
       searchQuery: "", // Search query for filtering table
@@ -480,6 +486,11 @@ export default {
       this.uploadStatus = this.selectedFile
         ? `Selected: ${this.selectedFile.name}`
         : "";
+    },
+
+    clearFile() {
+      this.selectedFile = null; // Clear selected file
+      this.fileInputKey += 1; // Force re-render of input element
     },
 
     /* ----------- API CALL: UPLOAD FILE ---------- */
