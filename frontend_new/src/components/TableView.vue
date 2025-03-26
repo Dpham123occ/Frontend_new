@@ -1,237 +1,56 @@
 <template>
-  <!-- Main Layout with responsive grid -->
-  <div class="max-w-screen-2xl mx-auto grid grid-cols-1 md:grid-cols-6 h-screen bg-[#ffff]">
-    <!-- HAMBURGER BUTTON -->
-    <button 
-      @click="toggleSidebar" 
-      class="hamburger-btn fixed z-20 md:relative ml-4 mt-4 md:ml-0 md:mt-0"
-    >
-      <span :class="{ open: isSidebarOpen }">&#9776;</span>
-    </button>
-    
-    <!-- SIDEBAR CONTAINER -->
-    <div
-      :class="[
-        'sidebar-container', 
-        'transition-all', 
-        'duration-300', 
-        'ease-in-out',
-        'fixed md:relative',
-        'z-10',
-        'h-screen',
-        { 
-          'w-[250px]': isSidebarOpen, 
-          'w-[80px]': !isSidebarOpen,
-          'left-0': isSidebarOpen,
-          '-left-full md:left-0': !isSidebarOpen
-        }
-      ]"
-      class="bg-side-bar-2 p-4 flex flex-col"
-    >
-      <!-- LOADING OVERLAY -->
-      <div
-        v-if="isLoading"
-        class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50"
-      >
-        <div class="loading loading-spinner loading-lg"></div>
-        <p class="text-white text-lg mt-4">Task in progress, please wait...</p>
+  <div class="main-container">
+    <div class="overflow-x-auto">
+      <table class="table table-xs">
+        <thead>
+          <tr>
+            <th v-for="(header, index) in csvHeaders" :key="index">{{ header }}</th>
+            <th>Notes</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="(row, rowIndex) in paginatedData" :key="rowIndex">
+            <td v-for="(value, colIndex) in row" :key="colIndex">{{ value }}</td>
+            <td>
+              <textarea class="fixed-textarea" v-model="notes[rowIndex + (currentPage - 1) * rowsPerPage]" placeholder="Add notes here"
+                rows="2"></textarea>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <!-- Table and Pagination Section -->
+    <div class="table-section" v-if="csvHeaders.length && csvData.length">
+      <!-- Conditionally Rendered Table for CSV Data -->
+      <!-- Pagination Controls -->
+      <div class="pagination-controls">
+        <label for="rowsPerPage">Rows per page:</label>
+        <select v-model="rowsPerPage" @change="resetPagination">
+          <option v-for="option in rowsPerPageOptions" :key="option" :value="option">
+            {{ option }}
+          </option>
+        </select>
+        <button @click="prevPage" :disabled="currentPage === 1">Previous</button>
+        <span>Page {{ currentPage }} of {{ totalPages }}</span>
+        <button @click="nextPage" :disabled="currentPage === totalPages">Next</button>
       </div>
-      
-      <!-- Logo Section -->
-      <router-link to="/home" class="flex justify-center md:justify-start">
-        <img
-          src="../../assets/trailspur-logo.svg"
-          alt="Trailspur Logo"
-          class="logo mb-8 max-w-[180px]"
-          :class="{ 'mx-auto': !isSidebarOpen }"
-        />
-      </router-link>
 
-      <!-- NAVIGATION MENU -->
-      <nav class="nav-menu flex flex-col gap-2">
-        <button 
-          class="nav-item bg-button text-sm md:text-base truncate" 
-          @click="showTable"
-          :title="isSidebarOpen ? '' : 'Display Tarrant County Costar Listings'"
-        >
-          <span v-if="isSidebarOpen">Display Tarrant County Costar Listings</span>
-          <span v-else class="flex justify-center">📋</span>
-        </button>
+      <!-- back button-->
+      <div class="button-group">
+        <button @click="goBack" class="back-button">Back</button>
+      </div>
 
-        <!-- ACTIONS DROPDOWN -->
-        <div class="relative">
-          <button 
-            class="nav-item bg-side-bar-2 text-sm md:text-base w-full flex items-center justify-between"
-            @click="toggleDropdown"
-            :title="isSidebarOpen ? '' : 'Actions'"
-          >
-            <span v-if="isSidebarOpen">Actions</span>
-            <span v-else class="flex justify-center">⚙️</span>
-            <span
-              v-if="isSidebarOpen"
-              :class="{
-                'rotate-180': isDropdownOpen,
-                'rotate-0': !isDropdownOpen,
-              }"
-              class="ml-2 inline-block transition-transform"
-            >
-              ▲
-            </span>
-          </button>
-
-          <!-- Dropdown Menu -->
-          <div
-            v-if="isDropdownOpen && isSidebarOpen"
-            class="absolute left-0 md:left-full top-0 md:top-auto mt-0 md:mt-2 ml-0 md:ml-2 py-2 w-full md:w-64 shadow-xl z-10 rounded-md bg-white"
-          >
-            <button
-              class="nav-item bg-button block px-4 py-2 text-left font-medium text-sm md:text-base w-full"
-              @click="downloadTAD"
-            >
-              Download TAD Data (GeoDB)
-            </button>
-            <button
-              class="nav-item block px-4 py-2 text-left font-medium text-sm md:text-base w-full"
-              @click="spatialMerge"
-            >
-              Generate Acquisition List
-            </button>
-            <button
-              class="nav-item bg-button block px-4 py-2 text-left font-medium text-sm md:text-base w-full"
-              @click="uploadFile"
-            >
-              Upload Costar File
-            </button>
-            <button
-              class="nav-item bg-button block px-4 py-2 text-left font-medium text-sm md:text-base w-full"
-              @click="downloadVacanciesReport"
-            >
-              Download Costar Vacancies Report
-            </button>
-          </div>
-        </div>
-        
-        <button 
-          class="nav-item bg-button back-button text-sm md:text-base truncate" 
-          @click="goback"
-          :title="isSidebarOpen ? '' : 'Back'"
-        >
-          <span v-if="isSidebarOpen">Back</span>
-          <span v-else class="flex justify-center">⬅️</span>
-        </button>
-      </nav>
+      <!-- Save Notes Button -->
+      <div class="button-group">
+        <button @click="saveNotes" class="save-button">Save Notes</button>
+      </div>
     </div>
 
-    <!-- MAIN CONTENT AREA -->
-    <div
-      :class="[
-        'main-content',
-        'transition-all',
-        'duration-300',
-        { 
-          'ml-0 md:ml-[80px]': !isSidebarOpen,
-          'ml-0 md:ml-[250px]': isSidebarOpen 
-        }
-      ]"
-      class="w-full md:w-[calc(100vw-80px)] lg:w-[calc(100vw-250px)] flex flex-col h-screen p-4"
-    >
-      <div class="flex-grow overflow-auto">
-        <div class="overflow-x-auto">
-          <table
-            v-if="csvData.length"
-            class="min-w-full divide-y divide-gray-200 table-auto"
-          >
-            <thead class="bg-gray-100">
-              <tr>
-                <th
-                  v-for="(header, index) in csvHeaders"
-                  :key="index"
-                  class="px-4 py-2 text-left text-xs md:text-sm font-medium text-gray-700 uppercase tracking-wider cursor-pointer"
-                >
-                  {{ header }}
-                </th>
-              </tr>
-            </thead>
-            <tbody class="bg-white divide-y divide-gray-200">
-              <tr
-                v-for="(row, rowIndex) in paginatedData"
-                :key="rowIndex"
-                :class="{ 'bg-gray-50': rowIndex % 2 === 0 }"
-              >
-                <td
-                  v-for="(value, colIndex) in row"
-                  :key="colIndex"
-                  class="px-4 py-2 whitespace-nowrap text-xs md:text-sm text-gray-700"
-                >
-                  {{ value }}
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
 
-        <!-- Pagination Controls -->
-        <div
-          class="flex flex-wrap justify-center items-center gap-2 md:gap-4 mt-4"
-          v-if="csvData.length"
-        >
-          <div class="flex items-center gap-2">
-            <span class="text-xs md:text-sm">Rows per page:</span>
-            <select 
-              v-model="rowsPerPage" 
-              class="select select-bordered select-sm w-16 md:w-20 text-xs md:text-sm"
-              @change="resetToFirstPage"
-            >
-              <option v-for="option in rowsPerPageOptions" :value="option" :key="option">
-                {{ option }}
-              </option>
-            </select>
-          </div>
-          
-          <button
-            class="btn btn-xs md:btn-sm"
-            @click="prevPage"
-            :disabled="currentPage === 1"
-          >
-            Previous
-          </button>
-          <span class="text-xs md:text-sm">Page {{ currentPage }} of {{ totalPages }}</span>
-          <button
-            class="btn btn-xs md:btn-sm"
-            @click="nextPage"
-            :disabled="currentPage === totalPages"
-          >
-            Next
-          </button>
-        </div>
 
-        <!-- Upload & Process & Download Buttons -->
-        <div
-          class="flex flex-col md:flex-row gap-2 mt-4"
-        >
-          <div class="join w-full">
-            <input
-              :key="fileInputKey"
-              ref="fileInput"
-              type="file"
-              class="join-item file-input file-input-bordered w-full text-xs md:text-sm"
-              @change="handleFileSelection"
-              accept=".xlsx, .xls, .csv"
-            />
-            <button v-if="selectedFile" class="btn btn-error join-item btn-xs md:btn-sm" @click="clearFile">
-              ✕
-            </button>
-          </div>
-          <div class="flex gap-2 w-full">
-            <button class="btn btn-xs md:btn-sm flex-grow" @click="uploadFile">
-              Upload Costar File
-            </button>
-            <button class="btn btn-xs md:btn-sm flex-grow" @click="downloadVacanciesReport">
-              Download Trailspur Costar Data
-            </button>
-          </div>
-        </div>
-      </div>
+    <!-- Empty State -->
+    <div v-else>
+      <el-empty description="Upload a file to display data." />
     </div>
   </div>
 </template>
