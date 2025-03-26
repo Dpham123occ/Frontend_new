@@ -91,12 +91,10 @@
       class="col-start-2 col-span-5 flex flex-col h-screen p-4"
     >
       <div class="flex-grow overflow-auto">
-        <table
-          v-if="csvData.length"
-          class="overflow-x-auto table table-md"
-        >
+        <table v-if="csvData.length" class="overflow-x-auto table table-md">
           <thead class="bg-gray-100">
             <tr>
+              <th>Contacted</th>
               <th
                 v-for="(header, index) in csvHeaders"
                 :key="index"
@@ -112,10 +110,14 @@
               :key="rowIndex"
               :class="{ 'bg-gray-100': rowIndex % 2 === 0 }"
             >
-              <td
-                v-for="(value, colIndex) in row"
-                :key="colIndex"
-              >
+              <td>
+                <input
+                  type="checkbox"
+                  v-model="contactedStatus[rowIndex]"
+                  class="checkbox checkbox-primary"
+                />
+              </td>
+              <td v-for="(value, colIndex) in row" :key="colIndex">
                 {{ value }}
               </td>
             </tr>
@@ -129,17 +131,21 @@
         >
           <div class="flex items-center gap-2">
             <span>Rows per page:</span>
-            <select 
-              v-model="rowsPerPage" 
+            <select
+              v-model="rowsPerPage"
               class="select select-bordered select-sm w-20"
               @change="resetToFirstPage"
             >
-              <option v-for="option in rowsPerPageOptions" :value="option" :key="option">
+              <option
+                v-for="option in rowsPerPageOptions"
+                :value="option"
+                :key="option"
+              >
                 {{ option }}
               </option>
             </select>
           </div>
-          
+
           <button
             class="btn btn-s"
             @click="prevPage"
@@ -169,7 +175,11 @@
             @change="handleFileSelection"
             accept=".xlsx, .xls, .csv"
           />
-          <button v-if="selectedFile" class="btn btn-error join-item" @click="clearFile">
+          <button
+            v-if="selectedFile"
+            class="btn btn-error join-item"
+            @click="clearFile"
+          >
             ✕
           </button>
           <button class="btn btn-s join-item" @click="uploadFile">
@@ -212,6 +222,7 @@ export default {
       isLoading: false,
       isDropdownOpen: false, // State to control the dropdown visibility
       isSidebarOpen: true, // Start the sidebar open
+      contactedStatus: {}, // Checkbox
 
       /* AWS S3 CONFIG */
       uploadStatus: "",
@@ -285,6 +296,12 @@ export default {
           alert("No data available.");
           return;
         }
+
+        // Initialize contacted status
+        this.contactedStatus = {};
+        master_vacancy_list.forEach((_, index) => {
+          this.contactedStatus[index] = false;
+        });
 
         // Convert JSON to CSV format
         const csvString = papaparse.unparse(master_vacancy_list);
@@ -418,7 +435,9 @@ export default {
       this.uploadStatus = "Uploading and processing...";
 
       try {
-        const response = await this.fileUploadService.processFile(this.selectedFile);
+        const response = await this.fileUploadService.processFile(
+          this.selectedFile
+        );
         this.uploadStatus = "File processed successfully!";
         alert(response.data.Detail || "File processed successfully!");
       } catch (error) {
