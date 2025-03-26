@@ -114,7 +114,7 @@
                 <input
                   type="checkbox"
                   v-model="contactedStatus[rowIndex]"
-                  class="checkbox checkbox-primary"
+                  class="checkbox checkbox-neutral"
                 />
               </td>
               <td v-for="(value, colIndex) in row" :key="colIndex">
