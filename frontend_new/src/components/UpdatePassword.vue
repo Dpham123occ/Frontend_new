@@ -9,7 +9,27 @@
           New Password
         </label>
         <input v-model="newPassword" type="password" id="new-password" placeholder="Enter your new password" required
-          class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#967444]" />
+          class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#967444]" 
+          @input="validatePassword" />
+      </div>
+
+      <!-- Password Requirements -->
+      <div class="mb-4 text-left text-sm text-gray-600">
+        <p class="font-medium mb-1">Password must:</p>
+        <ul class="list-disc pl-5 space-y-1">
+          <li :class="{'text-green-500': meetsLength, 'text-red-500': !meetsLength && newPassword.length > 0}">
+            Be 8-127 characters long
+          </li>
+          <li :class="{'text-green-500': hasLetter, 'text-red-500': !hasLetter && newPassword.length > 0}">
+            Contain at least one letter (A-Z)
+          </li>
+          <li :class="{'text-green-500': hasNumber, 'text-red-500': !hasNumber && newPassword.length > 0}">
+            Contain at least one number (0-9)
+          </li>
+          <li :class="{'text-green-500': hasSpecialChar, 'text-red-500': !hasSpecialChar && newPassword.length > 0}">
+            Contain at least one special character (!@#$%^&* etc.)
+          </li>
+        </ul>
       </div>
 
       <!-- Confirm New Password Input -->
@@ -23,8 +43,8 @@
       </div>
 
       <!-- Update Password Button -->
-      <button @click="updatePassword"
-        class="w-full bg-[#967444] text-white py-2 px-4 rounded-md hover:bg-[#7a5c36] transition-colors">
+      <button @click="updatePassword" :disabled="!isPasswordValid"
+        class="w-full bg-[#967444] text-white py-2 px-4 rounded-md hover:bg-[#7a5c36] transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed">
         Update Password
       </button>
 
@@ -42,7 +62,7 @@
 </template>
 
 <script>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, computed } from "vue";
 import { supabase } from "../lib/supabase";
 import { useRouter } from "vue-router";
 
@@ -55,12 +75,38 @@ export default {
     const error = ref("");
     const router = useRouter();
 
+    // Password validation flags
+    const meetsLength = ref(false);
+    const hasLetter = ref(false);
+    const hasNumber = ref(false);
+    const hasSpecialChar = ref(false);
+
+    // Special characters allowed
+    const specialChars = "!#$^&*(){}[]-_=+`~;'\"?/,<>.";
+
+    // Validate password against policy
+    const validatePassword = () => {
+      const pass = newPassword.value;
+      
+      meetsLength.value = pass.length >= 8 && pass.length <= 127;
+      hasLetter.value = /[A-Za-z]/.test(pass);
+      hasNumber.value = /[0-9]/.test(pass);
+      hasSpecialChar.value = new RegExp(`[${specialChars.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}]`).test(pass);
+    };
+
+    // Computed property to check if password meets all requirements
+    const isPasswordValid = computed(() => {
+      return meetsLength.value && 
+             hasLetter.value && 
+             hasNumber.value && 
+             hasSpecialChar.value &&
+             newPassword.value === confirmPassword.value;
+    });
+
     // Listen for the PASSWORD_RECOVERY event
     onMounted(() => {
       supabase.auth.onAuthStateChange((event, session) => {
         if (event === "PASSWORD_RECOVERY") {
-          // The user has clicked the reset link and is redirected here
-          // You can now prompt them to update their password
           console.log("PASSWORD_RECOVERY event detected");
         }
       });
@@ -69,8 +115,10 @@ export default {
     // Update Password Function
     const updatePassword = async () => {
       try {
-        if (!newPassword.value || !confirmPassword.value) {
-          error.value = "Please fill in all fields.";
+        error.value = "";
+
+        if (!isPasswordValid.value) {
+          error.value = "Please ensure your password meets all requirements.";
           return;
         }
 
@@ -88,7 +136,7 @@ export default {
 
         // Show success message
         successMessage.value = "Password updated successfully!";
-        error.value = ""; // Clear any previous error
+        error.value = "";
 
         // Redirect to home page after a short delay
         if (router.currentRoute.value.path === "/update-password") {
@@ -100,9 +148,8 @@ export default {
 
       } catch (err) {
         console.error("Error updating password:", err.message);
-        alert("Error updating password: " + err.message);
         error.value = "Failed to update password. Please try again.";
-        successMessage.value = ""; // Clear any previous success message
+        successMessage.value = "";
       }
     };
 
@@ -111,6 +158,12 @@ export default {
       confirmPassword,
       successMessage,
       error,
+      meetsLength,
+      hasLetter,
+      hasNumber,
+      hasSpecialChar,
+      isPasswordValid,
+      validatePassword,
       updatePassword,
     };
   },
