@@ -94,7 +94,6 @@
         <table v-if="csvData.length" class="overflow-x-auto table table-md">
           <thead class="bg-gray-100">
             <tr>
-              <th>Contacted</th>
               <th
                 v-for="(header, index) in csvHeaders"
                 :key="index"
@@ -110,13 +109,6 @@
               :key="rowIndex"
               :class="{ 'bg-gray-100': rowIndex % 2 === 0 }"
             >
-              <td>
-                <input
-                  type="checkbox"
-                  v-model="contactedStatus[rowIndex]"
-                  class="checkbox checkbox-neutral"
-                />
-              </td>
               <td v-for="(value, colIndex) in row" :key="colIndex">
                 {{ value }}
               </td>
@@ -222,7 +214,6 @@ export default {
       isLoading: false,
       isDropdownOpen: false, // State to control the dropdown visibility
       isSidebarOpen: true, // Start the sidebar open
-      contactedStatus: {}, // Checkbox
 
       /* AWS S3 CONFIG */
       uploadStatus: "",
@@ -296,12 +287,6 @@ export default {
           alert("No data available.");
           return;
         }
-
-        // Initialize contacted status
-        this.contactedStatus = {};
-        master_vacancy_list.forEach((_, index) => {
-          this.contactedStatus[index] = false;
-        });
 
         // Convert JSON to CSV format
         const csvString = papaparse.unparse(master_vacancy_list);
