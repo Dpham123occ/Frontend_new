@@ -5,6 +5,7 @@
         <thead>
           <tr>
             <th v-for="(header, index) in csvHeaders" :key="index">{{ header }}</th>
+            <th>Contacted Owner?</th>
             <th>Notes</th>
           </tr>
         </thead>
@@ -12,17 +13,44 @@
           <tr v-for="(row, rowIndex) in paginatedData" :key="rowIndex">
             <td v-for="(value, colIndex) in row" :key="colIndex">{{ value }}</td>
             <td>
-              <textarea class="fixed-textarea" v-model="notes[rowIndex + (currentPage - 1) * rowsPerPage]" placeholder="Add notes here"
-                rows="2"></textarea>
+              <input 
+                type="checkbox" 
+                v-model="contacted[rowIndex + (currentPage - 1) * rowsPerPage]"
+                class="contacted-checkbox"
+              >
+            </td>
+            <td>
+              <button 
+                @click="openNotesModal(rowIndex + (currentPage - 1) * rowsPerPage)"
+                class="notes-button"
+              >
+                View/Edit Notes
+              </button>
             </td>
           </tr>
         </tbody>
       </table>
     </div>
-    <!-- Table and Pagination Section -->
+
+    <!-- Notes Modal -->
+    <div v-if="showNotesModal" class="modal-overlay">
+      <div class="modal-content">
+        <h3>Edit Notes</h3>
+        <textarea 
+          v-model="currentNote" 
+          class="modal-textarea" 
+          placeholder="Enter your notes here"
+          rows="5"
+        ></textarea>
+        <div class="modal-buttons">
+          <button @click="saveCurrentNote" class="save-button">Save</button>
+          <button @click="closeNotesModal" class="cancel-button">Cancel</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Rest of your existing code (pagination, etc.) -->
     <div class="table-section" v-if="csvHeaders.length && csvData.length">
-      <!-- Conditionally Rendered Table for CSV Data -->
-      <!-- Pagination Controls -->
       <div class="pagination-controls">
         <label for="rowsPerPage">Rows per page:</label>
         <select v-model="rowsPerPage" @change="resetPagination">
@@ -35,20 +63,15 @@
         <button @click="nextPage" :disabled="currentPage === totalPages">Next</button>
       </div>
 
-      <!-- back button-->
       <div class="button-group">
         <button @click="goBack" class="back-button">Back</button>
       </div>
 
-      <!-- Save Notes Button -->
       <div class="button-group">
         <button @click="saveNotes" class="save-button">Save Notes</button>
       </div>
     </div>
 
-
-
-    <!-- Empty State -->
     <div v-else>
       <el-empty description="Upload a file to display data." />
     </div>
@@ -64,17 +87,22 @@ export default {
   props: {
     tableName: {
       type: String,
-      required: true, // Ensure the parent component always provides a table name
+      required: true,
     },
   },
   data() {
     return {
-      csvHeaders: [], // Array to store headers
-      csvData: [], // Array to store rows of data
-      notes: [], // Array to store notes for each row
-      currentPage: 1, // Current page for pagination
-      rowsPerPage: 10, // Rows displayed per page
-      rowsPerPageOptions: [10, 20, 50], // Options for pagination
+      csvHeaders: [],
+      csvData: [],
+      notes: [],
+      contacted: [],
+      currentPage: 1,
+      rowsPerPage: 10,
+      rowsPerPageOptions: [10, 20, 50],
+      // Modal related data
+      showNotesModal: false,
+      currentNote: "",
+      currentNoteIndex: -1
     };
   },
   computed: {
@@ -88,15 +116,27 @@ export default {
     },
   },
   methods: {
+    openNotesModal(index) {
+      this.currentNoteIndex = index;
+      this.currentNote = this.notes[index] || "";
+      this.showNotesModal = true;
+    },
+    closeNotesModal() {
+      this.showNotesModal = false;
+    },
+    saveCurrentNote() {
+      if (this.currentNoteIndex >= 0) {
+        this.$set(this.notes, this.currentNoteIndex, this.currentNote);
+      }
+      this.closeNotesModal();
+    },
     goBack() {
-      // Use window.history.back() to go back to the previous page in history
       window.history.back();
     },
     async fetchCSVFile() {
       try {
-        // Fetch data from Supabase using the dynamic tableName prop
         let { data, error } = await supabase
-          .from(this.tableName) // Use the prop here
+          .from(this.tableName)
           .select("*");
 
         if (error) {
@@ -109,16 +149,16 @@ export default {
           return;
         }
 
-        // Convert JSON to CSV format
         const csvString = Papa.unparse(data);
 
-        // Parse CSV using PapaParse
         Papa.parse(csvString, {
-          header: true, // Extract headers dynamically
-          skipEmptyLines: true, // Skip empty rows
+          header: true,
+          skipEmptyLines: true,
           complete: (results) => {
-            this.csvHeaders = results.meta.fields; // Extract headers
-            this.csvData = results.data; // Extract rows
+            this.csvHeaders = results.meta.fields;
+            this.csvData = results.data;
+            this.contacted = new Array(this.csvData.length).fill(false);
+            this.notes = new Array(this.csvData.length).fill("");
             this.resetPagination();
           },
         });
@@ -139,17 +179,15 @@ export default {
     },
     saveNotes() {
       console.log("Saved Notes:", this.notes);
-      alert("Notes saved successfully!");
+      console.log("Contacted Status:", this.contacted);
+      alert("Notes and contacted status saved successfully!");
     },
   },
   mounted() {
-    // Automatically fetch the CSV file when the component is mounted
     this.fetchCSVFile();
   },
 };
 </script>
-
-
 
 <style scoped>
 .main-container {
@@ -169,19 +207,10 @@ export default {
 
 textarea {
   width: 100%;
-  /* Ensures textarea spans the cell */
   resize: none;
-  /* Prevents resizing */
-
   border-radius: 4px;
-  /* Optional: add rounded corners */
   border: 1px solid #ccc;
   height: 100%;
-}
-
-textarea {
-  width: 100%;
-  resize: none;
 }
 
 .pagination-controls {
@@ -189,23 +218,16 @@ textarea {
   align-items: center;
   gap: 10px;
   margin-top: 10px;
-
-
 }
 
-/* Hover effect for Previous and Next buttons */
 .pagination-controls button:hover {
   cursor: pointer;
-  /* Change cursor to pointer when hovered */
   transform: scale(1.1);
 }
 
-/* Style for Previous and Next buttons with constant underline */
 .pagination-controls button {
   text-decoration: underline;
-  /* Underline is always present */
   cursor: default;
-  /* Default cursor initially */
   font-weight: bold;
 }
 
@@ -213,108 +235,180 @@ textarea {
   display: flex;
   justify-content: flex-end;
   margin-top: 10px;
-
-
 }
 
-.save-button {
+.save-button, .back-button {
   padding: 10px 20px;
   background-color: #000000;
   color: white;
   border: none;
   cursor: pointer;
   border-radius: 4px;
+  width: 10%;
 }
 
-.save-button:hover {
+.save-button:hover, .back-button:hover {
   background-color: #000000;
   transform: scale(1.05);
 }
 
-/* Add grid lines to the table */
 table {
   border-collapse: collapse;
-  /* Ensures no space between borders */
   width: 100%;
 }
 
-th,
-td {
+th, td {
   border: 1px solid black;
-  /* Defines grid lines */
   padding: 8px;
-  /* Adds some spacing inside cells */
   text-align: left;
-  /* Aligns text to the left */
 }
 
-/* Optional: Add a border to the table itself */
 table {
   border: 2px solid black;
   min-width: 100%;
-  /* Ensures the table expands horizontally */
   border-collapse: collapse;
-  /* Removes extra spacing */
 }
 
-/* Add horizontal scrolling */
 .overflow-x-auto {
   overflow-x: auto;
-  /* Enables horizontal scrolling */
   white-space: nowrap;
-  /* Prevents table content from wrapping */
 }
 
-/* Style for table headers */
 th {
   background-color: #d3d3d3;
-  /* Light grey background */
   color: black;
-  /* Text color */
   font-weight: bold;
-  /* Make header text bold */
   padding: 10px;
-  /* Add spacing */
   text-align: left;
-  /* Align text to the left */
   text-transform: uppercase;
 }
 
-/* Target the last column of the table */
-table td:last-child,
-table th:last-child {
-  width: 200px;
-  /* Adjust the width as per your requirement */
-}
-
-.back-button {
-  padding: 10px 20px;
-  background-color: #000000;
-  color: white;
-  border: none;
-  cursor: pointer;
-  border-radius: 4px;
-
-
-}
-
-.back-button:hover {
-  background-color: #000000;
-  transform: scale(1.05);
-}
-
-.save-button,
-.back-button {
-  width: 10%;
-  /* Make both buttons the same width */
+/* Style for the contacted checkbox */
+.contacted-checkbox {
+  width: 20px;
+  height: 20px;
+  margin: 0 auto;
+  display: block;
 }
 
 .fixed-textarea {
-  width: 20vw; /* 20% of the viewport width */
-  height: 10vh; /* 10% of the viewport height */
+  width: 20vw;
+  height: 10vh;
   resize: none;
-  border-radius: 4px; /* Optional: rounded corners */
-  border: 1px solid #ccc; /* Optional: border */
-  padding: 8px; /* Optional: padding */
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  padding: 8px;
+}
+
+/* Notes Button Style */
+.notes-button {
+  padding: 6px 12px;
+  background-color: #4a5568;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.875rem;
+  transition: background-color 0.2s;
+}
+
+.notes-button:hover {
+  background-color: #2d3748;
+}
+
+/* Modal Styles */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  width: 500px;
+  max-width: 90%;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.modal-textarea {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  margin: 10px 0;
+  resize: vertical;
+  min-height: 100px;
+}
+
+.modal-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.modal-buttons button {
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  min-width: 80px; /* Add minimum width to ensure consistent sizing */
+  height: 36px; /* Fixed height for both buttons */
+  box-sizing: border-box; /* Include padding and border in the element's total dimensions */
+  font-size: 14px; /* Consistent font size */
+  line-height: 1; /* Reset line height */
+}
+
+.modal-buttons .save-button {
+  background-color: #000000;
+  color: white;
+  border: none;
+}
+
+.modal-buttons .save-button:hover {
+  background-color: #444445;
+}
+
+.modal-buttons .cancel-button {
+  background-color: #e2e8f0;
+  border: 1px solid #cbd5e0;
+}
+
+.modal-buttons .cancel-button:hover {
+  background-color: #cbd5e0;
+}
+/* Keep your existing table styles */
+table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+th, td {
+  border: 1px solid black;
+  padding: 8px;
+  text-align: left;
+}
+
+th {
+  background-color: #d3d3d3;
+  color: black;
+  font-weight: bold;
+  padding: 10px;
+  text-transform: uppercase;
+}
+
+.contacted-checkbox {
+  width: 20px;
+  height: 20px;
+  margin: 0 auto;
+  display: block;
 }
 </style>
